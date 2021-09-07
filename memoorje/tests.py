@@ -1,11 +1,12 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import AccessToken
 
 from memoorje.models import User
 
 
-class DjoserBaseTestCase(APITestCase):
-    base_url = "/api/auth"
+class BaseTestCase(APITestCase):
+    base_url = "/api"
 
     def get_api_url(self, url):
         """
@@ -14,6 +15,10 @@ class DjoserBaseTestCase(APITestCase):
         :return: the url fragment prepended with the base url
         """
         return f"{self.base_url}{url}"
+
+
+class DjoserBaseTestCase(BaseTestCase):
+    base_url = "/api/auth"
 
     def test_signup(self):
         """
@@ -26,3 +31,35 @@ class DjoserBaseTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(User.objects.get().email, email)
+
+
+class DjoserJWTTestCase(BaseTestCase):
+    base_url = "/api/auth"
+
+    def setUp(self) -> None:
+        self.email = "test@example.org"
+        self.password = "test12345"
+        self.user = User.objects.create_user(self.email, self.password)
+
+    def test_login(self) -> None:
+        """
+        Obtain JSON Web Tokens (login)
+        """
+        url = "/jwt/create/"
+        data = {"email": self.email, "password": self.password}
+        response = self.client.post(self.get_api_url(url), data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertSetEqual(set(response.data), {"access", "refresh"})
+
+    def test_get_user(self) -> None:
+        """
+        Retrieve data of authenticated user
+        """
+        url = "/users/me/"
+        # This test actually covers authentication *and* user data retrieval.
+        # self.client.force_authenticate(user=self.user)
+        access_token = AccessToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"JWT {access_token}")
+        response = self.client.get(self.get_api_url(url))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertDictEqual(response.data, {"email": self.email, "id": self.user.id})
