@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
     "djoser",
+    "drf_spectacular",
     "memoorje",
 ]
 
@@ -135,8 +136,15 @@ AUTH_USER_MODEL = "memoorje.User"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Memoorje API",
+    "DESCRIPTION": "Sicherer, selbstverwalteter digitaler Nachlass für alle",
+    "VERSION": "0.0.1",
 }
