@@ -17,6 +17,14 @@ class BaseTestCase(APITestCase):
         return f"{self.base_url}{url}"
 
 
+class UserTestCase(BaseTestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("test@example.org", "test12345")
+
+    def authenticate_user(self):
+        self.client.force_authenticate(user=self.user)
+
+
 class DjoserBaseTestCase(BaseTestCase):
     base_url = "/api/auth"
 
@@ -65,7 +73,7 @@ class DjoserJWTTestCase(BaseTestCase):
         self.assertDictEqual(response.data, {"email": self.email, "id": self.user.id})
 
 
-class APITestCase(BaseTestCase):
+class APITestCase(UserTestCase):
     def test_create_capsule(self) -> None:
         """
         Create a capsule
@@ -73,3 +81,6 @@ class APITestCase(BaseTestCase):
         url = "/capsules/"
         response = self.client.post(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.authenticate_user()
+        response = self.client.post(self.get_api_url(url))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)

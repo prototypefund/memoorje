@@ -50,3 +50,4 @@ class User(AbstractUser):
 
 class Capsule(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    owner = models.ForeignKey("User", on_delete=models.CASCADE)

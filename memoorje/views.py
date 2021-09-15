@@ -1,13 +1,13 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 
 from memoorje.models import Capsule
 from memoorje.serializers import CapsuleSerializer
 
 
-class CapsuleViewSet(viewsets.ModelViewSet):
+class CapsuleViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
-    Create, list, show, update and delete the capsules for an authenticated user.
+    Create capsules for an authenticated user.
     """
 
     queryset = Capsule.objects.all()
