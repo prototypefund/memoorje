@@ -3,11 +3,9 @@ __pycache__/
 /data/*
 !/data/.gitkeep
 /db.sqlite3
-/schnipsel/local_settings.py
-/schnipsel/static/
 
 /dist/
-/schnipsel.egg-info/
+/memoorje.egg-info/
 /build/
 /.pybuild/
 /.tox/
@@ -15,9 +13,9 @@ __pycache__/
 /debian/*debhelper*
 /debian/*.substvars
 /debian/files
-/debian/python3-schnipsel/
-/debian/schnipsel/
-/debian/schnipsel-webapp/
+/debian/python3-memoorje/
+/debian/memoorje/
+/debian/memoorje-webapp/
 
 node_modules/
 app/dist/
