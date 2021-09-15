@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins
+from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from memoorje.models import Capsule
