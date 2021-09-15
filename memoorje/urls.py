@@ -16,9 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from rest_framework import routers
+
+from memoorje.views import CapsuleViewSet
+
+router = routers.SimpleRouter()
+router.register(r"capsules", CapsuleViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/", include(router.urls)),
     path("api/auth/", include("djoser.urls")),
     path("api/auth/", include("djoser.urls.jwt")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

@@ -63,3 +63,13 @@ class DjoserJWTTestCase(BaseTestCase):
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertDictEqual(response.data, {"email": self.email, "id": self.user.id})
+
+
+class APITestCase(BaseTestCase):
+    def test_create_capsule(self) -> None:
+        """
+        Create a capsule
+        """
+        url = "/capsules/"
+        response = self.client.post(self.get_api_url(url))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
