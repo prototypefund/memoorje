@@ -1,0 +1,16 @@
+include:
+  - project: 'kmohrf/gitlab-recipes'
+    ref: main
+    file: '/templates/python-lib.gitlab-ci.yml'
+
+variables:
+  DEBBUILD_IMAGE: git-registry.hack-hro.de:443/kmohrf/docker-recipes/debbuild-python:bullseye
+  DPKG_INSTALL_DISTRIBUTION: bullseye
+
+test::python:
+  extends: .run_tox
+  image: $IMAGE
+  parallel:
+    matrix:
+      - IMAGE:
+        - $DEBBUILD_PY_BULLSEYE
