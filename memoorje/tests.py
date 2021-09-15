@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import AccessToken
 
-from memoorje.models import User
+from memoorje.models import User, Capsule
 
 
 class BaseTestCase(APITestCase):
@@ -84,3 +84,5 @@ class APITestCase(UserTestCase):
         self.authenticate_user()
         response = self.client.post(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Capsule.objects.count(), 1)
+        self.assertEqual(Capsule.objects.get().owner, self.user)
