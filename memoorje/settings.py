@@ -156,4 +156,5 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Memoorje API",
     "DESCRIPTION": "Sicherer, selbstverwalteter digitaler Nachlass für alle",
     "VERSION": "0.0.1",
+    "POSTPROCESSING_HOOKS": ["drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields"],
 }
