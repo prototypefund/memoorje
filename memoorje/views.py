@@ -5,9 +5,9 @@ from memoorje.models import Capsule
 from memoorje.serializers import CapsuleSerializer
 
 
-class CapsuleViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class CapsuleViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
-    Create capsules for an authenticated user.
+    Capsule access for authenticated users.
     """
 
     queryset = Capsule.objects.all()
