@@ -29,6 +29,7 @@ setup(
         "djangorestframework-simplejwt~=4.8.0",
         "djoser~=2.1.0",
         "drf-spectacular~=0.18.2",
+        "djangorestframework-camel-case~=1.2.0",
     ],
     include_package_data=True,
     classifiers=[
