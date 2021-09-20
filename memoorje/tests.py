@@ -162,3 +162,14 @@ class CapsuleTestCase(CapsuleMixin, BaseTestCase):
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url, id=other_capsule.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class CapsuleContentTestCase(CapsuleMixin, BaseTestCase):
+    def test_retrieve_contents_without_capsule(self):
+        """
+        Retrieve capsule content list without a capsule given
+        """
+        url = "/capsule-contents/"
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

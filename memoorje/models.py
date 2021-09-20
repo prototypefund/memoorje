@@ -84,3 +84,7 @@ class Capsule(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
     description = models.TextField()
+
+
+class CapsuleContent(models.Model):
+    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
