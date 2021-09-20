@@ -23,17 +23,21 @@ async function memoorjeCrypto (method: string, input: Uint8Array, password: stri
 }
 
 async function encrypt (args: { password: string, plainText: Array<number> }) {
-  return Array.from(await new window.EncryptionV1().encrypt(args.password, Uint8Array.from(args.plainText)))
+  return Array.from(await new window.MemoorjeCrypto.EncryptionV1().encrypt(args.password, Uint8Array.from(args.plainText)))
 }
 
 async function decrypt (args: { password: string, data: Array<number> }) {
-  return Array.from(await new window.EncryptionV1().decrypt(args.password, Uint8Array.from(args.data)))
+  return Array.from(await new window.MemoorjeCrypto.EncryptionV1().decrypt(args.password, Uint8Array.from(args.data)))
+}
+
+async function loadTestEnv (page) {
+  await page.goto('tests/index.html')
+  await page.waitForFunction(() => typeof window.MemoorjeCrypto !== 'undefined')
 }
 
 test('Data encrypted in Python can be decrypted in browser', async ({ page }) => {
+  await loadTestEnv(page)
   const plainText = 'from Python to browser'
-  await page.goto('tests/index.html')
-  await page.waitForLoadState()
   const encryptedDataFromPython = await memoorjeCrypto('encrypt', encoder.encode(plainText))
   const decipheredDataFromBrowser = Uint8Array.from(
     await page.evaluate(decrypt, {password: PASSWORD, data: Array.from(encryptedDataFromPython)})
@@ -42,9 +46,8 @@ test('Data encrypted in Python can be decrypted in browser', async ({ page }) =>
 })
 
 test('Data encrypted in browser can be decrypted in Python', async ({ page }) => {
+  await loadTestEnv(page)
   const plainText = 'from browser to Python'
-  await page.goto('tests/index.html')
-  await page.waitForLoadState()
   const encryptedDataFromBrowser = Uint8Array.from(
     await page.evaluate(encrypt, {password: PASSWORD, plainText: Array.from(encoder.encode(plainText))})
   )
