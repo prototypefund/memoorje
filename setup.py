@@ -30,6 +30,7 @@ setup(
         "djangorestframework-simplejwt~=4.8.0",
         "djoser~=2.1.0",
         "drf-spectacular~=0.18.2",
+        "pycryptodome~=3.6",
     ],
     include_package_data=True,
     classifiers=[

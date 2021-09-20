@@ -18,3 +18,16 @@ test::python:
     matrix:
       - IMAGE:
         - $DEBBUILD_PY_BULLSEYE
+
+test::libjs-crypto:
+  image: mcr.microsoft.com/playwright:focal
+  rules:
+    - changes:
+        - memoorje/crypto/*
+        - libjs/crypto/**/*
+  before_script:
+    - apt update -y && apt install -y python3-pycryptodome
+    - cd libjs/crypto
+    - npm ci
+  script:
+    - npm run test -- --browser all
