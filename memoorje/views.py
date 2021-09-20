@@ -26,7 +26,7 @@ class CapsuleViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated & IsCapsuleOwner]
 
 
-class CapsuleContentViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class CapsuleContentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     Capsule content access for a given capsule
     """

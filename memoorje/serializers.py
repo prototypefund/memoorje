@@ -17,3 +17,7 @@ class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CapsuleContent
         fields = []
+
+    def create(self, validated_data):
+        capsule = self.context["request"].capsule
+        return CapsuleContent.objects.create(capsule=capsule, **validated_data)

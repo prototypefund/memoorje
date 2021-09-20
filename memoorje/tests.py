@@ -5,7 +5,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import AccessToken
 
-from memoorje.models import Capsule, User
+from memoorje.models import Capsule, CapsuleContent, User
 
 
 class BaseTestCase(APITestCase):
@@ -155,21 +155,35 @@ class CapsuleTestCase(CapsuleMixin, BaseTestCase):
         """
         Retrieve a capsule which does not belong to the logged in user
         """
-        url = "/capsules/{id}/"
+        url = "/capsules/{pk}/"
         other_capsule = self.create_capsule()
         self.create_user()
         self.create_capsule()
         self.authenticate_user()
-        response = self.client.get(self.get_api_url(url, id=other_capsule.id))
+        response = self.client.get(self.get_api_url(url, pk=other_capsule.pk))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class CapsuleContentTestCase(CapsuleMixin, BaseTestCase):
-    def test_retrieve_contents_without_capsule(self):
+    def test_access_contents_without_capsule(self):
         """
-        Retrieve capsule content list without a capsule given
+        Access capsule content list without a capsule given
         """
         url = "/capsule-contents/"
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.post(self.get_api_url(url))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_create_capsule_content(self):
+        """
+        Create a content for an existing capsule
+        """
+        url = "/capsule-contents/?capsule={pk}"
+        self.create_capsule()
+        self.authenticate_user()
+        response = self.client.post(self.get_api_url(url, pk=self.capsule.pk))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(CapsuleContent.objects.count(), 1)
+        self.assertEqual(CapsuleContent.objects.get().capsule, self.capsule)
