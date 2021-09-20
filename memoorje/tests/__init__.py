@@ -211,7 +211,7 @@ class EncryptionV1Test(unittest.TestCase):
             "Data encrypted by EncryptionV1 must also be decipherable by it.",
         )
 
-    def test_decrypted_previously_encrypted_data(self):
+    def test_previously_encrypted_data_can_be_decrypted(self):
         encryption = EncryptionV1()
         with open(os.path.join(FILES_DIR, "encrypted-v1.bin"), "rb") as encrypted_file:
             self.assertEqual(
