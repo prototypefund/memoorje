@@ -1,4 +1,5 @@
 import json
+import os
 import unittest
 
 from rest_framework import status
@@ -8,6 +9,9 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 from memoorje.crypto import EncryptionV1
 from memoorje.models import Capsule, CapsuleContent, User
+
+
+FILES_DIR = os.path.join(os.path.dirname(__file__), "files")
 
 
 class BaseTestCase(APITestCase):
@@ -206,3 +210,11 @@ class EncryptionV1Test(unittest.TestCase):
             EncryptionV1.decrypt(password, encrypted_data),
             "Data encrypted by EncryptionV1 must also be decipherable by it.",
         )
+
+    def test_decrypted_previously_encrypted_data(self):
+        encryption = EncryptionV1()
+        with open(os.path.join(FILES_DIR, "encrypted-v1.bin"), "rb") as encrypted_file:
+            self.assertEqual(
+                encryption.decrypt("abc123", encrypted_file.read()),
+                b"This has been encrypted upfront",
+            )
