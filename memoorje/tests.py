@@ -20,19 +20,26 @@ class BaseTestCase(APITestCase):
         return f"{self.base_url}{url.format(**kwargs)}"
 
 
-class UserTestCase(BaseTestCase):
+class UserMixin:
+    user: User
+    password: str
+    email: str
+
     def create_user(self):
+        self.email = f"test{User.objects.count()}@example.org"
+        self.password = "test12345"
+        self.user = User.objects.create_user(self.email, self.password)
+
+    def ensure_user_exists(self):
         if not hasattr(self, "user"):
-            self.email = "test@example.org"
-            self.password = "test12345"
-            self.user = User.objects.create_user(self.email, self.password)
+            self.create_user()
 
     def authenticate_user(self):
-        self.create_user()
+        self.ensure_user_exists()
         self.client.force_authenticate(user=self.user)
 
 
-class AuthenticationTestCase(UserTestCase):
+class UserTestCase(UserMixin, BaseTestCase):
     base_url = "/api/auth"
 
     def test_signup(self):
@@ -71,16 +78,31 @@ class AuthenticationTestCase(UserTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertDictEqual(response.data, {"email": self.email, "id": self.user.id})
 
-
-class CapsuleTestCase(UserTestCase):
-    def create_capsule(self) -> None:
+    def test_create_two_users(self) -> None:
+        """
+        Create more than one user
+        """
         self.create_user()
+        self.create_user()
+        self.assertEqual(User.objects.count(), 2)
+
+
+class CapsuleMixin(UserMixin):
+    capsule: Capsule
+    capsule_description: str
+    capsule_name: str
+
+    def create_capsule(self) -> Capsule:
+        self.ensure_user_exists()
         self.capsule_name = "test"
         self.capsule_description = "test"
         self.capsule = Capsule.objects.create(
             owner=self.user, name=self.capsule_name, description=self.capsule_description
         )
+        return self.capsule
 
+
+class CapsuleTestCase(CapsuleMixin, BaseTestCase):
     def test_create_capsule_unauthorized(self) -> None:
         """
         Create a capsule unauthorized
@@ -128,3 +150,15 @@ class CapsuleTestCase(UserTestCase):
                 "description": self.capsule_description,
             },
         )
+
+    def test_retrieve_others_capsule(self) -> None:
+        """
+        Retrieve a capsule which does not belong to the logged in user
+        """
+        url = "/capsules/{id}/"
+        other_capsule = self.create_capsule()
+        self.create_user()
+        self.create_capsule()
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url, id=other_capsule.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

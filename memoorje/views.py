@@ -2,6 +2,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from memoorje.models import Capsule
+from memoorje.permissions import IsCapsuleOwner
 from memoorje.serializers import CapsuleSerializer
 
 
@@ -12,4 +13,4 @@ class CapsuleViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewset
 
     queryset = Capsule.objects.all()
     serializer_class = CapsuleSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & IsCapsuleOwner]
