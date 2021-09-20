@@ -1,17 +1,11 @@
 import json
-import os
-import unittest
 
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import AccessToken
 
-from memoorje.crypto import EncryptionV1
 from memoorje.models import Capsule, CapsuleContent, User
-
-
-FILES_DIR = os.path.join(os.path.dirname(__file__), "files")
 
 
 class BaseTestCase(APITestCase):
@@ -193,28 +187,3 @@ class CapsuleContentTestCase(CapsuleMixin, BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(CapsuleContent.objects.count(), 1)
         self.assertEqual(CapsuleContent.objects.get().capsule, self.capsule)
-
-
-class EncryptionV1Test(unittest.TestCase):
-    def test_encrypted_data_can_be_decrypted(self):
-        data = b"my encrypted data"
-        password = "abc123"
-        encryption = EncryptionV1(iv_size_bytes=64)
-        encrypted_data = encryption.encrypt(password, data)
-        self.assertTrue(
-            EncryptionV1.does_handle_data_stream(encrypted_data),
-            "EncryptionV1 should handle its own encrypted data",
-        )
-        self.assertEqual(
-            data,
-            EncryptionV1.decrypt(password, encrypted_data),
-            "Data encrypted by EncryptionV1 must also be decipherable by it.",
-        )
-
-    def test_previously_encrypted_data_can_be_decrypted(self):
-        encryption = EncryptionV1()
-        with open(os.path.join(FILES_DIR, "encrypted-v1.bin"), "rb") as encrypted_file:
-            self.assertEqual(
-                encryption.decrypt("abc123", encrypted_file.read()),
-                b"This has been encrypted upfront",
-            )

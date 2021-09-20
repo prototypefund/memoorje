@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-from memoorje import crypto
+from memoorje_crypto import formats
 
 
 def _parse_args():
@@ -13,8 +13,8 @@ def _parse_args():
     def add_encryption_args(parser: argparse.ArgumentParser):
         parser.add_argument(
             "--encryption-format",
-            default=crypto.EncryptionV1.__name__,
-            choices={crypto.EncryptionV1.__name__},
+            default=formats.EncryptionV1.__name__,
+            choices={formats.EncryptionV1.__name__},
             help="The encryption format to use.",
         )
         parser.add_argument(
@@ -55,7 +55,7 @@ def _main(args):
             file=sys.stderr,
         )
         sys.exit(1)
-    encryption = getattr(crypto, args.encryption_format)()
+    encryption = getattr(formats, args.encryption_format)()
     processor = getattr(encryption, args.method)
     data = processor(args.password, args.input.read())
     args.output.write(data)

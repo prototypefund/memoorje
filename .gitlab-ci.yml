@@ -23,7 +23,7 @@ test::libjs-crypto:
   image: mcr.microsoft.com/playwright:focal
   rules:
     - changes:
-        - memoorje/crypto/*
+        - libpy/memoorje_crypto/**/*
         - libjs/crypto/**/*
   before_script:
     - apt update -y && apt install -y python3-pycryptodome

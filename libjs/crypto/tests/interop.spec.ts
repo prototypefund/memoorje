@@ -11,10 +11,10 @@ const decoder = new TextDecoder()
 
 async function memoorjeCrypto (method: string, input: Uint8Array, password: string = PASSWORD) {
   const { stdout } = spawnSync(
-    'python3', ['-m', 'memoorje.crypto', method, '--password', password],
+    'python3', ['-m', 'memoorje_crypto', method, '--password', password],
     {
       cwd: BASE_PATH,
-      env: {PYTHONPATH: '.'},
+      env: {PYTHONPATH: join(BASE_PATH, 'libpy', 'memoorje_crypto')},
       encoding: 'buffer',
       input
     }
