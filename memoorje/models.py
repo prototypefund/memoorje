@@ -85,6 +85,10 @@ class Capsule(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
 
+    def touch(self, timestamp=timezone.now()):
+        self.updated_on = timestamp
+        self.save()
+
 
 class CapsuleContent(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
