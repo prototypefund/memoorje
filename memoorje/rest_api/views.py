@@ -2,8 +2,8 @@ from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from memoorje.models import Capsule, CapsuleContent
-from memoorje.permissions import IsCapsuleOwner
-from memoorje.serializers import CapsuleContentSerializer, CapsuleSerializer
+from memoorje.rest_api.permissions import IsCapsuleOwner
+from memoorje.rest_api.serializers import CapsuleContentSerializer, CapsuleSerializer
 
 
 class CreateCapsuleViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):

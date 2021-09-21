@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "djoser",
     "drf_spectacular",
     "memoorje",
+    "memoorje.rest_api",
 ]
 
 MIDDLEWARE = [
