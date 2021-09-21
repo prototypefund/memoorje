@@ -6,4 +6,4 @@ class MemoorjeConfig(AppConfig):
 
     def ready(self):
         # noinspection PyUnresolvedReferences
-        from . import signals
+        from . import signals  # noqa: F401
