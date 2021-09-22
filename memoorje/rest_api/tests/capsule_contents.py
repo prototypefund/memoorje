@@ -17,7 +17,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         """
         Access capsule content list without a capsule given
         """
-        url = "/capsule-contents/"
+        url = "/capsule-contents"
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -28,7 +28,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         """
         Create a content for an existing capsule
         """
-        url = "/capsule-contents/?capsule={pk}"
+        url = "/capsule-contents?capsule={pk}"
         self.create_capsule()
         self.authenticate_user()
         response = self.client.post(self.get_api_url(url, pk=self.capsule.pk))
@@ -61,7 +61,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         """
         List the contents for a capsule.
         """
-        url = "/capsule-contents/?capsule={pk}"
+        url = "/capsule-contents?capsule={pk}"
         self.create_capsule()
         self.create_capsule_content()
         self.authenticate_user()

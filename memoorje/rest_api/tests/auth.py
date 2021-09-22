@@ -30,7 +30,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         """
         Create a new user account (signup)
         """
-        url = "/register/"
+        url = "/register"
         email = "test@example.org"
         password = "test12345"
         data = {"email": email, "password": password, "passwordConfirm": password}
@@ -43,7 +43,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         """
         Create a session cookie (login)
         """
-        url = "/login/"
+        url = "/login"
         self.create_user()
         data = {"login": self.email, "password": self.password}
         response = self.client.post(self.get_api_url(url), data)
@@ -53,7 +53,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         """
         Retrieve data of authenticated user
         """
-        url = "/profile/"
+        url = "/profile"
         self.create_user()
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
