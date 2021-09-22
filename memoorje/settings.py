@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     # https://stackoverflow.com/questions/64303246
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
-    "djoser",
     "drf_spectacular",
     "memoorje",
     "memoorje.rest_api",
