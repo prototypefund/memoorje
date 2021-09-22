@@ -10,6 +10,4 @@ class MemoorjeAPITestCase(APITestCase):
         :param url: an url fragment
         :return: the url fragment prepended with the base url
         """
-        base_url, *query = url.split("?")
-        base_url += "" + (("?" + "".join(query)) if query else "")
-        return f"{self.base_url}{base_url.format(**kwargs)}"
+        return f"{self.base_url}{url.format(**kwargs)}"
