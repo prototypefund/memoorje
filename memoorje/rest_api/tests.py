@@ -3,7 +3,6 @@ import json
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from rest_framework_simplejwt.tokens import AccessToken
 
 from memoorje.models import Capsule, CapsuleContent, User
 
@@ -46,9 +45,10 @@ class UserTestCase(UserMixin, BaseTestCase):
         """
         Create a new user account (signup)
         """
-        url = "/users/"
+        url = "/register/"
         email = "test@example.org"
-        data = {"email": email, "password": "test12345"}
+        password = "test12345"
+        data = {"email": email, "password": password, "passwordConfirm": password}
         response = self.client.post(self.get_api_url(url), data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 1)
@@ -56,24 +56,21 @@ class UserTestCase(UserMixin, BaseTestCase):
 
     def test_login(self) -> None:
         """
-        Obtain JSON Web Tokens (login)
+        Create a session cookie (login)
         """
-        url = "/jwt/create/"
+        url = "/login/"
         self.create_user()
-        data = {"email": self.email, "password": self.password}
+        data = {"login": self.email, "password": self.password}
         response = self.client.post(self.get_api_url(url), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertSetEqual(set(response.data), {"access", "refresh"})
 
     def test_retrieve_user(self) -> None:
         """
         Retrieve data of authenticated user
         """
-        url = "/users/me/"
+        url = "/profile/"
         self.create_user()
-        # This test actually covers authentication *and* user data retrieval.
-        access_token = AccessToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f"JWT {access_token}")
+        self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertDictEqual(response.data, {"email": self.email, "id": self.user.id})
@@ -109,7 +106,7 @@ class CapsuleTestCase(CapsuleMixin, BaseTestCase):
         """
         url = "/capsules/"
         response = self.client.post(self.get_api_url(url))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_create_capsule(self) -> None:
         """
@@ -129,7 +126,7 @@ class CapsuleTestCase(CapsuleMixin, BaseTestCase):
         url = "/capsules/{id}/"
         self.create_capsule()
         response = self.client.post(self.get_api_url(url, id=self.capsule.id))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_retrieve_capsule(self) -> None:
         """

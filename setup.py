@@ -27,7 +27,7 @@ setup(
         "django~=3.2.7",
         "djangorestframework~=3.12.1",
         "djangorestframework-camel-case~=1.2.0",
-        "djangorestframework-simplejwt~=4.8.0",
+        "django-rest-registration~=0.6.4",
         "drf-spectacular~=0.18.2",
         "memoorje_crypto",
     ],

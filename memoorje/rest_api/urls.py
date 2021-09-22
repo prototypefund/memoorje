@@ -10,4 +10,5 @@ router.register(r"capsule-contents", CapsuleContentViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("auth/", include("rest_registration.api.urls")),
 ]

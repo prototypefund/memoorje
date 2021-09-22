@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     # we can remove the following when using rest_framework 3.12.2 or higher, see:
     # https://stackoverflow.com/questions/64303246
     "rest_framework.authtoken",
-    "rest_framework_simplejwt",
+    "rest_registration",
     "drf_spectacular",
     "memoorje",
     "memoorje.rest_api",
@@ -135,7 +135,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "memoorje.User"
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_RENDERER_CLASSES": (
         "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
@@ -149,8 +148,10 @@ REST_FRAMEWORK = {
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
-SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ("JWT",),
+REST_REGISTRATION = {
+    "REGISTER_VERIFICATION_ENABLED": False,
+    "REGISTER_EMAIL_VERIFICATION_ENABLED": False,
+    "RESET_PASSWORD_VERIFICATION_ENABLED": False,
 }
 
 SPECTACULAR_SETTINGS = {
