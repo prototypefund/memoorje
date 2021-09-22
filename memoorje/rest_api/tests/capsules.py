@@ -83,3 +83,24 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url, pk=other_capsule.pk))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_capsule(self) -> None:
+        """
+        Update a capsule's name and description.
+        """
+        url = "/capsules/{pk}/"
+        new_name = "Changed name"
+        new_description = "Changed description"
+        self.create_capsule()
+        self.authenticate_user()
+        response = self.client.put(
+            self.get_api_url(url, pk=self.capsule.pk),
+            {
+                "name": new_name,
+                "description": new_description,
+            },
+        )
+        self.capsule.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(new_name, self.capsule.name)
+        self.assertEqual(new_description, self.capsule.description)

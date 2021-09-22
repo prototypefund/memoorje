@@ -16,7 +16,7 @@ class CreateCapsuleViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class CapsuleViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class CapsuleViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     Capsule access for authenticated users
     """
