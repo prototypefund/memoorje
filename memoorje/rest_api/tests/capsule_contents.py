@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import status
 
 from memoorje.models import CapsuleContent
@@ -54,3 +56,20 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         initial_updated_on = self.capsule.updated_on
         content.delete()
         self.assertGreater(self.capsule.updated_on, initial_updated_on)
+
+    def test_list_capsule_contents(self):
+        """
+        List the contents for a capsule.
+        """
+        url = "/capsule-contents/?capsule={pk}"
+        self.create_capsule()
+        self.create_capsule_content()
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url, pk=self.capsule.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual(
+            json.loads(response.content),
+            [
+                {},
+            ],
+        )
