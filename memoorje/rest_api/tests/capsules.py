@@ -28,7 +28,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         """
         Create a capsule unauthorized
         """
-        url = "/capsules"
+        url = "/capsules/"
         response = self.client.post(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -36,7 +36,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         """
         Create a capsule
         """
-        url = "/capsules"
+        url = "/capsules/"
         self.authenticate_user()
         response = self.client.post(self.get_api_url(url), data={"name": "test", "description": "test"})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -47,7 +47,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         """
         Retrieve a capsule unauthorized
         """
-        url = "/capsules/{id}"
+        url = "/capsules/{id}/"
         self.create_capsule()
         response = self.client.post(self.get_api_url(url, id=self.capsule.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -56,7 +56,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         """
         Retrieve a capsule
         """
-        url = "/capsules/{id}"
+        url = "/capsules/{id}/"
         self.create_capsule()
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url, id=self.capsule.id))
@@ -76,7 +76,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         """
         Retrieve a capsule which does not belong to the logged in user
         """
-        url = "/capsules/{pk}"
+        url = "/capsules/{pk}/"
         other_capsule = self.create_capsule()
         self.create_user()
         self.create_capsule()
@@ -88,7 +88,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         """
         Update a capsule's name and description.
         """
-        url = "/capsules/{pk}"
+        url = "/capsules/{pk}/"
         new_name = "Changed name"
         new_description = "Changed description"
         self.create_capsule()

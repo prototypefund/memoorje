@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 class MemoorjeAPITestCase(APITestCase):
     base_url = "/api"
 
-    def get_api_url(self, url: str, **kwargs):
+    def get_api_url(self, url, **kwargs):
         """
         Prepend the path to the full url for this test class.
         :param url: an url fragment
