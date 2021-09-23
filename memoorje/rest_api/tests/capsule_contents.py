@@ -1,3 +1,4 @@
+from base64 import b64encode
 import json
 
 from rest_framework import status
@@ -8,8 +9,11 @@ from memoorje.rest_api.tests.capsules import CapsuleMixin
 
 
 class CapsuleContentMixin(CapsuleMixin):
+    metadata: bytes
+
     def create_capsule_content(self):
-        return CapsuleContent.objects.create(capsule=self.capsule)
+        self.metadata = b"Just any arbitrary metadata (encrypted)"
+        return CapsuleContent.objects.create(capsule=self.capsule, metadata=self.metadata)
 
 
 class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
@@ -29,12 +33,20 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         Create a content for an existing capsule
         """
         url = "/capsule-contents/?capsule={pk}"
+        metadata = b"Capsule Content's Metadata"
         self.create_capsule()
         self.authenticate_user()
-        response = self.client.post(self.get_api_url(url, pk=self.capsule.pk))
+        response = self.client.post(
+            self.get_api_url(url, pk=self.capsule.pk),
+            {
+                "metadata": b64encode(metadata),
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(CapsuleContent.objects.count(), 1)
-        self.assertEqual(CapsuleContent.objects.get().capsule, self.capsule)
+        capsule_content = CapsuleContent.objects.get()
+        self.assertEqual(capsule_content.capsule, self.capsule)
+        self.assertEqual(capsule_content.metadata, metadata)
 
     def test_modify_capsule(self):
         """
@@ -70,6 +82,8 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         self.assertListEqual(
             json.loads(response.content),
             [
-                {},
+                {
+                    "metadata": b64encode(self.metadata).decode(),
+                },
             ],
         )
