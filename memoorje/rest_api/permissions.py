@@ -13,7 +13,7 @@ class IsCapsuleOwner(permissions.BasePermission):
     @staticmethod
     def get_capsule_from_request(request):
         try:
-            pk = request.GET.get("capsule")
+            pk = request.query_params.get("capsule")
             # we set request.capsule as a side effect
             request.capsule = Capsule.objects.get(pk=pk)
             return request.capsule
