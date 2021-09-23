@@ -1,7 +1,7 @@
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from rest_framework import routers
-from rest_registration.api.views import login, profile, register
+from rest_registration.api.views import login, logout, profile, register
 
 from memoorje.rest_api.views import CapsuleContentViewSet, CapsuleViewSet, CreateCapsuleViewSet
 
@@ -13,6 +13,7 @@ router.register(r"capsule-contents", CapsuleContentViewSet)
 urlpatterns = [
     path("", include(router.urls)),
     path("auth/login", login, name="login"),
+    path("auth/logout", logout, name="logout"),
     path("auth/profile", profile, name="profile"),
     path("auth/register", register, name="register"),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
