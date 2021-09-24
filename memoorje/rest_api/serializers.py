@@ -16,12 +16,9 @@ class CapsuleSerializer(serializers.HyperlinkedModelSerializer):
 class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CapsuleContent
-        fields = ["capsule", "metadata"]
+        fields = ["capsule", "metadata", "data"]
 
     def validate_capsule(self, value: Capsule) -> Capsule:
         if value.owner != self.context["request"].user:
             raise serializers.ValidationError("You may not access capsule's content")
         return value
-
-    def create(self, validated_data):
-        return CapsuleContent.objects.create(**validated_data)

@@ -93,3 +93,4 @@ class Capsule(models.Model):
 class CapsuleContent(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
     metadata = models.BinaryField(editable=True)
+    data = models.FileField()
