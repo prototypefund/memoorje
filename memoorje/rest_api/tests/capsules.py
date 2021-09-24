@@ -13,6 +13,14 @@ class CapsuleMixin(UserMixin):
     capsule_description: str
     capsule_name: str
 
+    def get_capsule_url(self, capsule=None, response=None):
+        if capsule is None:
+            capsule = self.capsule
+        request = None
+        if response is not None:
+            request = response.wsgi_request
+        return reverse("capsule-detail", args=[capsule.pk], request=request)
+
     def create_capsule(self) -> Capsule:
         self.ensure_user_exists()
         self.capsule_name = "test"
@@ -64,7 +72,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         self.assertDictEqual(
             json.loads(response.content),
             {
-                "url": reverse("capsule-detail", args=[self.capsule.pk], request=response.wsgi_request),
+                "url": self.get_capsule_url(response=response),
                 "createdOn": self.capsule.created_on.isoformat()[:-6] + "Z",
                 "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
                 "name": self.capsule_name,

@@ -30,13 +30,6 @@ class CapsuleContentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, view
     serializer_class = CapsuleContentSerializer
     permission_classes = [IsAuthenticated & IsCapsuleOwner]
 
-    @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                name="capsule", description="`id` of the capsule to which the content belongs", required=True, type=str
-            )
-        ]
-    )
     def create(self, request, *args, **kwargs):
         """
         Create a content object for a given capsule.

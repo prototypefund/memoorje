@@ -11,7 +11,7 @@ class IsCapsuleOwner(permissions.BasePermission):
         return None
 
     @staticmethod
-    def get_capsule_from_request(request):
+    def get_capsule_from_query_params(request):
         try:
             pk = request.query_params.get("capsule")
             # we set request.capsule as a side effect
@@ -28,8 +28,8 @@ class IsCapsuleOwner(permissions.BasePermission):
             return False
 
     def has_permission(self, request, view):
-        if view.action in ["create", "list"]:
-            capsule = self.get_capsule_from_request(request)
+        if view.action == "list":
+            capsule = self.get_capsule_from_query_params(request)
             return self.has_capsule_permission(request, capsule)
         else:
             return super().has_permission(request, view)

@@ -25,20 +25,19 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.post(self.get_api_url(url))
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_create_capsule_content(self):
         """
         Create a content for an existing capsule
         """
-        url = "/capsule-contents/?capsule={pk}"
+        url = "/capsule-contents/"
         metadata = b"Capsule Content's Metadata"
         self.create_capsule()
         self.authenticate_user()
         response = self.client.post(
-            self.get_api_url(url, pk=self.capsule.pk),
+            self.get_api_url(url),
             {
+                "capsule": self.get_capsule_url(),
                 "metadata": b64encode(metadata),
             },
         )
@@ -47,6 +46,23 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         capsule_content = CapsuleContent.objects.get()
         self.assertEqual(capsule_content.capsule, self.capsule)
         self.assertEqual(capsule_content.metadata, metadata)
+
+    def test_create_capsule_content_unauthorized(self):
+        """
+        Create a content for a capsule belonging to another user.
+        """
+        url = "/capsule-contents/"
+        self.create_capsule()
+        self.create_user()
+        self.authenticate_user()
+        response = self.client.post(
+            self.get_api_url(url),
+            {
+                "capsule": self.get_capsule_url(),
+                "metadata": b64encode(b"test"),
+            },
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_modify_capsule(self):
         """
@@ -83,6 +99,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
+                    "capsule": self.get_capsule_url(response=response),
                     "metadata": b64encode(self.metadata).decode(),
                 },
             ],
