@@ -83,7 +83,7 @@ class Capsule(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
 
     def touch(self, timestamp=timezone.now()):
         self.updated_on = timestamp
