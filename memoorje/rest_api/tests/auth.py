@@ -2,25 +2,7 @@ from rest_framework import status
 
 from memoorje.models import User
 from memoorje.rest_api.tests.memoorje import MemoorjeAPITestCase
-
-
-class UserMixin:
-    user: User
-    password: str
-    email: str
-
-    def create_user(self):
-        self.email = f"test{User.objects.count()}@example.org"
-        self.password = "test12345"
-        self.user = User.objects.create_user(self.email, self.password)
-
-    def ensure_user_exists(self):
-        if not hasattr(self, "user"):
-            self.create_user()
-
-    def authenticate_user(self):
-        self.ensure_user_exists()
-        self.client.force_authenticate(user=self.user)
+from memoorje.tests import UserMixin
 
 
 class UserTestCase(UserMixin, MemoorjeAPITestCase):

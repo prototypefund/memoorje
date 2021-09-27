@@ -1,38 +1,10 @@
 import json
 
 from rest_framework import status
-from rest_framework.reverse import reverse
 
 from memoorje.models import Capsule
 from memoorje.rest_api.tests import MemoorjeAPITestCase
-from memoorje.rest_api.tests.auth import UserMixin
-
-
-class CapsuleMixin(UserMixin):
-    capsule: Capsule
-    capsule_description: str
-    capsule_name: str
-
-    def get_capsule_url(self, capsule=None, response=None):
-        if capsule is None:
-            capsule = self.capsule
-        request = None
-        if response is not None:
-            request = response.wsgi_request
-        return reverse("capsule-detail", args=[capsule.pk], request=request)
-
-    def create_capsule(self) -> Capsule:
-        self.ensure_user_exists()
-        self.capsule_name = "test"
-        self.capsule_description = "test"
-        self.capsule = Capsule.objects.create(
-            owner=self.user, name=self.capsule_name, description=self.capsule_description
-        )
-        return self.capsule
-
-    def ensure_capsule_exists(self):
-        if not hasattr(self, "capsule"):
-            self.create_capsule()
+from memoorje.tests import CapsuleMixin
 
 
 class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):

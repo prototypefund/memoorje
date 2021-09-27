@@ -1,36 +1,12 @@
 from base64 import b64encode
-from contextlib import contextmanager
 import json
-from tempfile import TemporaryFile
 
 from rest_framework import status
 from rest_framework.reverse import reverse
 
 from memoorje.models import CapsuleContent
 from memoorje.rest_api.tests import MemoorjeAPITestCase
-from memoorje.rest_api.tests.capsules import CapsuleMixin
-
-
-@contextmanager
-def test_data_file(data):
-    with TemporaryFile() as f:
-        f.write(data)
-        f.seek(0)
-        yield f
-
-
-class CapsuleContentMixin(CapsuleMixin):
-    capsule_content: CapsuleContent
-    data: bytes
-    metadata: bytes
-
-    def create_capsule_content(self):
-        self.ensure_capsule_exists()
-        self.metadata = b"Just any arbitrary metadata (encrypted)"
-        self.data = b"Some encrypted data"
-        self.capsule_content = CapsuleContent.objects.create(capsule=self.capsule, metadata=self.metadata)
-        with test_data_file(self.data) as f:
-            self.capsule_content.data.save("testfile", f)
+from memoorje.tests import CapsuleContentMixin, test_data_file
 
 
 class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
@@ -135,13 +111,3 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
                 },
             ],
         )
-
-    def test_download_data(self):
-        """
-        Download the file for a capsule content.
-        """
-        self.create_capsule_content()
-        url = reverse("capsule-content-data", args=[self.capsule_content.pk])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(b"".join(response.streaming_content), self.data)
