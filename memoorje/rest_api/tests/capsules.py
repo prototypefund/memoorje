@@ -30,6 +30,10 @@ class CapsuleMixin(UserMixin):
         )
         return self.capsule
 
+    def ensure_capsule_exists(self):
+        if not hasattr(self, "capsule"):
+            self.create_capsule()
+
 
 class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
     def test_create_capsule_unauthorized(self) -> None:
