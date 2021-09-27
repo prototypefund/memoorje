@@ -38,9 +38,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    # we can remove the following when using rest_framework 3.12.2 or higher, see:
-    # https://stackoverflow.com/questions/64303246
-    "rest_framework.authtoken",
     "rest_registration",
     "drf_spectacular",
     "memoorje",
