@@ -1,5 +1,6 @@
 from base64 import b64encode
 import json
+import os
 
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -111,3 +112,16 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
                 },
             ],
         )
+
+    def test_delete_capsule_content(self):
+        """
+        Delete a capsule content.
+        """
+        url = "/capsule-contents/{pk}/"
+        self.create_capsule_content()
+        self.authenticate_user()
+        file_path = self.capsule_content.data.path
+        response = self.client.delete(self.get_api_url(url, pk=self.capsule_content.pk))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(CapsuleContent.objects.exists())
+        self.assertFalse(os.path.isfile(file_path))

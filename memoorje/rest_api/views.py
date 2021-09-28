@@ -25,16 +25,16 @@ class CapsuleViewSet(
         return [permission() for permission in permission_classes]
 
 
-class CapsuleContentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class CapsuleContentViewSet(
+    mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+):
+    """
+    Capsule content access for authenticated users
+    """
+
     queryset = CapsuleContent.objects.all()
     serializer_class = CapsuleContentSerializer
     permission_classes = [IsAuthenticated & IsCapsuleOwner]
-
-    def create(self, request, *args, **kwargs):
-        """
-        Create a content object for a given capsule.
-        """
-        return super().create(request, *args, **kwargs)
 
     @extend_schema(
         parameters=[

@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from memoorje.models import Capsule
+from memoorje.models import Capsule, CapsuleContent
 
 
 class IsCapsuleOwner(permissions.BasePermission):
@@ -8,6 +8,8 @@ class IsCapsuleOwner(permissions.BasePermission):
     def get_capsule_from_object(obj):
         if isinstance(obj, Capsule):
             return obj
+        elif isinstance(obj, CapsuleContent):
+            return obj.capsule
         return None
 
     @staticmethod
