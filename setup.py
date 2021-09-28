@@ -28,6 +28,7 @@ setup(
         "djangorestframework~=3.12.1",
         "djangorestframework-camel-case~=1.2.0",
         "django-downloadview~=2.1.1",
+        "django-filter~=2.4.0",
         "django-rest-registration~=0.6.4",
         "drf-spectacular~=0.18.2",
         "memoorje_crypto",

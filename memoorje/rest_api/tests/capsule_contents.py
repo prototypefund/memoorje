@@ -18,7 +18,8 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         url = "/capsule-contents/"
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual(response.data, [])
 
     def test_create_capsule_content(self):
         """
@@ -52,6 +53,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         """
 
         def request(request_url, request_body):
+            request_body["data"].seek(0)
             return self.client.post(self.get_api_url(request_url), request_body, format="multipart")
 
         url = "/capsule-contents/"
