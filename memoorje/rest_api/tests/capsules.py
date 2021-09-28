@@ -110,3 +110,14 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
                 },
             ],
         )
+
+    def test_delete_capsule(self):
+        """
+        Delete a capsule.
+        """
+        url = "/capsules/{pk}/"
+        self.create_capsule()
+        self.authenticate_user()
+        response = self.client.delete(self.get_api_url(url, pk=self.capsule.pk))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Capsule.objects.exists())

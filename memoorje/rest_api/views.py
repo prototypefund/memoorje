@@ -7,13 +7,7 @@ from memoorje.rest_api.permissions import IsCapsuleOwner
 from memoorje.rest_api.serializers import CapsuleContentSerializer, CapsuleSerializer
 
 
-class CapsuleViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    viewsets.GenericViewSet,
-):
+class CapsuleViewSet(viewsets.ModelViewSet):
     """
     Capsule access for authenticated users
     """
