@@ -32,9 +32,11 @@ class CapsuleContentViewSet(
     Capsule content access for authenticated users
     """
 
-    queryset = CapsuleContent.objects.all()
     serializer_class = CapsuleContentSerializer
     permission_classes = [IsAuthenticated & IsCapsuleOwner]
+
+    def get_queryset(self):
+        return CapsuleContent.objects.filter(capsule__owner=self.request.user)
 
     @extend_schema(
         parameters=[

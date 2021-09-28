@@ -6,7 +6,7 @@ from memoorje.rest_api.views import CapsuleContentViewSet, CapsuleViewSet
 
 router = routers.SimpleRouter()
 router.register(r"capsules", CapsuleViewSet, basename="capsule")
-router.register(r"capsule-contents", CapsuleContentViewSet)
+router.register(r"capsule-contents", CapsuleContentViewSet, basename="capsule-content")
 
 urlpatterns = [
     path("", include(router.urls)),
