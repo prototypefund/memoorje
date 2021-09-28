@@ -8,21 +8,27 @@ from memoorje.rest_api.serializers import CapsuleContentSerializer, CapsuleSeria
 
 
 class CapsuleViewSet(
-    mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
 ):
     """
     Capsule access for authenticated users
     """
 
-    queryset = Capsule.objects.all()
     serializer_class = CapsuleSerializer
 
     def get_permissions(self):
-        if self.action == "create":
+        if self.action in ["create", "list"]:
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAuthenticated & IsCapsuleOwner]
         return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        return Capsule.objects.filter(owner=self.request.user)
 
 
 class CapsuleContentViewSet(

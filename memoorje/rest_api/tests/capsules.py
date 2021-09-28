@@ -66,7 +66,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         self.create_capsule()
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url, pk=other_capsule.pk))
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_capsule(self) -> None:
         """
@@ -88,3 +88,25 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(new_name, self.capsule.name)
         self.assertEqual(new_description, self.capsule.description)
+
+    def test_list_capsules(self):
+        """
+        List a user's capsules.
+        """
+        url = "/capsules/"
+        self.create_capsule()
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual(
+            json.loads(response.content),
+            [
+                {
+                    "url": self.get_capsule_url(response=response),
+                    "createdOn": self.capsule.created_on.isoformat()[:-6] + "Z",
+                    "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
+                    "name": self.capsule_name,
+                    "description": self.capsule_description,
+                },
+            ],
+        )
