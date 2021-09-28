@@ -51,7 +51,14 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertDictEqual(response.data, {"email": self.email, "id": self.user.id})
+        self.assertDictEqual(
+            response.data,
+            {
+                "email": self.email,
+                "id": self.user.id,
+                "name": self.user.name,
+            },
+        )
 
     def test_create_two_users(self) -> None:
         """

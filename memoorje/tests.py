@@ -24,7 +24,7 @@ class UserMixin:
     def create_user(self):
         self.email = f"test{User.objects.count()}@example.org"
         self.password = "test12345"
-        self.user = User.objects.create_user(self.email, self.password)
+        self.user = User.objects.create_user(self.email, self.password, name="Test Name")
 
     def ensure_user_exists(self):
         if not hasattr(self, "user"):
