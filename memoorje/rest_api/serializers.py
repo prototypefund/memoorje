@@ -19,12 +19,16 @@ class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
         model = CapsuleContent
         fields = ["capsule", "metadata", "data"]
 
+    def get_capsule_queryset(self):
+        user = self.context["request"].user
+        return Capsule.objects.filter(owner=user)
+
+    def get_extra_kwargs(self):
+        kwargs = super().get_extra_kwargs()
+        kwargs["capsule"] = {"queryset": self.get_capsule_queryset()}
+        return kwargs
+
     def to_representation(self, instance):
         result = super().to_representation(instance)
         result["data"] = reverse("capsule-content-data", args=[instance.pk], request=self.context["request"])
         return result
-
-    def validate_capsule(self, value: Capsule) -> Capsule:
-        if value.owner != self.context["request"].user:
-            raise serializers.ValidationError("You may not access capsule's content")
-        return value
