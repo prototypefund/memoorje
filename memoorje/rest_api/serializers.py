@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+from memoorje import get_authenticated_user
 from memoorje.models import Capsule, CapsuleContent
 
 
@@ -10,8 +11,7 @@ class CapsuleSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["url", "name", "description", "created_on", "updated_on"]
 
     def create(self, validated_data):
-        user = self.context["request"].user
-        return Capsule.objects.create(owner=user, **validated_data)
+        return Capsule.objects.create(owner=get_authenticated_user(self.context.get("request")), **validated_data)
 
 
 class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,8 +20,7 @@ class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["capsule", "metadata", "data"]
 
     def get_capsule_queryset(self):
-        user = self.context["request"].user
-        return Capsule.objects.filter(owner=user)
+        return Capsule.objects.filter(owner=get_authenticated_user(self.context.get("request")))
 
     def get_extra_kwargs(self):
         kwargs = super().get_extra_kwargs()
