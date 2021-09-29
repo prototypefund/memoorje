@@ -8,7 +8,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from memoorje.data import CapsuleDataField
+from memoorje.data_storage.fields import CapsuleDataField
 
 
 class UserManager(BaseUserManager):

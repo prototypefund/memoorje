@@ -1,15 +1,13 @@
 from contextlib import contextmanager
 from tempfile import TemporaryFile
 
-from django.test import TestCase
-from rest_framework import status
 from rest_framework.reverse import reverse
 
 from memoorje.models import Capsule, CapsuleContent, User
 
 
 @contextmanager
-def test_data_file(data):
+def create_test_data_file(data):
     with TemporaryFile() as f:
         f.write(data)
         f.seek(0)
@@ -75,29 +73,5 @@ class CapsuleContentMixin(CapsuleMixin):
         self.metadata = b"Just any arbitrary metadata (encrypted)"
         self.data = b"Some encrypted data"
         self.capsule_content = CapsuleContent.objects.create(capsule=self.capsule, metadata=self.metadata)
-        with test_data_file(self.data) as f:
+        with create_test_data_file(self.data) as f:
             self.capsule_content.data.save("testfile", f)
-
-
-class CapsuleContentTestCase(CapsuleContentMixin, TestCase):
-    def test_download_data(self):
-        """
-        Download the file for a capsule content.
-        """
-        self.create_capsule_content()
-        url = self.capsule_content.data.url
-        self.authenticate_user()
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(b"".join(response.streaming_content), self.data)
-
-    def test_download_data_unauthorized(self):
-        """
-        Try to download the file for a capsule content belonging to another user.
-        """
-        self.create_capsule_content()
-        url = self.capsule_content.data.url
-        self.create_user()
-        self.authenticate_user()
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

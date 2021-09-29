@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_spectacular",
     "memoorje",
+    "memoorje.data_storage",
     "memoorje.rest_api",
 ]
 

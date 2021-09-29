@@ -6,7 +6,7 @@ from rest_framework import status
 
 from memoorje.models import CapsuleContent
 from memoorje.rest_api.tests import MemoorjeAPITestCase
-from memoorje.tests import CapsuleContentMixin, test_data_file
+from memoorje.tests import CapsuleContentMixin, create_test_data_file
 
 
 class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
@@ -29,7 +29,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         data = b"Capsule Content's File Data"
         self.create_capsule()
         self.authenticate_user()
-        with test_data_file(data) as data_file:
+        with create_test_data_file(data) as data_file:
             response = self.client.post(
                 self.get_api_url(url),
                 {
@@ -57,7 +57,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
 
         url = "/capsule-contents/"
         self.create_capsule()
-        with test_data_file(b"test") as data_file:
+        with create_test_data_file(b"test") as data_file:
             request_data = {
                 "capsule": self.get_capsule_url(),
                 "metadata": b64encode(b"test").decode(),

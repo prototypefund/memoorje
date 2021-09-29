@@ -5,5 +5,6 @@ class MemoorjeConfig(AppConfig):
     name = "memoorje"
 
     def ready(self):
-        # noinspection PyUnresolvedReferences
-        from . import signals  # noqa: F401
+        from django.utils.module_loading import autodiscover_modules
+
+        autodiscover_modules("signals")
