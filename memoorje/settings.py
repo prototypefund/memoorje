@@ -125,7 +125,6 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-MEDIA_ROOT = "media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -166,3 +165,5 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "0.0.1",
     "POSTPROCESSING_HOOKS": ["drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields"],
 }
+
+CAPSULE_DATA_DIR = "media/data/"

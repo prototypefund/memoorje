@@ -4,7 +4,7 @@ from django_downloadview import ObjectDownloadView
 from memoorje.models import CapsuleContent
 
 
-class CapsuleContentDataDownloadView(UserPassesTestMixin, ObjectDownloadView):
+class CapsuleDataDownloadView(UserPassesTestMixin, ObjectDownloadView):
     model = CapsuleContent
     file_field = "data"
     raise_exception = True

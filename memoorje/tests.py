@@ -85,7 +85,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, TestCase):
         Download the file for a capsule content.
         """
         self.create_capsule_content()
-        url = reverse("capsule-content-data", args=[self.capsule_content.pk])
+        url = self.capsule_content.data.url
         self.authenticate_user()
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -96,7 +96,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, TestCase):
         Try to download the file for a capsule content belonging to another user.
         """
         self.create_capsule_content()
-        url = reverse("capsule-content-data", args=[self.capsule_content.pk])
+        url = self.capsule_content.data.url
         self.create_user()
         self.authenticate_user()
         response = self.client.get(url)

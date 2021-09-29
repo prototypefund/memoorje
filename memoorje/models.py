@@ -8,6 +8,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from memoorje.data import CapsuleDataField
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -93,4 +95,4 @@ class Capsule(models.Model):
 class CapsuleContent(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
     metadata = models.BinaryField(editable=True)
-    data = models.FileField()
+    data = CapsuleDataField()

@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.reverse import reverse
 
 from memoorje import get_authenticated_user
 from memoorje.models import Capsule, CapsuleContent
@@ -26,8 +25,3 @@ class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
         kwargs = super().get_extra_kwargs()
         kwargs["capsule"] = {"queryset": self.get_capsule_queryset()}
         return kwargs
-
-    def to_representation(self, instance):
-        result = super().to_representation(instance)
-        result["data"] = reverse("capsule-content-data", args=[instance.pk], request=self.context["request"])
-        return result

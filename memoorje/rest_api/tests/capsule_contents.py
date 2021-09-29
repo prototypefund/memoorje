@@ -3,7 +3,6 @@ import json
 import os
 
 from rest_framework import status
-from rest_framework.reverse import reverse
 
 from memoorje.models import CapsuleContent
 from memoorje.rest_api.tests import MemoorjeAPITestCase
@@ -108,9 +107,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
                 {
                     "capsule": self.get_capsule_url(response=response),
                     "metadata": b64encode(self.metadata).decode(),
-                    "data": reverse(
-                        "capsule-content-data", args=[self.capsule_content.pk], request=response.wsgi_request
-                    ),
+                    "data": response.wsgi_request.build_absolute_uri(self.capsule_content.data.url),
                 },
             ],
         )

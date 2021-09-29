@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.urls import include, path
 
-from memoorje.views import CapsuleContentDataDownloadView
+from memoorje.views import CapsuleDataDownloadView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("memoorje.rest_api.urls")),
-    path("data/<int:pk>/", CapsuleContentDataDownloadView.as_view(), name="capsule-content-data"),
+    path("data/<int:pk>/", CapsuleDataDownloadView.as_view(), name="capsule-data"),
 ]
