@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from memoorje import get_authenticated_user
 from memoorje.models import Capsule, CapsuleContent
+from memoorje.rest_api.fields import BinaryField
 
 
 class CapsuleSerializer(serializers.HyperlinkedModelSerializer):
@@ -14,6 +15,8 @@ class CapsuleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
+    metadata = BinaryField()
+
     class Meta:
         model = CapsuleContent
         fields = ["capsule", "metadata", "data"]

@@ -30,21 +30,22 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         self.create_capsule()
         self.authenticate_user()
         with create_test_data_file(data) as data_file:
-            response = self.client.post(
-                self.get_api_url(url),
-                {
-                    "capsule": self.get_capsule_url(),
-                    "metadata": b64encode(metadata).decode(),
-                    "data": data_file,
-                },
-                format="multipart",
-            )
-            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            self.assertEqual(CapsuleContent.objects.count(), 1)
-            capsule_content = CapsuleContent.objects.get()
-            self.assertEqual(capsule_content.capsule, self.capsule)
-            self.assertEqual(capsule_content.metadata, metadata)
-            self.assertEqual(capsule_content.data.read(), data)
+            with create_test_data_file(metadata) as metadata_file:
+                response = self.client.post(
+                    self.get_api_url(url),
+                    {
+                        "capsule": self.get_capsule_url(),
+                        "metadata": metadata_file,
+                        "data": data_file,
+                    },
+                    format="multipart",
+                )
+                self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                self.assertEqual(CapsuleContent.objects.count(), 1)
+                capsule_content = CapsuleContent.objects.get()
+                self.assertEqual(capsule_content.capsule, self.capsule)
+                self.assertEqual(capsule_content.metadata, metadata)
+                self.assertEqual(capsule_content.data.read(), data)
 
     def test_create_capsule_content_unauthorized(self):
         """
@@ -52,24 +53,26 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         """
 
         def request(request_url, request_body):
+            request_body["metadata"].seek(0)
             request_body["data"].seek(0)
             return self.client.post(self.get_api_url(request_url), request_body, format="multipart")
 
         url = "/capsule-contents/"
         self.create_capsule()
         with create_test_data_file(b"test") as data_file:
-            request_data = {
-                "capsule": self.get_capsule_url(),
-                "metadata": b64encode(b"test").decode(),
-                "data": data_file,
-            }
-            self.authenticate_user()
-            response = request(url, request_data)
-            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            self.create_user()
-            self.authenticate_user()
-            response = request(url, request_data)
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            with create_test_data_file(b"test") as metadata_file:
+                request_data = {
+                    "capsule": self.get_capsule_url(),
+                    "metadata": metadata_file,
+                    "data": data_file,
+                }
+                self.authenticate_user()
+                response = request(url, request_data)
+                self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                self.create_user()
+                self.authenticate_user()
+                response = request(url, request_data)
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_modify_capsule(self):
         """
