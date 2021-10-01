@@ -3,6 +3,7 @@ import json
 import os
 
 from rest_framework import status
+from rest_framework.reverse import reverse
 
 from memoorje.models import CapsuleContent
 from memoorje.rest_api.tests import MemoorjeAPITestCase
@@ -108,6 +109,9 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
+                    "url": reverse(
+                        "capsulecontent-detail", args=[self.capsule_content.pk], request=response.wsgi_request
+                    ),
                     "capsule": self.get_capsule_url(response=response),
                     "metadata": b64encode(self.metadata).decode(),
                     "data": response.wsgi_request.build_absolute_uri(self.capsule_content.data.url),
@@ -127,3 +131,23 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(CapsuleContent.objects.exists())
         self.assertFalse(os.path.isfile(file_path))
+
+    def test_update_capsule_content_metadata(self):
+        """
+        Update the metadata field of a capsule content.
+        """
+        url = "/capsule-contents/{pk}/"
+        metadata = b"Some test metadata (updated)"
+        self.create_capsule_content()
+        self.authenticate_user()
+        with create_test_data_file(metadata) as metadata_file:
+            response = self.client.patch(
+                self.get_api_url(url, pk=self.capsule_content.pk),
+                {
+                    "metadata": metadata_file,
+                },
+                format="multipart",
+            )
+            self.capsule_content.refresh_from_db()
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(self.capsule_content.metadata, metadata)

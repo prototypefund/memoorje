@@ -1,4 +1,4 @@
-from rest_framework import mixins, viewsets
+from rest_framework import viewsets
 
 from memoorje import get_authenticated_user
 from memoorje.models import Capsule, CapsuleContent
@@ -16,9 +16,7 @@ class CapsuleViewSet(viewsets.ModelViewSet):
         return Capsule.objects.filter(owner=get_authenticated_user(self.request))
 
 
-class CapsuleContentViewSet(
-    mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
-):
+class CapsuleContentViewSet(viewsets.ModelViewSet):
     """
     Capsule content access for authenticated users
     """

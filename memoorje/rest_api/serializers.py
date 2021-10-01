@@ -19,7 +19,7 @@ class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = CapsuleContent
-        fields = ["capsule", "metadata", "data"]
+        fields = ["url", "capsule", "metadata", "data"]
 
     def get_capsule_queryset(self):
         return Capsule.objects.filter(owner=get_authenticated_user(self.context.get("request")))
