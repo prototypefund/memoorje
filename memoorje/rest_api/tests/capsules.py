@@ -48,11 +48,12 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         self.assertDictEqual(
             json.loads(response.content),
             {
-                "url": self.get_capsule_url(response=response),
                 "createdOn": self.capsule.created_on.isoformat()[:-6] + "Z",
-                "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
-                "name": self.capsule_name,
                 "description": self.capsule_description,
+                "id": str(self.capsule.id),
+                "name": self.capsule_name,
+                "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
+                "url": self.get_capsule_url(response=response),
             },
         )
 
@@ -102,11 +103,12 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
-                    "url": self.get_capsule_url(response=response),
                     "createdOn": self.capsule.created_on.isoformat()[:-6] + "Z",
-                    "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
-                    "name": self.capsule_name,
                     "description": self.capsule_description,
+                    "id": str(self.capsule.id),
+                    "name": self.capsule_name,
+                    "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
+                    "url": self.get_capsule_url(response=response),
                 },
             ],
         )

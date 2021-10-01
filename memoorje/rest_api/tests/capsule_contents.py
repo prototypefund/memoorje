@@ -109,12 +109,13 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
+                    "capsule": self.get_capsule_url(response=response),
+                    "data": response.wsgi_request.build_absolute_uri(self.capsule_content.data.url),
+                    "id": self.capsule_content.id,
+                    "metadata": b64encode(self.metadata).decode(),
                     "url": reverse(
                         "capsulecontent-detail", args=[self.capsule_content.pk], request=response.wsgi_request
                     ),
-                    "capsule": self.get_capsule_url(response=response),
-                    "metadata": b64encode(self.metadata).decode(),
-                    "data": response.wsgi_request.build_absolute_uri(self.capsule_content.data.url),
                 },
             ],
         )

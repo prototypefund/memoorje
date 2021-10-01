@@ -8,7 +8,7 @@ from memoorje.rest_api.fields import BinaryField
 class CapsuleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Capsule
-        fields = ["url", "name", "description", "created_on", "updated_on"]
+        fields = ["created_on", "description", "id", "name", "updated_on", "url"]
 
     def create(self, validated_data):
         return Capsule.objects.create(owner=get_authenticated_user(self.context.get("request")), **validated_data)
@@ -19,7 +19,7 @@ class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = CapsuleContent
-        fields = ["url", "capsule", "metadata", "data"]
+        fields = ["capsule", "data", "id", "metadata", "url"]
 
     def get_capsule_queryset(self):
         return Capsule.objects.filter(owner=get_authenticated_user(self.context.get("request")))
@@ -33,7 +33,7 @@ class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
 class CapsuleReceiverSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CapsuleReceiver
-        fields = ["url", "capsule", "email"]
+        fields = ["capsule", "email", "id", "url"]
 
     def get_capsule_queryset(self):
         return Capsule.objects.filter(owner=get_authenticated_user(self.context.get("request")))

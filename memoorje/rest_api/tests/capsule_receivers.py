@@ -75,11 +75,12 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
+                    "capsule": self.get_capsule_url(response=response),
+                    "email": self.receiver_email,
+                    "id": self.capsule_receiver.id,
                     "url": reverse(
                         "capsulereceiver-detail", args=[self.capsule_receiver.pk], request=response.wsgi_request
                     ),
-                    "capsule": self.get_capsule_url(response=response),
-                    "email": self.receiver_email,
                 },
             ],
         )
