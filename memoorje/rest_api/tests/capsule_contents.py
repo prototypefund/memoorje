@@ -83,9 +83,9 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
 
         # change an attribute of the capsule itself
         initial_updated_on = self.capsule.updated_on
-        # TODO: we might want to change this to an API request
-        self.capsule.name = "Changed the name"
-        self.capsule.save()
+        self.authenticate_user()
+        self.client.patch(self.get_api_url("/capsules/{pk}/", pk=self.capsule.pk), {"name": "Changed the name"})
+        self.capsule.refresh_from_db()
         self.assertGreater(self.capsule.updated_on, initial_updated_on)
 
         # modify capsule's content
