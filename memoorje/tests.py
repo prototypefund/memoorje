@@ -3,7 +3,7 @@ from tempfile import TemporaryFile
 
 from rest_framework.reverse import reverse
 
-from memoorje.models import Capsule, CapsuleContent, User
+from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, User
 
 
 @contextmanager
@@ -75,3 +75,13 @@ class CapsuleContentMixin(CapsuleMixin):
         self.capsule_content = CapsuleContent.objects.create(capsule=self.capsule, metadata=self.metadata)
         with create_test_data_file(self.data) as f:
             self.capsule_content.data.save("testfile", f)
+
+
+class CapsuleReceiverMixin(CapsuleMixin):
+    capsule_receiver: CapsuleReceiver
+    receiver_email: str
+
+    def create_capsule_receiver(self):
+        self.ensure_capsule_exists()
+        self.receiver_email = "test@example.org"
+        self.capsule_receiver = CapsuleReceiver.objects.create(capsule=self.capsule, email=self.receiver_email)

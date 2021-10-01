@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from memoorje import get_authenticated_user
-from memoorje.models import Capsule, CapsuleContent
+from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver
 from memoorje.rest_api.fields import BinaryField
 
 
@@ -20,6 +20,20 @@ class CapsuleContentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CapsuleContent
         fields = ["url", "capsule", "metadata", "data"]
+
+    def get_capsule_queryset(self):
+        return Capsule.objects.filter(owner=get_authenticated_user(self.context.get("request")))
+
+    def get_extra_kwargs(self):
+        kwargs = super().get_extra_kwargs()
+        kwargs["capsule"] = {"queryset": self.get_capsule_queryset()}
+        return kwargs
+
+
+class CapsuleReceiverSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = CapsuleReceiver
+        fields = ["url", "capsule", "email"]
 
     def get_capsule_queryset(self):
         return Capsule.objects.filter(owner=get_authenticated_user(self.context.get("request")))

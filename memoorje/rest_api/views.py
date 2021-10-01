@@ -1,8 +1,8 @@
-from rest_framework import viewsets
+from rest_framework import mixins, viewsets
 
 from memoorje import get_authenticated_user
-from memoorje.models import Capsule, CapsuleContent
-from memoorje.rest_api.serializers import CapsuleContentSerializer, CapsuleSerializer
+from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver
+from memoorje.rest_api.serializers import CapsuleContentSerializer, CapsuleReceiverSerializer, CapsuleSerializer
 
 
 class CapsuleViewSet(viewsets.ModelViewSet):
@@ -26,3 +26,21 @@ class CapsuleContentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return CapsuleContent.objects.filter(capsule__owner=get_authenticated_user(self.request))
+
+
+class CapsuleReceiverViewSet(
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    Capsule content access for authenticated users
+    """
+
+    serializer_class = CapsuleReceiverSerializer
+    filterset_fields = ["capsule"]
+
+    def get_queryset(self):
+        return CapsuleReceiver.objects.filter(capsule__owner=get_authenticated_user(self.request))

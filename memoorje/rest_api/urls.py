@@ -2,11 +2,12 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from rest_framework import routers
 
-from memoorje.rest_api.views import CapsuleContentViewSet, CapsuleViewSet
+from memoorje.rest_api.views import CapsuleContentViewSet, CapsuleReceiverViewSet, CapsuleViewSet
 
 router = routers.SimpleRouter()
 router.register(r"capsules", CapsuleViewSet, basename="capsule")
 router.register(r"capsule-contents", CapsuleContentViewSet, basename="capsulecontent")
+router.register(r"capsule-receivers", CapsuleReceiverViewSet, basename="capsulereceiver")
 
 urlpatterns = [
     path("", include(router.urls)),

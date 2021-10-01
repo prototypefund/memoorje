@@ -96,3 +96,11 @@ class CapsuleContent(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
     metadata = models.BinaryField(editable=True)
     data = CapsuleDataField()
+
+
+class CapsuleReceiver(models.Model):
+    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
+    email = models.EmailField()
+
+    class Meta:
+        unique_together = ["capsule", "email"]
