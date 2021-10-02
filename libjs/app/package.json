@@ -1,0 +1,64 @@
+{
+  "name": "@memoorje/app",
+  "version": "0.1.0",
+  "description": "The memoorje web frontend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "DEBUG=vite-ssg:* vite-ssg build",
+    "dev": "DEBUG=vite-ssg:* vite",
+    "serve": "vite preview",
+    "lint": "eslint \"**/*.{vue,ts,js}\"",
+    "style": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.hack-hro.de/memoorje/memoorje.git"
+  },
+  "keywords": [
+    "memoorje",
+    "webapp"
+  ],
+  "author": "memoorje developers <tach@memoorje.org>",
+  "license": "AGPL-3.0-or-later",
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.9.0",
+    "@iconify/json": "^1.1.404",
+    "@intlify/vite-plugin-vue-i18n": "^2.4.0",
+    "@vitejs/plugin-vue": "^1.8.1",
+    "@vue/compiler-sfc": "^3.2.12",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/server-renderer": "^3.2.12",
+    "@vueuse/head": "^0.5.1",
+    "autoprefixer": "^10.3.4",
+    "critters": "^0.0.10",
+    "eslint": "^7.32.0",
+    "postcss": "^8.3.6",
+    "postcss-import": "^14.0.2",
+    "prettier": "^2.4.1",
+    "tailwindcss": "^2.2.15",
+    "tailwindcss-interaction-variants": "^5.0.0",
+    "tailwindcss-typography": "^3.1.0",
+    "unplugin-icons": "^0.11.3",
+    "unplugin-vue-components": "^0.15.2",
+    "vite-plugin-pages": "^0.18.1",
+    "vite-plugin-pwa": "^0.11.2",
+    "vite-ssg": "^0.15.2",
+    "vite-svg-loader": "^2.2.0",
+    "vue-router": "^4.0.11"
+  },
+  "dependencies": {
+    "@memoorje/api": "file:../api",
+    "@memoorje/crypto": "file:../crypto",
+    "@vuelidate/core": "^2.0.0-alpha.26",
+    "@vuelidate/validators": "^2.0.0-alpha.22",
+    "base64-js": "^1.5.1",
+    "comlink": "^4.3.1",
+    "date-fns": "^2.24.0",
+    "downloadjs": "^1.4.7",
+    "fast-sort": "^3.0.2",
+    "focus-visible": "^5.2.0",
+    "pinia": "^2.0.0-rc.9",
+    "vue": "^3.2.13"
+  }
+}
