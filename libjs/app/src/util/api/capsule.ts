@@ -99,8 +99,10 @@ export async function addCapsuleContent(capsuleId: string, file: FileRecord) {
       'capsule',
       `${configuration.basePath}/api/capsules/${capsuleId}/`
     )
-    // formData.set("metadata", new Blob([file.encrypted.metadataCipherText.buffer], fileOptions))
-    formData.set('metadata', fromByteArray(file.encrypted.metadataCipherText))
+    formData.set(
+      'metadata',
+      new Blob([file.encrypted.metadataCipherText.buffer], fileOptions)
+    )
     formData.set(
       'data',
       new Blob([file.encrypted.dataCipherText.buffer], fileOptions)
