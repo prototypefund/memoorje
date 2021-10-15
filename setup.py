@@ -30,6 +30,7 @@ setup(
         "django-downloadview~=2.1.1",
         "django-filter~=2.4.0",
         "django-rest-registration~=0.6.4",
+        "djeveric",
         "drf-spectacular~=0.18.2",
         "memoorje_crypto",
     ],
