@@ -101,6 +101,7 @@ class CapsuleContent(models.Model):
 class CapsuleReceiver(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
     email = models.EmailField()
+    is_email_confirmed = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ["capsule", "email"]

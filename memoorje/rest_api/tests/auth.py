@@ -30,7 +30,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         data = {"login": self.email, "password": self.password}
         response = self.client.post(self.get_api_url(url), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.wsgi_request.user.is_authenticated)
+        self.assertTrue(response.wsgi_request.email.is_authenticated)
 
     def test_logout(self) -> None:
         """
@@ -40,7 +40,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self.authenticate_user()
         response = self.client.post(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFalse(response.wsgi_request.user.is_authenticated)
+        self.assertFalse(response.wsgi_request.email.is_authenticated)
 
     def test_retrieve_user(self) -> None:
         """
