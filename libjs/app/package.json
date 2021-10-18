@@ -33,6 +33,8 @@
     "autoprefixer": "^10.3.4",
     "critters": "^0.0.10",
     "eslint": "^7.32.0",
+    "eslint-plugin-unicorn": "^37.0.1",
+    "eslint-plugin-vue": "^7.19.1",
     "postcss": "^8.3.6",
     "postcss-import": "^14.0.2",
     "prettier": "^2.4.1",
