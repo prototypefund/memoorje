@@ -21,6 +21,18 @@ import { exists, mapValues } from '../runtime';
 export interface Capsule {
     /**
      * 
+     * @type {Date}
+     * @memberof Capsule
+     */
+    readonly createdOn: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof Capsule
+     */
+    description?: string;
+    /**
+     * 
      * @type {string}
      * @memberof Capsule
      */
@@ -30,31 +42,19 @@ export interface Capsule {
      * @type {string}
      * @memberof Capsule
      */
-    readonly url: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Capsule
-     */
     name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Capsule
-     */
-    description?: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof Capsule
-     */
-    readonly createdOn: Date;
     /**
      * 
      * @type {Date}
      * @memberof Capsule
      */
     readonly updatedOn: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof Capsule
+     */
+    readonly url: string;
 }
 
 export function CapsuleFromJSON(json: any): Capsule {
@@ -67,12 +67,12 @@ export function CapsuleFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
     }
     return {
         
-        'id': json['id'],
-        'url': json['url'],
-        'name': json['name'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
         'createdOn': (new Date(json['createdOn'])),
+        'description': !exists(json, 'description') ? undefined : json['description'],
+        'id': json['id'],
+        'name': json['name'],
         'updatedOn': (new Date(json['updatedOn'])),
+        'url': json['url'],
     };
 }
 
@@ -85,8 +85,8 @@ export function CapsuleToJSON(value?: Capsule | null): any {
     }
     return {
         
-        'name': value.name,
         'description': value.description,
+        'name': value.name,
     };
 }
 

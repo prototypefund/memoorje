@@ -1,5 +1,6 @@
 export * from './Capsule';
 export * from './CapsuleContent';
+export * from './CapsuleReceiver';
 export * from './ChangePassword';
 export * from './DefaultLogin';
 export * from './DefaultRegisterEmail';
@@ -8,6 +9,7 @@ export * from './DefaultSendResetPasswordLink';
 export * from './DefaultUserProfile';
 export * from './Logout';
 export * from './PatchedCapsule';
+export * from './PatchedCapsuleContent';
 export * from './PatchedDefaultUserProfile';
 export * from './ResetPassword';
 export * from './VerifyEmail';

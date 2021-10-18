@@ -21,6 +21,18 @@ import { exists, mapValues } from '../runtime';
 export interface PatchedCapsule {
     /**
      * 
+     * @type {Date}
+     * @memberof PatchedCapsule
+     */
+    readonly createdOn?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedCapsule
+     */
+    description?: string;
+    /**
+     * 
      * @type {string}
      * @memberof PatchedCapsule
      */
@@ -30,31 +42,19 @@ export interface PatchedCapsule {
      * @type {string}
      * @memberof PatchedCapsule
      */
-    readonly url?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedCapsule
-     */
     name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedCapsule
-     */
-    description?: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof PatchedCapsule
-     */
-    readonly createdOn?: Date;
     /**
      * 
      * @type {Date}
      * @memberof PatchedCapsule
      */
     readonly updatedOn?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedCapsule
+     */
+    readonly url?: string;
 }
 
 export function PatchedCapsuleFromJSON(json: any): PatchedCapsule {
@@ -67,12 +67,12 @@ export function PatchedCapsuleFromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'url': !exists(json, 'url') ? undefined : json['url'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
         'createdOn': !exists(json, 'createdOn') ? undefined : (new Date(json['createdOn'])),
+        'description': !exists(json, 'description') ? undefined : json['description'],
+        'id': !exists(json, 'id') ? undefined : json['id'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
         'updatedOn': !exists(json, 'updatedOn') ? undefined : (new Date(json['updatedOn'])),
+        'url': !exists(json, 'url') ? undefined : json['url'],
     };
 }
 
@@ -85,8 +85,8 @@ export function PatchedCapsuleToJSON(value?: PatchedCapsule | null): any {
     }
     return {
         
-        'name': value.name,
         'description': value.description,
+        'name': value.name,
     };
 }
 

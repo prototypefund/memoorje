@@ -21,11 +21,11 @@ import {
 } from '../models';
 
 export interface CapsulesCreateRequest {
-    id: string;
-    url: string;
-    name: string;
     createdOn: Date;
+    id: string;
+    name: string;
     updatedOn: Date;
+    url: string;
     description?: string;
 }
 
@@ -35,12 +35,12 @@ export interface CapsulesDestroyRequest {
 
 export interface CapsulesPartialUpdateRequest {
     id: string;
-    id2?: string;
-    url?: string;
-    name?: string;
-    description?: string;
     createdOn?: Date;
+    description?: string;
+    id2?: string;
+    name?: string;
     updatedOn?: Date;
+    url?: string;
 }
 
 export interface CapsulesRetrieveRequest {
@@ -49,11 +49,11 @@ export interface CapsulesRetrieveRequest {
 
 export interface CapsulesUpdateRequest {
     id: string;
-    id2: string;
-    url: string;
-    name: string;
     createdOn: Date;
+    id2: string;
+    name: string;
     updatedOn: Date;
+    url: string;
     description?: string;
 }
 
@@ -66,24 +66,24 @@ export class CapsulesApi extends runtime.BaseAPI {
      * Capsule access for authenticated users
      */
     async capsulesCreateRaw(requestParameters: CapsulesCreateRequest): Promise<runtime.ApiResponse<Capsule>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling capsulesCreate.');
+        if (requestParameters.createdOn === null || requestParameters.createdOn === undefined) {
+            throw new runtime.RequiredError('createdOn','Required parameter requestParameters.createdOn was null or undefined when calling capsulesCreate.');
         }
 
-        if (requestParameters.url === null || requestParameters.url === undefined) {
-            throw new runtime.RequiredError('url','Required parameter requestParameters.url was null or undefined when calling capsulesCreate.');
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling capsulesCreate.');
         }
 
         if (requestParameters.name === null || requestParameters.name === undefined) {
             throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling capsulesCreate.');
         }
 
-        if (requestParameters.createdOn === null || requestParameters.createdOn === undefined) {
-            throw new runtime.RequiredError('createdOn','Required parameter requestParameters.createdOn was null or undefined when calling capsulesCreate.');
-        }
-
         if (requestParameters.updatedOn === null || requestParameters.updatedOn === undefined) {
             throw new runtime.RequiredError('updatedOn','Required parameter requestParameters.updatedOn was null or undefined when calling capsulesCreate.');
+        }
+
+        if (requestParameters.url === null || requestParameters.url === undefined) {
+            throw new runtime.RequiredError('url','Required parameter requestParameters.url was null or undefined when calling capsulesCreate.');
         }
 
         const queryParameters: any = {};
@@ -109,28 +109,28 @@ export class CapsulesApi extends runtime.BaseAPI {
             formParams = new URLSearchParams();
         }
 
-        if (requestParameters.id !== undefined) {
-            formParams.append('id', requestParameters.id as any);
-                    }
-
-        if (requestParameters.url !== undefined) {
-            formParams.append('url', requestParameters.url as any);
-        }
-
-        if (requestParameters.name !== undefined) {
-            formParams.append('name', requestParameters.name as any);
+        if (requestParameters.createdOn !== undefined) {
+            formParams.append('createdOn', requestParameters.createdOn as any);
         }
 
         if (requestParameters.description !== undefined) {
             formParams.append('description', requestParameters.description as any);
         }
 
-        if (requestParameters.createdOn !== undefined) {
-            formParams.append('createdOn', requestParameters.createdOn as any);
+        if (requestParameters.id !== undefined) {
+            formParams.append('id', requestParameters.id as any);
+                    }
+
+        if (requestParameters.name !== undefined) {
+            formParams.append('name', requestParameters.name as any);
         }
 
         if (requestParameters.updatedOn !== undefined) {
             formParams.append('updatedOn', requestParameters.updatedOn as any);
+        }
+
+        if (requestParameters.url !== undefined) {
+            formParams.append('url', requestParameters.url as any);
         }
 
         const response = await this.request({
@@ -244,28 +244,28 @@ export class CapsulesApi extends runtime.BaseAPI {
             formParams = new URLSearchParams();
         }
 
-        if (requestParameters.id2 !== undefined) {
-            formParams.append('id', requestParameters.id2 as any);
-                    }
-
-        if (requestParameters.url !== undefined) {
-            formParams.append('url', requestParameters.url as any);
-        }
-
-        if (requestParameters.name !== undefined) {
-            formParams.append('name', requestParameters.name as any);
+        if (requestParameters.createdOn !== undefined) {
+            formParams.append('createdOn', requestParameters.createdOn as any);
         }
 
         if (requestParameters.description !== undefined) {
             formParams.append('description', requestParameters.description as any);
         }
 
-        if (requestParameters.createdOn !== undefined) {
-            formParams.append('createdOn', requestParameters.createdOn as any);
+        if (requestParameters.id2 !== undefined) {
+            formParams.append('id', requestParameters.id2 as any);
+                    }
+
+        if (requestParameters.name !== undefined) {
+            formParams.append('name', requestParameters.name as any);
         }
 
         if (requestParameters.updatedOn !== undefined) {
             formParams.append('updatedOn', requestParameters.updatedOn as any);
+        }
+
+        if (requestParameters.url !== undefined) {
+            formParams.append('url', requestParameters.url as any);
         }
 
         const response = await this.request({
@@ -328,24 +328,24 @@ export class CapsulesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling capsulesUpdate.');
         }
 
-        if (requestParameters.id2 === null || requestParameters.id2 === undefined) {
-            throw new runtime.RequiredError('id2','Required parameter requestParameters.id2 was null or undefined when calling capsulesUpdate.');
+        if (requestParameters.createdOn === null || requestParameters.createdOn === undefined) {
+            throw new runtime.RequiredError('createdOn','Required parameter requestParameters.createdOn was null or undefined when calling capsulesUpdate.');
         }
 
-        if (requestParameters.url === null || requestParameters.url === undefined) {
-            throw new runtime.RequiredError('url','Required parameter requestParameters.url was null or undefined when calling capsulesUpdate.');
+        if (requestParameters.id2 === null || requestParameters.id2 === undefined) {
+            throw new runtime.RequiredError('id2','Required parameter requestParameters.id2 was null or undefined when calling capsulesUpdate.');
         }
 
         if (requestParameters.name === null || requestParameters.name === undefined) {
             throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling capsulesUpdate.');
         }
 
-        if (requestParameters.createdOn === null || requestParameters.createdOn === undefined) {
-            throw new runtime.RequiredError('createdOn','Required parameter requestParameters.createdOn was null or undefined when calling capsulesUpdate.');
-        }
-
         if (requestParameters.updatedOn === null || requestParameters.updatedOn === undefined) {
             throw new runtime.RequiredError('updatedOn','Required parameter requestParameters.updatedOn was null or undefined when calling capsulesUpdate.');
+        }
+
+        if (requestParameters.url === null || requestParameters.url === undefined) {
+            throw new runtime.RequiredError('url','Required parameter requestParameters.url was null or undefined when calling capsulesUpdate.');
         }
 
         const queryParameters: any = {};
@@ -371,28 +371,28 @@ export class CapsulesApi extends runtime.BaseAPI {
             formParams = new URLSearchParams();
         }
 
-        if (requestParameters.id2 !== undefined) {
-            formParams.append('id', requestParameters.id2 as any);
-                    }
-
-        if (requestParameters.url !== undefined) {
-            formParams.append('url', requestParameters.url as any);
-        }
-
-        if (requestParameters.name !== undefined) {
-            formParams.append('name', requestParameters.name as any);
+        if (requestParameters.createdOn !== undefined) {
+            formParams.append('createdOn', requestParameters.createdOn as any);
         }
 
         if (requestParameters.description !== undefined) {
             formParams.append('description', requestParameters.description as any);
         }
 
-        if (requestParameters.createdOn !== undefined) {
-            formParams.append('createdOn', requestParameters.createdOn as any);
+        if (requestParameters.id2 !== undefined) {
+            formParams.append('id', requestParameters.id2 as any);
+                    }
+
+        if (requestParameters.name !== undefined) {
+            formParams.append('name', requestParameters.name as any);
         }
 
         if (requestParameters.updatedOn !== undefined) {
             formParams.append('updatedOn', requestParameters.updatedOn as any);
+        }
+
+        if (requestParameters.url !== undefined) {
+            formParams.append('url', requestParameters.url as any);
         }
 
         const response = await this.request({

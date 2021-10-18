@@ -22,12 +22,40 @@ import {
 
 export interface CapsuleContentsCreateRequest {
     capsule: string;
-    metadata: string;
     data: string;
+    id: number;
+    metadata: string;
+    url: string;
 }
 
 export interface CapsuleContentsDestroyRequest {
-    id: string;
+    id: number;
+}
+
+export interface CapsuleContentsListRequest {
+    capsule?: string;
+}
+
+export interface CapsuleContentsPartialUpdateRequest {
+    id: number;
+    capsule?: string;
+    data?: string;
+    id2?: number;
+    metadata?: string;
+    url?: string;
+}
+
+export interface CapsuleContentsRetrieveRequest {
+    id: number;
+}
+
+export interface CapsuleContentsUpdateRequest {
+    id: number;
+    capsule: string;
+    data: string;
+    id2: number;
+    metadata: string;
+    url: string;
 }
 
 /**
@@ -43,12 +71,20 @@ export class CapsuleContentsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('capsule','Required parameter requestParameters.capsule was null or undefined when calling capsuleContentsCreate.');
         }
 
+        if (requestParameters.data === null || requestParameters.data === undefined) {
+            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling capsuleContentsCreate.');
+        }
+
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling capsuleContentsCreate.');
+        }
+
         if (requestParameters.metadata === null || requestParameters.metadata === undefined) {
             throw new runtime.RequiredError('metadata','Required parameter requestParameters.metadata was null or undefined when calling capsuleContentsCreate.');
         }
 
-        if (requestParameters.data === null || requestParameters.data === undefined) {
-            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling capsuleContentsCreate.');
+        if (requestParameters.url === null || requestParameters.url === undefined) {
+            throw new runtime.RequiredError('url','Required parameter requestParameters.url was null or undefined when calling capsuleContentsCreate.');
         }
 
         const queryParameters: any = {};
@@ -78,12 +114,20 @@ export class CapsuleContentsApi extends runtime.BaseAPI {
             formParams.append('capsule', requestParameters.capsule as any);
         }
 
+        if (requestParameters.data !== undefined) {
+            formParams.append('data', requestParameters.data as any);
+        }
+
+        if (requestParameters.id !== undefined) {
+            formParams.append('id', requestParameters.id as any);
+        }
+
         if (requestParameters.metadata !== undefined) {
             formParams.append('metadata', requestParameters.metadata as any);
         }
 
-        if (requestParameters.data !== undefined) {
-            formParams.append('data', requestParameters.data as any);
+        if (requestParameters.url !== undefined) {
+            formParams.append('url', requestParameters.url as any);
         }
 
         const response = await this.request({
@@ -140,8 +184,12 @@ export class CapsuleContentsApi extends runtime.BaseAPI {
     /**
      * Capsule content access for authenticated users
      */
-    async capsuleContentsListRaw(): Promise<runtime.ApiResponse<Array<CapsuleContent>>> {
+    async capsuleContentsListRaw(requestParameters: CapsuleContentsListRequest): Promise<runtime.ApiResponse<Array<CapsuleContent>>> {
         const queryParameters: any = {};
+
+        if (requestParameters.capsule !== undefined) {
+            queryParameters['capsule'] = requestParameters.capsule;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -161,8 +209,201 @@ export class CapsuleContentsApi extends runtime.BaseAPI {
     /**
      * Capsule content access for authenticated users
      */
-    async capsuleContentsList(): Promise<Array<CapsuleContent>> {
-        const response = await this.capsuleContentsListRaw();
+    async capsuleContentsList(requestParameters: CapsuleContentsListRequest): Promise<Array<CapsuleContent>> {
+        const response = await this.capsuleContentsListRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Capsule content access for authenticated users
+     */
+    async capsuleContentsPartialUpdateRaw(requestParameters: CapsuleContentsPartialUpdateRequest): Promise<runtime.ApiResponse<CapsuleContent>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling capsuleContentsPartialUpdate.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const consumes: runtime.Consume[] = [
+            { contentType: 'application/x-www-form-urlencoded' },
+            { contentType: 'multipart/form-data' },
+            { contentType: 'application/json' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.capsule !== undefined) {
+            formParams.append('capsule', requestParameters.capsule as any);
+        }
+
+        if (requestParameters.data !== undefined) {
+            formParams.append('data', requestParameters.data as any);
+        }
+
+        if (requestParameters.id2 !== undefined) {
+            formParams.append('id', requestParameters.id2 as any);
+        }
+
+        if (requestParameters.metadata !== undefined) {
+            formParams.append('metadata', requestParameters.metadata as any);
+        }
+
+        if (requestParameters.url !== undefined) {
+            formParams.append('url', requestParameters.url as any);
+        }
+
+        const response = await this.request({
+            path: `/api/capsule-contents/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CapsuleContentFromJSON(jsonValue));
+    }
+
+    /**
+     * Capsule content access for authenticated users
+     */
+    async capsuleContentsPartialUpdate(requestParameters: CapsuleContentsPartialUpdateRequest): Promise<CapsuleContent> {
+        const response = await this.capsuleContentsPartialUpdateRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Capsule content access for authenticated users
+     */
+    async capsuleContentsRetrieveRaw(requestParameters: CapsuleContentsRetrieveRequest): Promise<runtime.ApiResponse<CapsuleContent>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling capsuleContentsRetrieve.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const response = await this.request({
+            path: `/api/capsule-contents/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CapsuleContentFromJSON(jsonValue));
+    }
+
+    /**
+     * Capsule content access for authenticated users
+     */
+    async capsuleContentsRetrieve(requestParameters: CapsuleContentsRetrieveRequest): Promise<CapsuleContent> {
+        const response = await this.capsuleContentsRetrieveRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Capsule content access for authenticated users
+     */
+    async capsuleContentsUpdateRaw(requestParameters: CapsuleContentsUpdateRequest): Promise<runtime.ApiResponse<CapsuleContent>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling capsuleContentsUpdate.');
+        }
+
+        if (requestParameters.capsule === null || requestParameters.capsule === undefined) {
+            throw new runtime.RequiredError('capsule','Required parameter requestParameters.capsule was null or undefined when calling capsuleContentsUpdate.');
+        }
+
+        if (requestParameters.data === null || requestParameters.data === undefined) {
+            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling capsuleContentsUpdate.');
+        }
+
+        if (requestParameters.id2 === null || requestParameters.id2 === undefined) {
+            throw new runtime.RequiredError('id2','Required parameter requestParameters.id2 was null or undefined when calling capsuleContentsUpdate.');
+        }
+
+        if (requestParameters.metadata === null || requestParameters.metadata === undefined) {
+            throw new runtime.RequiredError('metadata','Required parameter requestParameters.metadata was null or undefined when calling capsuleContentsUpdate.');
+        }
+
+        if (requestParameters.url === null || requestParameters.url === undefined) {
+            throw new runtime.RequiredError('url','Required parameter requestParameters.url was null or undefined when calling capsuleContentsUpdate.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const consumes: runtime.Consume[] = [
+            { contentType: 'application/x-www-form-urlencoded' },
+            { contentType: 'multipart/form-data' },
+            { contentType: 'application/json' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.capsule !== undefined) {
+            formParams.append('capsule', requestParameters.capsule as any);
+        }
+
+        if (requestParameters.data !== undefined) {
+            formParams.append('data', requestParameters.data as any);
+        }
+
+        if (requestParameters.id2 !== undefined) {
+            formParams.append('id', requestParameters.id2 as any);
+        }
+
+        if (requestParameters.metadata !== undefined) {
+            formParams.append('metadata', requestParameters.metadata as any);
+        }
+
+        if (requestParameters.url !== undefined) {
+            formParams.append('url', requestParameters.url as any);
+        }
+
+        const response = await this.request({
+            path: `/api/capsule-contents/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CapsuleContentFromJSON(jsonValue));
+    }
+
+    /**
+     * Capsule content access for authenticated users
+     */
+    async capsuleContentsUpdate(requestParameters: CapsuleContentsUpdateRequest): Promise<CapsuleContent> {
+        const response = await this.capsuleContentsUpdateRaw(requestParameters);
         return await response.value();
     }
 

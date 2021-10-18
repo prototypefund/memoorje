@@ -5,12 +5,14 @@ README.md
 package.json
 src/apis/AuthApi.ts
 src/apis/CapsuleContentsApi.ts
+src/apis/CapsuleReceiversApi.ts
 src/apis/CapsulesApi.ts
 src/apis/SchemaApi.ts
 src/apis/index.ts
 src/index.ts
 src/models/Capsule.ts
 src/models/CapsuleContent.ts
+src/models/CapsuleReceiver.ts
 src/models/ChangePassword.ts
 src/models/DefaultLogin.ts
 src/models/DefaultRegisterEmail.ts
@@ -19,6 +21,7 @@ src/models/DefaultSendResetPasswordLink.ts
 src/models/DefaultUserProfile.ts
 src/models/Logout.ts
 src/models/PatchedCapsule.ts
+src/models/PatchedCapsuleContent.ts
 src/models/PatchedDefaultUserProfile.ts
 src/models/ResetPassword.ts
 src/models/VerifyEmail.ts

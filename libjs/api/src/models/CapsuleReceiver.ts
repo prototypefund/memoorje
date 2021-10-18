@@ -16,60 +16,53 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface CapsuleContent
+ * @interface CapsuleReceiver
  */
-export interface CapsuleContent {
+export interface CapsuleReceiver {
     /**
      * 
      * @type {string}
-     * @memberof CapsuleContent
+     * @memberof CapsuleReceiver
      */
     capsule: string;
     /**
      * 
      * @type {string}
-     * @memberof CapsuleContent
+     * @memberof CapsuleReceiver
      */
-    data: string;
+    email: string;
     /**
      * 
      * @type {number}
-     * @memberof CapsuleContent
+     * @memberof CapsuleReceiver
      */
     readonly id: number;
     /**
      * 
      * @type {string}
-     * @memberof CapsuleContent
-     */
-    metadata: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CapsuleContent
+     * @memberof CapsuleReceiver
      */
     readonly url: string;
 }
 
-export function CapsuleContentFromJSON(json: any): CapsuleContent {
-    return CapsuleContentFromJSONTyped(json, false);
+export function CapsuleReceiverFromJSON(json: any): CapsuleReceiver {
+    return CapsuleReceiverFromJSONTyped(json, false);
 }
 
-export function CapsuleContentFromJSONTyped(json: any, ignoreDiscriminator: boolean): CapsuleContent {
+export function CapsuleReceiverFromJSONTyped(json: any, ignoreDiscriminator: boolean): CapsuleReceiver {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'capsule': json['capsule'],
-        'data': json['data'],
+        'email': json['email'],
         'id': json['id'],
-        'metadata': json['metadata'],
         'url': json['url'],
     };
 }
 
-export function CapsuleContentToJSON(value?: CapsuleContent | null): any {
+export function CapsuleReceiverToJSON(value?: CapsuleReceiver | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -79,8 +72,7 @@ export function CapsuleContentToJSON(value?: CapsuleContent | null): any {
     return {
         
         'capsule': value.capsule,
-        'data': value.data,
-        'metadata': value.metadata,
+        'email': value.email,
     };
 }
 
