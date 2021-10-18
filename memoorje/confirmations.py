@@ -1,4 +1,5 @@
 from djeveric import BaseConfirmation
+
 from memoorje.emails import CapsuleReceiverConfirmationEmail
 from memoorje.models import CapsuleReceiver
 

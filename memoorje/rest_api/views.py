@@ -1,8 +1,16 @@
 from rest_framework import mixins, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from memoorje import get_authenticated_user
+from memoorje.confirmations import CapsuleReceiverConfirmation
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver
-from memoorje.rest_api.serializers import CapsuleContentSerializer, CapsuleReceiverSerializer, CapsuleSerializer
+from memoorje.rest_api.serializers import (
+    CapsuleContentSerializer,
+    CapsuleReceiverConfirmationSerializer,
+    CapsuleReceiverSerializer,
+    CapsuleSerializer,
+)
 
 
 class CapsuleViewSet(viewsets.ModelViewSet):
@@ -44,3 +52,10 @@ class CapsuleReceiverViewSet(
 
     def get_queryset(self):
         return CapsuleReceiver.objects.filter(capsule__owner=get_authenticated_user(self.request))
+
+    @action(detail=True, methods=["post"])
+    def confirm(self, request, pk=None):
+        serializer = CapsuleReceiverConfirmationSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            CapsuleReceiverConfirmation(serializer.instance).check()
+            return Response()

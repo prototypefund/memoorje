@@ -42,3 +42,11 @@ class CapsuleReceiverSerializer(serializers.HyperlinkedModelSerializer):
         kwargs = super().get_extra_kwargs()
         kwargs["capsule"] = {"queryset": self.get_capsule_queryset()}
         return kwargs
+
+
+class CapsuleReceiverConfirmationSerializer(serializers.ModelSerializer):
+    token = serializers.CharField()
+
+    class Meta:
+        model = CapsuleReceiver
+        fields = ["token"]

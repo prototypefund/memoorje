@@ -1,5 +1,6 @@
 import json
 
+from django.core import mail
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -95,3 +96,13 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         response = self.client.delete(self.get_api_url(url, pk=self.capsule_receiver.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(CapsuleReceiver.objects.exists())
+
+    def test_confirm_capsule_receiver(self):
+        """
+        Confirm a capsule receivers email address.
+        """
+        url = "/capsule-receivers/{pk}/confirm/"
+        self.create_capsule_receiver()
+        self.authenticate_user()
+        response = self.client.post(self.get_api_url(url, pk=self.capsule_receiver.pk), json.loads(mail.outbox[0].body))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
