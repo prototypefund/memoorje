@@ -43,6 +43,9 @@ let isLoading = $ref(false)
 let capsule = $ref(null)
 let files: FileRecord[] = $ref([])
 
+// make sure opening the capsule resets the password timer
+passwordRecord.value?.touch()
+
 async function updateCapsule() {
   const password = passwordRecord.value?.password
   if (password) {
