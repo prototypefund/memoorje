@@ -13,7 +13,7 @@
       </div>
       <div v-else-if="isLoadingCapsules">Loading capsules</div>
       <div v-else>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <MCapsulePreview
             v-for="capsule in capsules"
             :key="capsule.id"
