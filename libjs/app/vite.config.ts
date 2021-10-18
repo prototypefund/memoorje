@@ -10,6 +10,7 @@ import IconsResolver from 'unplugin-icons/resolver'
 import Pages from 'vite-plugin-pages'
 import { VitePWA } from 'vite-plugin-pwa'
 import svgLoader from 'vite-svg-loader'
+import analyze from 'rollup-plugin-analyzer'
 
 export default defineConfig({
   build: {
@@ -18,6 +19,9 @@ export default defineConfig({
         drop_console: true,
         drop_debugger: true,
       },
+    },
+    rollupOptions: {
+      plugins: [analyze()],
     },
   },
   resolve: {
