@@ -1,4 +1,4 @@
-import { toByteArray, fromByteArray } from 'base64-js'
+import { toByteArray } from 'base64-js'
 import { reactive } from 'vue'
 import { capsulesAPI, capsuleContentsAPI, configuration } from './_base'
 import {
