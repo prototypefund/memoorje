@@ -10,10 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = Path(os.environ.get("MEMOORJE_DATA_DIR", BASE_DIR))
 
 
 # Quick-start development settings - unsuitable for production
@@ -83,7 +85,7 @@ WSGI_APPLICATION = "memoorje.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": DATA_DIR / "db.sqlite3",
     }
 }
 
@@ -121,10 +123,15 @@ USE_L10N = True
 USE_TZ = True
 
 
+# media
+MEDIA_ROOT = DATA_DIR / "media"
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = DATA_DIR / "static"
 
 
 # Default primary key field type
@@ -167,4 +174,4 @@ SPECTACULAR_SETTINGS = {
     "POSTPROCESSING_HOOKS": ["drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields"],
 }
 
-CAPSULE_DATA_DIR = "media/data/"
+CAPSULE_DATA_DIR = MEDIA_ROOT / "data"
