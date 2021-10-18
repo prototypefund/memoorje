@@ -33,8 +33,12 @@
       </colgroup>
       <thead class="hidden md:table-header-group mb-3">
         <tr>
-          <th class="pl-6 py-3" :class="headerClasses">Name</th>
-          <th class="pr-6 py-3" :class="headerClasses">Updated on</th>
+          <th class="pl-6 py-3 whitespace-nowrap" :class="headerClasses">
+            Name
+          </th>
+          <th class="pr-6 py-3 whitespace-nowrap" :class="headerClasses">
+            Updated on
+          </th>
         </tr>
         <tr>
           <th colspan="2" class="py-1"></th>
