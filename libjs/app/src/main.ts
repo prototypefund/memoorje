@@ -1,11 +1,13 @@
-import { ViteSSG } from 'vite-ssg'
 import { createPinia } from 'pinia'
+import { ViteSSG } from 'vite-ssg'
 
 import routes from 'virtual:generated-pages'
+
 import App from './App.vue'
 import './index.css'
 import { useMainStore } from '~/store/main'
 import { isLoggedIn, getUser } from '~/util/api/auth'
+import { i18n } from '~/util/i18n'
 
 export const createApp = ViteSSG(
   // the root component
@@ -21,6 +23,7 @@ export const createApp = ViteSSG(
   async ({ app, router, initialState }) => {
     const pinia = createPinia()
     app.use(pinia)
+    app.use(i18n)
 
     async function setLoginState() {
       const mainStore = useMainStore(pinia)
