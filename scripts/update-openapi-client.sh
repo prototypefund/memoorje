@@ -21,3 +21,6 @@ find "$EXPORT_PATH/src/apis" -name "*.ts" | while read -r filename; do
 done
 # The generator creates an invalid type for the FetchAPI that we need to fix afterwards
 sed -Ei "s|export type FetchAPI = .+;|export declare type FetchAPI = WindowOrWorkerGlobalScope['fetch'];|" "$EXPORT_PATH/src/runtime.ts"
+# make sure the TypeScript config uses a recent EcmaScript target as target and the EcmaScript module system
+jq '.compilerOptions.target = "es2020" | .compilerOptions.module = "esnext"' "$EXPORT_PATH/tsconfig.json" \
+  | sponge "$EXPORT_PATH/tsconfig.json"
