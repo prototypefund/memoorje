@@ -63,9 +63,9 @@
             part of the
             <a href="https://prototypefund.de/">PrototypeFund</a>.
           </p>
-          <img
+          <BMBFLogo
             alt="Logo des Bundesministerium für Bildung und Forschung"
-            src="../../assets/bmbf-logo.svg"
+            style="max-width: 175px"
           />
         </div>
       </div>
@@ -75,6 +75,7 @@
 
 <script lang="ts" setup>
 import { useHead } from '@vueuse/head'
+import BMBFLogo from '../../assets/bmbf-logo.svg?component'
 
 const props = defineProps<{
   unsized?: boolean
