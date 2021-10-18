@@ -24,10 +24,9 @@
 </template>
 
 <script lang="ts" setup>
-import { formatRelative, formatDistance } from 'date-fns'
 import { Capsule } from './types'
 import { BaseState, useMainStore } from '~/store/main'
-import { now } from '~/util/time'
+import { formatDistanceFromToday } from '~/util/time'
 
 const props = defineProps<{
   capsule: Capsule
@@ -36,14 +35,9 @@ const store: BaseState = useMainStore()
 const passwordRecord = store.safe.retrieve(props.capsule.id)
 // eslint-disable-next-line prefer-const
 let closesIn = $computed(() => {
-  if (passwordRecord.value && passwordRecord.value.expires > now.value) {
-    return formatDistance(passwordRecord.value.expires, now.value, {
-      addSuffix: true,
-    })
+  if (passwordRecord.value && passwordRecord.value.expires > new Date()) {
+    return formatDistanceFromToday(passwordRecord.value.expires).value
   }
 })
-// eslint-disable-next-line prefer-const
-let updatedOn = $computed(() => {
-  return formatRelative(props.capsule.updatedOn, now.value)
-})
+const updatedOn = formatDistanceFromToday(props.capsule.updatedOn)
 </script>

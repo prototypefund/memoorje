@@ -20,12 +20,11 @@
 </template>
 
 <script lang="ts" setup>
-import { formatRelative } from 'date-fns'
 import { ComputedRef } from 'vue'
 import { ExtendedPathFileMetadata, ExtendedPathFileRecord } from './types'
 import { basename, join, rootName } from '~/util/file'
 import { PasswordRecord } from '~/util/security'
-import { now } from '~/util/time'
+import { formatDistanceFromToday } from '~/util/time'
 
 const props = defineProps<{
   file: ExtendedPathFileMetadata | ExtendedPathFileRecord
@@ -63,7 +62,5 @@ let customAttribs = $computed(() => {
   }
 })
 // eslint-disable-next-line prefer-const
-let updatedOn = $computed(() => {
-  return formatRelative(props.file.updatedOn, now.value)
-})
+const updatedOn = formatDistanceFromToday(props.file.updatedOn)
 </script>

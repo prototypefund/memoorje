@@ -74,7 +74,7 @@
             v-if="file.updatedOn"
             class="py-3 pr-6 whitespace-nowrap hidden md:table-cell"
           >
-            {{ formatRelative(file.updatedOn, now) }}
+            {{ formatDistanceFromToday(file.updatedOn).value }}
           </td>
         </tr>
       </tbody>
@@ -89,7 +89,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { formatRelative } from 'date-fns'
 import { sort } from 'fast-sort'
 import { ComputedRef } from 'vue'
 import { useRoute } from 'vue-router'
@@ -102,7 +101,7 @@ import {
   stripPathPrefix,
 } from '~/util/file'
 import { PasswordRecord } from '~/util/security'
-import { now } from '~/util/time'
+import { formatDistanceFromToday } from '~/util/time'
 
 const props = defineProps<{
   files: FileRecord[]
