@@ -74,6 +74,7 @@
     </div>
 
     <div class="max-w-container m-auto px-6 mt-16">
+      <h2 class="sr-only">About memoorje</h2>
       <div class="md:flex gap-12 justify-center">
         <MFigure :illustration="IllustrationVault" title="Secure by default">
           <p>
