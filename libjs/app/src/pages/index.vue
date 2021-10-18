@@ -42,8 +42,8 @@
     </div>
 
     <div class="max-w-720p m-auto mt-16">
-      <div class="md:rounded overflow-hidden" style="aspect-ratio: 16 / 6">
-        <picture class="block" style="margin-top: -20%">
+      <div class="md:rounded overflow-hidden">
+        <picture class="block">
           <source
             type="image/avif"
             srcset="
@@ -62,7 +62,13 @@
               ../assets/wave.jpg      3024w
             "
           />
-          <img class="w-full" alt="" src="../assets/wave-1920.jpg" />
+          <img
+            class="w-full"
+            alt=""
+            width="3024"
+            height="1134"
+            src="../assets/wave-1920.jpg"
+          />
         </picture>
       </div>
     </div>
