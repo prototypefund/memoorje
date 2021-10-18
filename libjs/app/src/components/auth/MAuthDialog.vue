@@ -83,7 +83,6 @@
           flex-grow
           sm:max-w-1/2
         "
-        @click="currentAction"
         >{{ currentActionLabel }}
       </MButton>
     </div>

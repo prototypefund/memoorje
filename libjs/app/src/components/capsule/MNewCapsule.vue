@@ -36,7 +36,6 @@
       type="submit"
       design="accent"
       class="w-full sm:w-auto sm:order-last sm:mx-0 flex-grow sm:max-w-1/2"
-      @click="doCreateCapsule"
       >Create Capsule
     </MButton>
   </MForm>
