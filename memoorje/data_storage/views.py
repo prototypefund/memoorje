@@ -11,4 +11,4 @@ class CapsuleDataDownloadView(UserPassesTestMixin, ObjectDownloadView):
 
     def test_func(self):
         content: CapsuleContent = self.get_object()
-        return content.capsule.owner == self.request.email
+        return content.capsule.owner == self.request.user
