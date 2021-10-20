@@ -1,21 +1,11 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from memoorje import get_authenticated_user
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver
 from memoorje.rest_api.fields import BinaryField
 
 
-class CapsuleSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Capsule
-        fields = ["created_on", "description", "id", "name", "updated_on", "url"]
-
-    def create(self, validated_data):
-        return Capsule.objects.create(owner=get_authenticated_user(self.context.get("request")), **validated_data)
-
-
-class CapsuleRelatedSerializerMixin:
+class RelatedCapsuleSerializerMixin:
     """
     Restricts the queryset for the `capsule` field of the serializer to capsules of the current user.
     """
@@ -29,7 +19,16 @@ class CapsuleRelatedSerializerMixin:
         return kwargs
 
 
-class CapsuleContentSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):
+class CapsuleSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Capsule
+        fields = ["created_on", "description", "id", "name", "updated_on", "url"]
+
+    def create(self, validated_data):
+        return Capsule.objects.create(owner=get_authenticated_user(self.context.get("request")), **validated_data)
+
+
+class CapsuleContentSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedModelSerializer):
     metadata = BinaryField()
 
     class Meta:
@@ -37,16 +36,7 @@ class CapsuleContentSerializer(CapsuleRelatedSerializerMixin, serializers.Hyperl
         fields = ["capsule", "data", "id", "metadata", "url"]
 
 
-class CapsuleReceiverSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):
+class CapsuleReceiverSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CapsuleReceiver
         fields = ["capsule", "email", "id", "url"]
-
-
-class CapsuleReceiverConfirmationSerializer(serializers.Serializer):
-    token = serializers.CharField()
-
-    def validate_token(self, value):
-        if not self.instance.check_confirmation_token(value):
-            raise ValidationError("Invalid token")
-        return value

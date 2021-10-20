@@ -97,3 +97,4 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, TestCase):
         """
         self.create_capsule_receiver()
         self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(self.capsule_receiver.get_confirmation_token(), mail.outbox[0].body)

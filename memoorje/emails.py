@@ -1,6 +1,6 @@
-from djeveric import BaseConfirmationEmail
+from djeveric.emails import ConfirmationEmail
 
 
-class CapsuleReceiverConfirmationEmail(BaseConfirmationEmail):
-    def get_message(self, context):
-        return f"Token: {context['token']}"
+class CapsuleReceiverConfirmationEmail(ConfirmationEmail):
+    def get_body(self, context):
+        return f"pk: {context['pk']}, token: {context['token']}"
