@@ -7,8 +7,11 @@ from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from djeveric.fields import ConfirmationField
+from djeveric.models import ConfirmableModelMixin
 
 from memoorje.data_storage.fields import CapsuleDataField
+from memoorje.emails import CapsuleReceiverConfirmationEmail
 
 
 class UserManager(BaseUserManager):
@@ -98,9 +101,10 @@ class CapsuleContent(models.Model):
     data = CapsuleDataField()
 
 
-class CapsuleReceiver(models.Model):
+class CapsuleReceiver(ConfirmableModelMixin, models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
     email = models.EmailField()
+    is_email_confirmed = ConfirmationField(email_class=CapsuleReceiverConfirmationEmail)
 
     class Meta:
         unique_together = ["capsule", "email"]

@@ -1,8 +1,13 @@
+from djeveric.views import ConfirmModelMixin
 from rest_framework import mixins, viewsets
 
 from memoorje import get_authenticated_user
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver
-from memoorje.rest_api.serializers import CapsuleContentSerializer, CapsuleReceiverSerializer, CapsuleSerializer
+from memoorje.rest_api.serializers import (
+    CapsuleContentSerializer,
+    CapsuleReceiverSerializer,
+    CapsuleSerializer,
+)
 
 
 class CapsuleViewSet(viewsets.ModelViewSet):
@@ -29,6 +34,7 @@ class CapsuleContentViewSet(viewsets.ModelViewSet):
 
 
 class CapsuleReceiverViewSet(
+    ConfirmModelMixin,
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
@@ -39,8 +45,9 @@ class CapsuleReceiverViewSet(
     Capsule content access for authenticated users
     """
 
+    queryset = CapsuleReceiver.objects
     serializer_class = CapsuleReceiverSerializer
     filterset_fields = ["capsule"]
 
-    def get_queryset(self):
-        return CapsuleReceiver.objects.filter(capsule__owner=get_authenticated_user(self.request))
+    def get_basic_queryset(self):
+        return self.queryset.filter(capsule__owner=get_authenticated_user(self.request))

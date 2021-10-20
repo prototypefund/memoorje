@@ -6,5 +6,5 @@ from memoorje.models import CapsuleContent
 
 @receiver(post_delete, sender=CapsuleContent)
 @receiver(post_save, sender=CapsuleContent)
-def touch_capsule(sender, instance: CapsuleContent, **kwargs):
+def touch_capsule(instance: CapsuleContent, **kwargs):
     instance.capsule.touch()
