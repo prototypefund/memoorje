@@ -1,6 +1,5 @@
 import json
 
-from django.core import mail
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -103,6 +102,40 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         """
         url = "/capsule-receivers/{pk}/confirm/"
         self.create_capsule_receiver()
-        self.authenticate_user()
-        response = self.client.post(self.get_api_url(url, pk=self.capsule_receiver.pk), json.loads(mail.outbox[0].body))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.post(
+            self.get_api_url(url, pk=self.capsule_receiver.pk),
+            {"token": self.capsule_receiver.get_confirmation_token()},
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.capsule_receiver.refresh_from_db()
+        self.assertTrue(self.capsule_receiver.is_email_confirmed)
+
+    def test_confirm_capsule_receiver_twice(self):
+        """
+        A confirmation token for an email address must not be used twice.
+        """
+        url = "/capsule-receivers/{pk}/confirm/"
+        self.create_capsule_receiver()
+        response = self.client.post(
+            self.get_api_url(url, pk=self.capsule_receiver.pk),
+            {"token": self.capsule_receiver.get_confirmation_token()},
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.client.post(
+            self.get_api_url(url, pk=self.capsule_receiver.pk),
+            {"token": self.capsule_receiver.get_confirmation_token()},
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_confirm_other_capsule_receiver(self):
+        """
+        A confirmation token must not be used for another capsule receiver.
+        """
+        url = "/capsule-receivers/{pk}/confirm/"
+        first = self.create_capsule_receiver()
+        second = self.create_capsule_receiver("other@example.org")
+        response = self.client.post(
+            self.get_api_url(url, pk=first.pk),
+            {"token": second.get_confirmation_token()},
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

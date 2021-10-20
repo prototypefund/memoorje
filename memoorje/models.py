@@ -8,6 +8,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from djeveric import ConfirmationTokenGenerator
 from memoorje.data_storage.fields import CapsuleDataField
 
 
@@ -105,3 +106,16 @@ class CapsuleReceiver(models.Model):
 
     class Meta:
         unique_together = ["capsule", "email"]
+
+    def check_confirmation_token(self, token):
+        return ConfirmationTokenGenerator().check_token(self, token)
+
+    def confirm_email(self):
+        self.is_email_confirmed = True
+        self.save()
+
+    def get_confirmation_token(self):
+        return ConfirmationTokenGenerator().make_token(self)
+
+    def get_confirmation_token_data(self):
+        return [self.email, self.is_email_confirmed]
