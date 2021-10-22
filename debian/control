@@ -1,0 +1,45 @@
+Source: memoorje
+Section: web
+Priority: optional
+Maintainer: memoorje maintainers <tach@memoorje.org>
+Build-Depends:
+ debhelper,
+ dh-exec,
+ dh-python,
+ dh-sysuser,
+ python3-all,
+ python3-pip,
+ python3-setuptools,
+ wget,
+# project dependencies
+ python3-django-downloadview,
+ python3-django-filters,
+ python3-djangorestframework,
+Standards-Version: 4.6.0
+
+Package: memoorje
+Architecture: all
+Depends:
+ ${misc:Depends},
+ python3-memoorje,
+ python3-uwsgidecorators,
+ uwsgi-core,
+ uwsgi-plugin-python3,
+Recommends:
+ ${misc:Recommends},
+ nginx,
+Description: memoorje application daemon
+
+Package: python3-memoorje
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+ python3-django (>= 2:3.2.7),
+ python3-django-downloadview,
+ python3-django-filters,
+ python3-djangorestframework,
+ python3-djangorestframework-camel-case,
+ python3-djangorestframework-spectacular,
+ python3-memoorje-crypto,
+Description: memoorje application (python lib)

@@ -1,0 +1,9 @@
+# related django packages
+# source:
+#     grep "python3.*django" debian/control | awk '{print $1}' | tr -d ',' | sort | uniq \
+#         | while read p; do apt-file list "$p" | grep "dist-packages/[^/]\+/__init__.py$"; done \
+#         | sed 's/^[^ ]* //; s#/__init__\.py$##' | sed 's/^/interest-noawait /' | sort
+interest-noawait /usr/lib/python3/dist-packages/django
+interest-noawait /usr/lib/python3/dist-packages/django_downloadview
+interest-noawait /usr/lib/python3/dist-packages/django_filters
+interest-noawait /usr/lib/python3/dist-packages/rest_framework

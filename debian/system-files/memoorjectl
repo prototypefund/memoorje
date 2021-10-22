@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -eu
+
+EXEC_USER=_memoorje
+
+# with "exec" we allow the init script to kill the real program
+# (otherwise the child process survives)
+if [ "$(id -nu)" = "$EXEC_USER" ]; then
+    . /etc/default/memoorje
+    export PYTHONPATH
+    export DJANGO_SETTINGS_MODULE
+    exec /usr/bin/env python3 -m django "$@"
+elif [ "$(id -u)" = 0 ]; then
+    exec su -s "$0" "$EXEC_USER" -- "$@"
+else
+    echo "please run $0 as root or '$EXEC_USER'" >&2
+    exit 1
+fi

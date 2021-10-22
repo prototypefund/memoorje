@@ -1,0 +1,4 @@
+#!/usr/bin/dh-exec
+debian/system-files/uwsgi.ini => /etc/memoorje/uwsgi.ini
+debian/system-files/nginx.conf => /etc/nginx/snippets/memoorje.conf
+debian/system-files/memoorjectl => /usr/bin/memoorjectl

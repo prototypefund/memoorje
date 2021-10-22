@@ -16,7 +16,7 @@ __pycache__/
 /debian/files
 /debian/python3-memoorje/
 /debian/memoorje/
-/debian/memoorje-webapp/
+/debian/tmp/
 
 node_modules/
 app/dist/

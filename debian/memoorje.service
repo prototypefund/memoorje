@@ -1,0 +1,23 @@
+[Unit]
+Description=memoorje website
+ConditionPathExists=/etc/memoorje/memoorje_config.py
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/default/memoorje
+ExecStartPre=/usr/bin/memoorjectl migrate --no-input
+ExecStartPre=/usr/bin/memoorjectl collectstatic --no-input --clear
+ExecStart=uwsgi \
+    --plugin=python3 \
+    --socket=/run/memoorje/socket \
+    --chown-socket=www-data:www-data \
+    --chmod-socket=660 \
+    --uid=_memoorje \
+    --gid=_memoorje \
+    /etc/memoorje/uwsgi.ini
+Restart=on-failure
+RuntimeDirectory=memoorje
+WorkingDirectory=/var/lib/memoorje
+
+[Install]
+WantedBy=multi-user.target

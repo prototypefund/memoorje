@@ -1,0 +1,4 @@
+# This file is consumed by systemd and only simple variable
+# assignments are supported.
+DJANGO_SETTINGS_MODULE=memoorje_config
+PYTHONPATH=/etc/memoorje

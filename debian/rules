@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME=memoorje
+
+%:
+	dh $@ --package python3-memoorje --with python3 --no-guessing-deps --buildsystem pybuild
+	dh $@ --package memoorje --with sysuser
+
+.PHONY: override_dh_auto_install
+override_dh_auto_install:
+	dh_auto_install --package python3-memoorje --destdir debian/python3-memoorje
