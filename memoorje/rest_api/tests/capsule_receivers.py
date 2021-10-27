@@ -2,7 +2,6 @@ import json
 
 from django.core import mail
 from rest_framework import status
-from rest_framework.reverse import reverse
 
 from memoorje.models import CapsuleReceiver
 from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase

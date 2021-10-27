@@ -2,11 +2,10 @@ from base64 import b64encode
 import json
 
 from rest_framework import status
-from rest_framework.reverse import reverse
 
 from memoorje.models import Keyslot
 from memoorje.rest_api.tests.memoorje import create_test_data_file, get_url, MemoorjeAPITestCase
-from memoorje.rest_api.tests.mixins import CapsuleMixin, KeyslotMixin
+from memoorje.rest_api.tests.mixins import KeyslotMixin
 
 
 class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):

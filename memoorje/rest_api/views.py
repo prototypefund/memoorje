@@ -2,7 +2,7 @@ from djeveric.views import ConfirmModelMixin
 from rest_framework import mixins, viewsets
 
 from memoorje import get_authenticated_user
-from memoorje.models import Capsule, CapsuleContent, Keyslot, CapsuleReceiver, Keyslot
+from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot
 from memoorje.rest_api.serializers import (
     CapsuleContentSerializer,
     CapsuleReceiverSerializer,

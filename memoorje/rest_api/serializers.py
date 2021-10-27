@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from memoorje import get_authenticated_user
-from memoorje.models import Capsule, CapsuleContent, Keyslot, CapsuleReceiver, Keyslot
+from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot
 from memoorje.rest_api.fields import BinaryField
 
 

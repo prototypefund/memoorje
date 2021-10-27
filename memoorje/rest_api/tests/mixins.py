@@ -1,6 +1,4 @@
-from rest_framework.reverse import reverse
-
-from memoorje.models import Capsule, CapsuleContent, Keyslot, CapsuleReceiver, User
+from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, User
 from memoorje.rest_api.tests.memoorje import create_test_data_file
 
 

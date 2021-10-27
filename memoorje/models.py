@@ -1,4 +1,3 @@
-from enum import Enum
 import uuid
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
