@@ -41,26 +41,15 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
             self.assertEqual(keyslot.data, data)
             self.assertEqual(keyslot.purpose, purpose)
 
-    # def test_modify_capsule(self):
-    #     """
-    #     Any capsule and capsule content modifications should update the capsule's update timestamp.
-    #     """
-    #     self.create_capsule()
-    #
-    #     # change an attribute of the capsule itself
-    #     initial_updated_on = self.capsule.updated_on
-    #     self.authenticate_user()
-    #     self.client.patch(self.get_api_url("/capsules/{pk}/", pk=self.capsule.pk), {"name": "Changed the name"})
-    #     self.capsule.refresh_from_db()
-    #     self.assertGreater(self.capsule.updated_on, initial_updated_on)
-    #
-    #     # modify capsule's content
-    #     initial_updated_on = self.capsule.updated_on
-    #     self.create_capsule_content()
-    #     self.assertGreater(self.capsule.updated_on, initial_updated_on)
-    #     initial_updated_on = self.capsule.updated_on
-    #     self.capsule_content.delete()
-    #     self.assertGreater(self.capsule.updated_on, initial_updated_on)
+    def test_modify_keyslot(self):
+        """Any keyslot modifications should update the capsule's update timestamp."""
+        self.create_capsule()
+        initial_updated_on = self.capsule.updated_on
+        self.create_keyslot()
+        self.assertGreater(self.capsule.updated_on, initial_updated_on)
+        initial_updated_on = self.capsule.updated_on
+        self.keyslot.delete()
+        self.assertGreater(self.capsule.updated_on, initial_updated_on)
 
     def test_list_keyslots(self):
         """List the keyslots for a capsule."""
@@ -83,9 +72,7 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
         )
 
     def test_delete_keyslot(self):
-        """
-        Delete a capsule content.
-        """
+        """Delete a keyslot."""
         url = "/keyslots/{pk}/"
         self.create_keyslot()
         self.authenticate_user()
@@ -93,22 +80,24 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Keyslot.objects.exists())
 
-    # def test_update_capsule_content_metadata(self):
-    #     """
-    #     Update the metadata field of a capsule content.
-    #     """
-    #     url = "/capsule-contents/{pk}/"
-    #     metadata = b"Some test metadata (updated)"
-    #     self.create_capsule_content()
-    #     self.authenticate_user()
-    #     with create_test_data_file(metadata) as metadata_file:
-    #         response = self.client.patch(
-    #             self.get_api_url(url, pk=self.capsule_content.pk),
-    #             {
-    #                 "metadata": metadata_file,
-    #             },
-    #             format="multipart",
-    #         )
-    #         self.capsule_content.refresh_from_db()
-    #         self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #         self.assertEqual(self.capsule_content.metadata, metadata)
+    def test_update_keyslot(self):
+        """Update the fields of a keyslot."""
+        url = "/keyslots/{pk}/"
+        data = b"Some test data (updated)"
+        purpose = Keyslot.Purpose.SSS
+        self.create_keyslot()
+        self.authenticate_user()
+        with create_test_data_file(data) as data_file:
+            response = self.client.put(
+                self.get_api_url(url, pk=self.keyslot.pk),
+                {
+                    "capsule": get_url("capsule", self.capsule),
+                    "data": data_file,
+                    "purpose": purpose,
+                },
+                format="multipart",
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.keyslot.refresh_from_db()
+            self.assertEqual(self.keyslot.data, data)
+            self.assertEqual(self.keyslot.purpose, purpose)

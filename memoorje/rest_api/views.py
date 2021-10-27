@@ -48,13 +48,7 @@ class CapsuleReceiverViewSet(
         return self.queryset.filter(capsule__owner=get_authenticated_user(self.request))
 
 
-class KeyslotViewSet(
-    mixins.CreateModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
-):
+class KeyslotViewSet(viewsets.ModelViewSet):
     """Keyslot access for authenticated users"""
 
     serializer_class = KeyslotSerializer
