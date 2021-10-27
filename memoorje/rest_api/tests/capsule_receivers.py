@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from memoorje.models import CapsuleReceiver
-from memoorje.rest_api.tests.memoorje import MemoorjeAPITestCase
+from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
 from memoorje.rest_api.tests.mixins import CapsuleReceiverMixin
 
 
@@ -31,7 +31,7 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         response = self.client.post(
             self.get_api_url(url),
             {
-                "capsule": self.get_capsule_url(),
+                "capsule": get_url("capsule", self.capsule),
                 "email": email,
             },
         )
@@ -52,7 +52,7 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         url = "/capsule-receivers/"
         self.create_capsule()
         request_data = {
-            "capsule": self.get_capsule_url(),
+            "capsule": get_url("capsule", self.capsule),
             "email": "test@example.org",
         }
         self.authenticate_user()
@@ -76,12 +76,10 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
-                    "capsule": self.get_capsule_url(response=response),
+                    "capsule": get_url("capsule", self.capsule, response),
                     "email": self.receiver_email,
                     "id": self.capsule_receiver.id,
-                    "url": reverse(
-                        "capsulereceiver-detail", args=[self.capsule_receiver.pk], request=response.wsgi_request
-                    ),
+                    "url": get_url("capsulereceiver", self.capsule_receiver, response),
                 },
             ],
         )

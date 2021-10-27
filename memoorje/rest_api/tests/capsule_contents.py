@@ -3,10 +3,9 @@ import json
 import os
 
 from rest_framework import status
-from rest_framework.reverse import reverse
 
 from memoorje.models import CapsuleContent
-from memoorje.rest_api.tests.memoorje import create_test_data_file, MemoorjeAPITestCase
+from memoorje.rest_api.tests.memoorje import create_test_data_file, get_url, MemoorjeAPITestCase
 from memoorje.rest_api.tests.mixins import CapsuleContentMixin
 
 
@@ -22,9 +21,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         self.assertListEqual(response.data, [])
 
     def test_create_capsule_content(self):
-        """
-        Create a content for an existing capsule
-        """
+        """Create a content for an existing capsule"""
         url = "/capsule-contents/"
         metadata = b"Capsule Content's Metadata"
         data = b"Capsule Content's File Data"
@@ -35,7 +32,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
                 response = self.client.post(
                     self.get_api_url(url),
                     {
-                        "capsule": self.get_capsule_url(),
+                        "capsule": get_url("capsule", self.capsule),
                         "metadata": metadata_file,
                         "data": data_file,
                     },
@@ -63,7 +60,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         with create_test_data_file(b"test") as data_file:
             with create_test_data_file(b"test") as metadata_file:
                 request_data = {
-                    "capsule": self.get_capsule_url(),
+                    "capsule": get_url("capsule", self.capsule),
                     "metadata": metadata_file,
                     "data": data_file,
                 }
@@ -109,13 +106,11 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
-                    "capsule": self.get_capsule_url(response=response),
+                    "capsule": get_url("capsule", self.capsule, response),
                     "data": response.wsgi_request.build_absolute_uri(self.capsule_content.data.url),
                     "id": self.capsule_content.id,
                     "metadata": b64encode(self.metadata).decode(),
-                    "url": reverse(
-                        "capsulecontent-detail", args=[self.capsule_content.pk], request=response.wsgi_request
-                    ),
+                    "url": get_url("capsulecontent", self.capsule_content, response),
                 },
             ],
         )

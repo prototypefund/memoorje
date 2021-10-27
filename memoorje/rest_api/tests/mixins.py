@@ -1,6 +1,6 @@
 from rest_framework.reverse import reverse
 
-from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, User
+from memoorje.models import Capsule, CapsuleContent, Keyslot, CapsuleReceiver, User
 from memoorje.rest_api.tests.memoorje import create_test_data_file
 
 
@@ -30,14 +30,6 @@ class CapsuleMixin(UserMixin):
     capsule: Capsule
     capsule_description: str
     capsule_name: str
-
-    def get_capsule_url(self, capsule=None, response=None):
-        if capsule is None:
-            capsule = self.capsule
-        request = None
-        if response is not None:
-            request = response.wsgi_request
-        return reverse("capsule-detail", args=[capsule.pk], request=request)
 
     def create_capsule(self) -> Capsule:
         self.ensure_user_exists()
@@ -76,3 +68,15 @@ class CapsuleReceiverMixin(CapsuleMixin):
         self.receiver_email = email or "test@example.org"
         self.capsule_receiver = CapsuleReceiver.objects.create(capsule=self.capsule, email=self.receiver_email)
         return self.capsule_receiver
+
+
+class KeyslotMixin(CapsuleMixin):
+    keyslot: Keyslot
+    data: bytes
+    purpose: Keyslot.Purpose
+
+    def create_keyslot(self):
+        self.ensure_capsule_exists()
+        self.data = b"Some encrypted data"
+        self.purpose = "pwd"
+        self.keyslot = Keyslot.objects.create(capsule=self.capsule, data=self.data, purpose=self.purpose)

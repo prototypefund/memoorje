@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 from tempfile import TemporaryFile
 
+from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
 
@@ -10,6 +11,10 @@ def create_test_data_file(data):
         f.write(data)
         f.seek(0)
         yield f
+
+
+def get_url(basename, instance, response=None):
+    return reverse(f"{basename}-detail", [instance.pk], request=response.wsgi_request if response else None)
 
 
 class MemoorjeAPITestCase(APITestCase):

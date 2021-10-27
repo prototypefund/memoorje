@@ -1,14 +1,12 @@
 from rest_framework import serializers
 
 from memoorje import get_authenticated_user
-from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot
+from memoorje.models import Capsule, CapsuleContent, Keyslot, CapsuleReceiver, Keyslot
 from memoorje.rest_api.fields import BinaryField
 
 
 class RelatedCapsuleSerializerMixin:
-    """
-    Restricts the queryset for the `capsule` field of the serializer to capsules of the current user.
-    """
+    """Restricts the queryset for the `capsule` field of the serializer to capsules of the current user."""
 
     def get_capsule_queryset(self):
         return Capsule.objects.filter(owner=get_authenticated_user(self.context.get("request")))
@@ -43,6 +41,8 @@ class CapsuleReceiverSerializer(RelatedCapsuleSerializerMixin, serializers.Hyper
 
 
 class KeyslotSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedModelSerializer):
+    data = BinaryField()
+
     class Meta:
         model = Keyslot
         fields = ["capsule", "data", "id", "purpose", "url"]

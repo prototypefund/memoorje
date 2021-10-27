@@ -3,7 +3,7 @@ import json
 from rest_framework import status
 
 from memoorje.models import Capsule
-from memoorje.rest_api.tests.memoorje import MemoorjeAPITestCase
+from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
 from memoorje.rest_api.tests.mixins import CapsuleMixin
 
 
@@ -53,7 +53,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
                 "id": str(self.capsule.id),
                 "name": self.capsule_name,
                 "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
-                "url": self.get_capsule_url(response=response),
+                "url": get_url("capsule", self.capsule, response),
             },
         )
 
@@ -108,7 +108,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
                     "id": str(self.capsule.id),
                     "name": self.capsule_name,
                     "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
-                    "url": self.get_capsule_url(response=response),
+                    "url": get_url("capsule", self.capsule, response),
                 },
             ],
         )

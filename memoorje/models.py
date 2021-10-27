@@ -111,12 +111,11 @@ class CapsuleReceiver(ConfirmableModelMixin, models.Model):
         unique_together = ["capsule", "email"]
 
 
-class KeyslotPurpose(Enum):
-    PASSWORD = "pwd"
-    SSS = "sss"
-
-
 class Keyslot(models.Model):
+    class Purpose(models.TextChoices):
+        PASSWORD = "pwd"
+        SSS = "sss"
+
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
     data = models.BinaryField()
-    purpose = models.CharField(max_length=3, choices=[(p, p.value) for p in KeyslotPurpose])
+    purpose = models.CharField(max_length=3, choices=Purpose.choices)

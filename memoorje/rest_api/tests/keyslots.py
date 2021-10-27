@@ -1,74 +1,47 @@
+from base64 import b64encode
+import json
+
 from rest_framework import status
+from rest_framework.reverse import reverse
 
-from memoorje.rest_api.tests.memoorje import MemoorjeAPITestCase
-from memoorje.rest_api.tests.mixins import CapsuleMixin
+from memoorje.models import Keyslot
+from memoorje.rest_api.tests.memoorje import create_test_data_file, get_url, MemoorjeAPITestCase
+from memoorje.rest_api.tests.mixins import CapsuleMixin, KeyslotMixin
 
 
-class KeyslotTestCase(CapsuleMixin, MemoorjeAPITestCase):
+class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
     def test_access_keyslots_without_capsule(self):
-        """
-        Access keyslot list without a capsule given
-        """
+        """Access keyslot list without a capsule given"""
         url = "/keyslots/"
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertListEqual(response.data, [])
 
-    # def test_create_capsule_content(self):
-    #     """
-    #     Create a content for an existing capsule
-    #     """
-    #     url = "/capsule-contents/"
-    #     metadata = b"Capsule Content's Metadata"
-    #     data = b"Capsule Content's File Data"
-    #     self.create_capsule()
-    #     self.authenticate_user()
-    #     with create_test_data_file(data) as data_file:
-    #         with create_test_data_file(metadata) as metadata_file:
-    #             response = self.client.post(
-    #                 self.get_api_url(url),
-    #                 {
-    #                     "capsule": self.get_capsule_url(),
-    #                     "metadata": metadata_file,
-    #                     "data": data_file,
-    #                 },
-    #                 format="multipart",
-    #             )
-    #             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #             self.assertEqual(CapsuleContent.objects.count(), 1)
-    #             capsule_content = CapsuleContent.objects.get()
-    #             self.assertEqual(capsule_content.capsule, self.capsule)
-    #             self.assertEqual(capsule_content.metadata, metadata)
-    #             self.assertEqual(capsule_content.data.read(), data)
-    #
-    # def test_create_capsule_content_unauthorized(self):
-    #     """
-    #     Create a content for a capsule belonging to another user.
-    #     """
-    #
-    #     def request(request_url, request_body):
-    #         request_body["metadata"].seek(0)
-    #         request_body["data"].seek(0)
-    #         return self.client.post(self.get_api_url(request_url), request_body, format="multipart")
-    #
-    #     url = "/capsule-contents/"
-    #     self.create_capsule()
-    #     with create_test_data_file(b"test") as data_file:
-    #         with create_test_data_file(b"test") as metadata_file:
-    #             request_data = {
-    #                 "capsule": self.get_capsule_url(),
-    #                 "metadata": metadata_file,
-    #                 "data": data_file,
-    #             }
-    #             self.authenticate_user()
-    #             response = request(url, request_data)
-    #             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #             self.create_user()
-    #             self.authenticate_user()
-    #             response = request(url, request_data)
-    #             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    #
+    def test_create_keyslot(self):
+        """Create a keyslot for an existing capsule"""
+        url = "/keyslots/"
+        data = b"Keyslot's Data"
+        purpose = "pwd"
+        self.create_capsule()
+        self.authenticate_user()
+        with create_test_data_file(data) as data_file:
+            response = self.client.post(
+                self.get_api_url(url),
+                {
+                    "capsule": get_url("capsule", self.capsule),
+                    "data": data_file,
+                    "purpose": purpose,
+                },
+                format="multipart",
+            )
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertEqual(Keyslot.objects.count(), 1)
+            keyslot = Keyslot.objects.get()
+            self.assertEqual(keyslot.capsule, self.capsule)
+            self.assertEqual(keyslot.data, data)
+            self.assertEqual(keyslot.purpose, purpose)
+
     # def test_modify_capsule(self):
     #     """
     #     Any capsule and capsule content modifications should update the capsule's update timestamp.
@@ -89,31 +62,27 @@ class KeyslotTestCase(CapsuleMixin, MemoorjeAPITestCase):
     #     initial_updated_on = self.capsule.updated_on
     #     self.capsule_content.delete()
     #     self.assertGreater(self.capsule.updated_on, initial_updated_on)
-    #
-    # def test_list_capsule_contents(self):
-    #     """
-    #     List the contents for a capsule.
-    #     """
-    #     url = "/capsule-contents/?capsule={pk}"
-    #     self.create_capsule_content()
-    #     self.authenticate_user()
-    #     response = self.client.get(self.get_api_url(url, pk=self.capsule.pk))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertListEqual(
-    #         json.loads(response.content),
-    #         [
-    #             {
-    #                 "capsule": self.get_capsule_url(response=response),
-    #                 "data": response.wsgi_request.build_absolute_uri(self.capsule_content.data.url),
-    #                 "id": self.capsule_content.id,
-    #                 "metadata": b64encode(self.metadata).decode(),
-    #                 "url": reverse(
-    #                     "capsulecontent-detail", args=[self.capsule_content.pk], request=response.wsgi_request
-    #                 ),
-    #             },
-    #         ],
-    #     )
-    #
+
+    def test_list_keyslots(self):
+        """List the keyslots for a capsule."""
+        url = "/keyslots/?capsule={pk}"
+        self.create_keyslot()
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url, pk=self.capsule.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual(
+            json.loads(response.content),
+            [
+                {
+                    "capsule": get_url("capsule", self.capsule, response),
+                    "id": self.keyslot.id,
+                    "data": b64encode(self.data).decode(),
+                    "purpose": self.purpose,
+                    "url": get_url("keyslot", self.keyslot, response),
+                },
+            ],
+        )
+
     # def test_delete_capsule_content(self):
     #     """
     #     Delete a capsule content.
