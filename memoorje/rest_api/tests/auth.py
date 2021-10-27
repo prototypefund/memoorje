@@ -2,7 +2,7 @@ from rest_framework import status
 
 from memoorje.models import User
 from memoorje.rest_api.tests.memoorje import MemoorjeAPITestCase
-from memoorje.tests import UserMixin
+from memoorje.rest_api.tests.mixins import UserMixin
 
 
 class UserTestCase(UserMixin, MemoorjeAPITestCase):

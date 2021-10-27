@@ -3,8 +3,8 @@ import json
 from rest_framework import status
 
 from memoorje.models import Capsule
-from memoorje.rest_api.tests import MemoorjeAPITestCase
-from memoorje.tests import CapsuleMixin
+from memoorje.rest_api.tests.memoorje import MemoorjeAPITestCase
+from memoorje.rest_api.tests.mixins import CapsuleMixin
 
 
 class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):

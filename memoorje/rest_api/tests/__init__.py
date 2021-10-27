@@ -1,4 +1,4 @@
-from .auth import *  # noqa: F401, F403
-from .capsule_contents import *  # noqa: F401, F403
-from .capsule_receivers import *  # noqa: F401, F403
-from .capsules import *  # noqa: F401, F403
+from .auth import UserTestCase  # noqa: F401, F403
+from .capsule_contents import CapsuleContentTestCase  # noqa: F401, F403
+from .capsule_receivers import CapsuleReceiverTestCase  # noqa: F401, F403
+from .capsules import CapsuleTestCase  # noqa: F401, F403

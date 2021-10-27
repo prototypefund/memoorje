@@ -1,19 +1,7 @@
-from contextlib import contextmanager
-from tempfile import TemporaryFile
-
-from django.core import mail
-from django.test import TestCase
 from rest_framework.reverse import reverse
 
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, User
-
-
-@contextmanager
-def create_test_data_file(data):
-    with TemporaryFile() as f:
-        f.write(data)
-        f.seek(0)
-        yield f
+from memoorje.rest_api.tests.memoorje import create_test_data_file
 
 
 class UserMixin:
@@ -88,13 +76,3 @@ class CapsuleReceiverMixin(CapsuleMixin):
         self.receiver_email = email or "test@example.org"
         self.capsule_receiver = CapsuleReceiver.objects.create(capsule=self.capsule, email=self.receiver_email)
         return self.capsule_receiver
-
-
-class CapsuleReceiverTestCase(CapsuleReceiverMixin, TestCase):
-    def test_receiver_creation_sends_confirmation_request(self):
-        """
-        An email with a confirmation link should be sent to the capsule receiver.
-        """
-        self.create_capsule_receiver()
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn(self.capsule_receiver.get_confirmation_token(), mail.outbox[0].body)

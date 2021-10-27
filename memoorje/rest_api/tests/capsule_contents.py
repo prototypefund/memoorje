@@ -6,8 +6,8 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from memoorje.models import CapsuleContent
-from memoorje.rest_api.tests import MemoorjeAPITestCase
-from memoorje.tests import CapsuleContentMixin, create_test_data_file
+from memoorje.rest_api.tests.memoorje import create_test_data_file, MemoorjeAPITestCase
+from memoorje.rest_api.tests.mixins import CapsuleContentMixin
 
 
 class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):

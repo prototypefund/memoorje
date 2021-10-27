@@ -1,11 +1,12 @@
 import json
 
+from django.core import mail
 from rest_framework import status
 from rest_framework.reverse import reverse
 
 from memoorje.models import CapsuleReceiver
-from memoorje.rest_api.tests import MemoorjeAPITestCase
-from memoorje.tests import CapsuleReceiverMixin
+from memoorje.rest_api.tests.memoorje import MemoorjeAPITestCase
+from memoorje.rest_api.tests.mixins import CapsuleReceiverMixin
 
 
 class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
@@ -95,6 +96,14 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         response = self.client.delete(self.get_api_url(url, pk=self.capsule_receiver.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(CapsuleReceiver.objects.exists())
+
+    def test_receiver_creation_sends_confirmation_request(self):
+        """
+        An email with a confirmation link should be sent to the capsule receiver.
+        """
+        self.create_capsule_receiver()
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(self.capsule_receiver.get_confirmation_token(), mail.outbox[0].body)
 
     def test_confirm_capsule_receiver(self):
         """
