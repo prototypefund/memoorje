@@ -1,7 +1,0 @@
-{
-  "extends": ["@antfu", "@vue/prettier", "@vue/prettier/@typescript-eslint"],
-  "rules": {
-    "import/first": "off",
-    "no-console": "off"
-  }
-}

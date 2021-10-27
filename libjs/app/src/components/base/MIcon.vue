@@ -1,1 +1,0 @@
-<template><slot />&nbsp;</template>

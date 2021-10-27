@@ -1,3 +1,0 @@
-<template>
-  <MPage> </MPage>
-</template>
