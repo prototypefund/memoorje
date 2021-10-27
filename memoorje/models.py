@@ -1,3 +1,4 @@
+from enum import Enum
 import uuid
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
@@ -97,7 +98,7 @@ class Capsule(models.Model):
 
 class CapsuleContent(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
-    metadata = models.BinaryField(editable=True)
+    metadata = models.BinaryField()
     data = CapsuleDataField()
 
 
@@ -108,3 +109,14 @@ class CapsuleReceiver(ConfirmableModelMixin, models.Model):
 
     class Meta:
         unique_together = ["capsule", "email"]
+
+
+class KeyslotPurpose(Enum):
+    PASSWORD = "pwd"
+    SSS = "sss"
+
+
+class Keyslot(models.Model):
+    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
+    data = models.BinaryField()
+    purpose = models.CharField(max_length=3, choices=[(p, p.value) for p in KeyslotPurpose])
