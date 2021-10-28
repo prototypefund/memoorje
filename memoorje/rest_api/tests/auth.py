@@ -9,9 +9,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
     base_url = "/api/auth"
 
     def test_signup(self):
-        """
-        Create a new user account (signup)
-        """
+        """Create a new user account (signup)"""
         url = "/register/"
         email = "test@example.org"
         password = "test12345"
@@ -22,9 +20,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self.assertEqual(User.objects.get().email, email)
 
     def test_login(self) -> None:
-        """
-        Create a session cookie (login)
-        """
+        """Create a session cookie (login)"""
         url = "/login/"
         self.create_user()
         data = {"login": self.email, "password": self.password}
@@ -33,9 +29,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
     def test_logout(self) -> None:
-        """
-        Remove the session (logout)
-        """
+        """Remove the session (logout)"""
         url = "/logout/"
         self.authenticate_user()
         response = self.client.post(self.get_api_url(url))
@@ -43,11 +37,8 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
     def test_retrieve_user(self) -> None:
-        """
-        Retrieve data of authenticated user
-        """
+        """Retrieve data of authenticated user"""
         url = "/profile/"
-        self.create_user()
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -61,9 +52,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         )
 
     def test_create_two_users(self) -> None:
-        """
-        Create more than one user
-        """
+        """Create more than one user"""
         self.create_user()
         self.create_user()
         self.assertEqual(User.objects.count(), 2)
