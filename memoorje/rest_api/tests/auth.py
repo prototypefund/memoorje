@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import status
 
 from memoorje.models import User
@@ -48,8 +49,19 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
                 "email": self.email,
                 "id": self.user.id,
                 "name": self.user.name,
+                "remind_interval": settings.DEFAULT_REMIND_INTERVAL,
             },
         )
+
+    def test_set_remind_interval(self):
+        """Set the remind interval of the authenticated user"""
+        url = "/profile/"
+        remind_interval = 23
+        self.authenticate_user()
+        response = self.client.patch(self.get_api_url(url), {"remindInterval": remind_interval})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.remind_interval, remind_interval)
 
     def test_create_two_users(self) -> None:
         """Create more than one user"""

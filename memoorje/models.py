@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
@@ -49,6 +50,7 @@ class UserManager(BaseUserManager):
 class User(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(_("email address"), unique=True)
     name = models.CharField(max_length=100, blank=True)
+    remind_interval = models.PositiveSmallIntegerField(default=settings.DEFAULT_REMIND_INTERVAL)
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,
@@ -58,7 +60,7 @@ class User(PermissionsMixin, AbstractBaseUser):
         _("active"),
         default=True,
         help_text=_(
-            "Designates whether this user should be treated as active. " "Unselect this instead of deleting accounts."
+            "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
         ),
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
