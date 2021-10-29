@@ -4,7 +4,7 @@ from rest_framework import status
 
 from memoorje.models import Capsule
 from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
-from memoorje.rest_api.tests.mixins import CapsuleMixin
+from memoorje.tests.mixins import CapsuleMixin
 
 
 class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):

@@ -1,10 +1,10 @@
+from datetime import date
 import uuid
 
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
-from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -12,7 +12,7 @@ from djeveric.fields import ConfirmationField
 from djeveric.models import ConfirmableModelMixin
 
 from memoorje.data_storage.fields import CapsuleDataField
-from memoorje.emails import CapsuleReceiverConfirmationEmail
+from memoorje.emails import CapsuleReceiverConfirmationEmail, ReminderEmail
 
 
 class UserManager(BaseUserManager):
@@ -51,6 +51,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(_("email address"), unique=True)
     name = models.CharField(max_length=100, blank=True)
     remind_interval = models.PositiveSmallIntegerField(default=settings.DEFAULT_REMIND_INTERVAL)
+    last_reminder_sent_on = models.DateField(null=True, blank=True)
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,
@@ -79,14 +80,20 @@ class User(PermissionsMixin, AbstractBaseUser):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
+    def send_email(self, email_class, context):
         """Send an email to this user."""
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+        email_class(self.email).send(context)
+
+    def send_reminder(self):
+        """Send a reminder to this user."""
+        self.send_email(ReminderEmail, {})
+        self.last_reminder_sent_on = date.today()
+        self.save()
 
 
 class Capsule(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    owner = models.ForeignKey("User", on_delete=models.CASCADE)
+    owner = models.ForeignKey("User", on_delete=models.CASCADE, related_name="capsules")
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)

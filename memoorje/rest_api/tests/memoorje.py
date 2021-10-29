@@ -1,16 +1,5 @@
-from contextlib import contextmanager
-from tempfile import TemporaryFile
-
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-
-
-@contextmanager
-def create_test_data_file(data):
-    with TemporaryFile() as f:
-        f.write(data)
-        f.seek(0)
-        yield f
 
 
 def get_url(basename, instance, response=None):

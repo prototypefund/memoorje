@@ -4,8 +4,9 @@ import json
 from rest_framework import status
 
 from memoorje.models import Keyslot
-from memoorje.rest_api.tests.memoorje import create_test_data_file, get_url, MemoorjeAPITestCase
-from memoorje.rest_api.tests.mixins import KeyslotMixin
+from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
+from memoorje.tests.memoorje import create_test_data_file
+from memoorje.tests.mixins import KeyslotMixin
 
 
 class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):

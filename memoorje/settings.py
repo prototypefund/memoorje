@@ -165,6 +165,16 @@ REST_REGISTRATION = {
     "REGISTER_VERIFICATION_ENABLED": False,
     "REGISTER_EMAIL_VERIFICATION_ENABLED": False,
     "RESET_PASSWORD_VERIFICATION_ENABLED": False,
+    "USER_HIDDEN_FIELDS": [
+        "date_joined",
+        "groups",
+        "is_active",
+        "is_staff",
+        "is_superuser",
+        "last_login",
+        "last_reminder_sent_on",
+        "user_permissions",
+    ],
 }
 
 SPECTACULAR_SETTINGS = {

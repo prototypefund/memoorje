@@ -33,6 +33,7 @@ setup(
         "djeveric",
         "drf-spectacular~=0.18.2",
         "memoorje_crypto",
+        "python-dateutil~=2.8.1",
     ],
     include_package_data=True,
     classifiers=[

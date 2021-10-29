@@ -5,8 +5,9 @@ import os
 from rest_framework import status
 
 from memoorje.models import CapsuleContent
-from memoorje.rest_api.tests.memoorje import create_test_data_file, get_url, MemoorjeAPITestCase
-from memoorje.rest_api.tests.mixins import CapsuleContentMixin
+from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
+from memoorje.tests.memoorje import create_test_data_file
+from memoorje.tests.mixins import CapsuleContentMixin
 
 
 class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):

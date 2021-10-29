@@ -1,11 +1,15 @@
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, User
-from memoorje.rest_api.tests.memoorje import create_test_data_file
+from memoorje.tests.memoorje import create_test_data_file
 
 
 class UserMixin:
     user: User
     password: str
     email: str
+
+    def authenticate_user(self):
+        self.ensure_user_exists()
+        self.client.force_login(user=self.user)
 
     def create_user(self):
         self.email = f"test{User.objects.count()}@example.org"
@@ -15,13 +19,6 @@ class UserMixin:
     def ensure_user_exists(self):
         if not hasattr(self, "user"):
             self.create_user()
-
-    def authenticate_user(self):
-        self.ensure_user_exists()
-        if hasattr(self.client, "force_authentication"):
-            self.client.force_authenticate(user=self.user)
-        else:
-            self.client.force_login(user=self.user)
 
 
 class CapsuleMixin(UserMixin):

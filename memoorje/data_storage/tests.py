@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework import status
 
-from memoorje.rest_api.tests.mixins import CapsuleContentMixin
+from memoorje.tests.mixins import CapsuleContentMixin
 
 
 class CapsuleContentTestCase(CapsuleContentMixin, TestCase):
