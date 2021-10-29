@@ -2,12 +2,13 @@ from djeveric.views import ConfirmModelMixin
 from rest_framework import mixins, viewsets
 
 from memoorje import get_authenticated_user
-from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot
+from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, Trustee
 from memoorje.rest_api.serializers import (
     CapsuleContentSerializer,
     CapsuleReceiverSerializer,
     CapsuleSerializer,
     KeyslotSerializer,
+    TrusteeSerializer,
 )
 
 
@@ -38,7 +39,7 @@ class CapsuleReceiverViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
-    """Capsule content access for authenticated users"""
+    """Capsule receiver access for authenticated users"""
 
     queryset = CapsuleReceiver.objects
     serializer_class = CapsuleReceiverSerializer
@@ -56,3 +57,13 @@ class KeyslotViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Keyslot.objects.filter(capsule__owner=get_authenticated_user(self.request))
+
+
+class TrusteeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """Trustee access for authenticated users"""
+
+    serializer_class = TrusteeSerializer
+    filterset_fields = ["capsule"]
+
+    def get_queryset(self):
+        return Trustee.objects.filter(capsule__owner=get_authenticated_user(self.request))

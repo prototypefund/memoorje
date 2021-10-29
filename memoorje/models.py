@@ -127,3 +127,11 @@ class Keyslot(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
     data = models.BinaryField()
     purpose = models.CharField(max_length=3, choices=Purpose.choices)
+
+
+class Trustee(models.Model):
+    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
+    email = models.EmailField()
+
+    class Meta:
+        unique_together = ["capsule", "email"]

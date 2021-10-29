@@ -75,3 +75,7 @@ class KeyslotMixin(CapsuleMixin):
         self.data = b"Some encrypted data"
         self.purpose = "pwd"
         self.keyslot = Keyslot.objects.create(capsule=self.capsule, data=self.data, purpose=self.purpose)
+
+
+class TrusteeMixin(CapsuleMixin):
+    pass
