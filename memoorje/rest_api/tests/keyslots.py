@@ -41,6 +41,24 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
             self.assertEqual(keyslot.data, data)
             self.assertEqual(keyslot.purpose, purpose)
 
+    def test_create_keyslot_unauthorized(self):
+        """Create a keyslot for a capsule belonging to another user."""
+        url = "/keyslots/"
+        # create a capsule (and an user)
+        self.create_capsule()
+        # create another user
+        self.create_user()
+        self.authenticate_user()
+        response = self.client.post(
+            self.get_api_url(url),
+            {
+                "capsule": get_url("capsule", self.capsule),
+            },
+            format="multipart",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["capsule"][0].code, "does_not_exist")
+
     def test_modify_keyslot(self):
         """Any keyslot modifications should update the capsule's update timestamp."""
         self.create_capsule()
