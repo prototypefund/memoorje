@@ -59,7 +59,13 @@ class KeyslotViewSet(viewsets.ModelViewSet):
         return Keyslot.objects.filter(capsule__owner=get_authenticated_user(self.request))
 
 
-class TrusteeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class TrusteeViewSet(
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
     """Trustee access for authenticated users"""
 
     serializer_class = TrusteeSerializer

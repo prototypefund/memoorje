@@ -1,4 +1,4 @@
-from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, User
+from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, Trustee, User
 from memoorje.tests.memoorje import create_test_data_file
 
 
@@ -78,4 +78,10 @@ class KeyslotMixin(CapsuleMixin):
 
 
 class TrusteeMixin(CapsuleMixin):
-    pass
+    trustee_email: str
+    trustee: Trustee
+
+    def create_trustee(self):
+        self.ensure_capsule_exists()
+        self.trustee_email = "trustee@example.org"
+        self.trustee = Trustee.objects.create(capsule=self.capsule, email=self.trustee_email)
