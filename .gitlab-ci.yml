@@ -12,8 +12,6 @@ variables:
   DPKG_INSTALL_DISTRIBUTION: bullseye
 
 test::python:
-  extends: .run_tox
-  image: $IMAGE
   parallel:
     matrix:
       - IMAGE:
