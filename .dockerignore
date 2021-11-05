@@ -1,0 +1,10 @@
+.env
+debian/
+.pybuild/
+.tox/
+build/
+media/
+*.egg-info/
+db.sqlite3
+tox.ini
+.coverage
