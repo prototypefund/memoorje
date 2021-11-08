@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from memoorje import get_authenticated_user
-from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, Trustee
+from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, PartialKey, Trustee
 from memoorje.rest_api.fields import BinaryField
 
 
@@ -45,6 +45,14 @@ class KeyslotSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedMo
     class Meta:
         model = Keyslot
         fields = ["capsule", "data", "id", "purpose", "url"]
+
+
+class PartialKeySerializer(serializers.HyperlinkedModelSerializer):
+    data = BinaryField()
+
+    class Meta:
+        model = PartialKey
+        fields = ["capsule", "data"]
 
 
 class TrusteeSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedModelSerializer):

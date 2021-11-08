@@ -1,5 +1,6 @@
 from djeveric.views import ConfirmModelMixin
 from rest_framework import mixins, viewsets
+from rest_framework.permissions import AllowAny
 
 from memoorje import get_authenticated_user
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, Trustee
@@ -8,6 +9,7 @@ from memoorje.rest_api.serializers import (
     CapsuleReceiverSerializer,
     CapsuleSerializer,
     KeyslotSerializer,
+    PartialKeySerializer,
     TrusteeSerializer,
 )
 
@@ -57,6 +59,13 @@ class KeyslotViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Keyslot.objects.filter(capsule__owner=get_authenticated_user(self.request))
+
+
+class PartialKeyViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """Partial Key deposit for trustees"""
+
+    permission_classes = [AllowAny]
+    serializer_class = PartialKeySerializer
 
 
 class TrusteeViewSet(

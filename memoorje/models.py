@@ -129,9 +129,16 @@ class Keyslot(models.Model):
     purpose = models.CharField(max_length=3, choices=Purpose.choices)
 
 
+class PartialKey(models.Model):
+    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
+    data = models.BinaryField()
+
+
 class Trustee(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
-    email = models.EmailField()
+    email = models.EmailField(blank=True)
+    name = models.CharField(max_length=100, blank=True)
+    partial_key_hash = models.CharField(max_length=1)
 
     class Meta:
-        unique_together = ["capsule", "email"]
+        unique_together = ["capsule", "partial_key_hash"]
