@@ -18,12 +18,11 @@ class RelatedCapsuleSerializerMixin:
 
 
 class CapsuleSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Capsule
-        fields = ["created_on", "description", "id", "name", "updated_on", "url"]
-
-    def create(self, validated_data):
-        return Capsule.objects.create(owner=get_authenticated_user(self.context.get("request")), **validated_data)
+        fields = ["created_on", "description", "id", "name", "owner", "updated_on", "url"]
 
 
 class CapsuleContentSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedModelSerializer):
