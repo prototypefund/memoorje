@@ -1,4 +1,5 @@
 from datetime import date
+import hashlib
 import uuid
 
 from django.conf import settings
@@ -133,12 +134,16 @@ class PartialKey(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
     data = models.BinaryField()
 
+    @staticmethod
+    def hash_key_data(data):
+        return hashlib.sha256(data).digest()
+
 
 class Trustee(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
     email = models.EmailField(blank=True)
     name = models.CharField(max_length=100, blank=True)
-    partial_key_hash = models.CharField(max_length=1)
+    partial_key_hash = models.BinaryField()
 
     class Meta:
         unique_together = ["capsule", "partial_key_hash"]

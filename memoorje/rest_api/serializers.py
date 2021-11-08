@@ -54,6 +54,14 @@ class PartialKeySerializer(serializers.HyperlinkedModelSerializer):
         model = PartialKey
         fields = ["capsule", "data"]
 
+    def validate(self, data):
+        data_hash = PartialKey.hash_key_data(data["data"])
+        try:
+            Trustee.objects.get(capsule=data["capsule"], partial_key_hash=data_hash)
+            return data
+        except Trustee.DoesNotExist:
+            raise serializers.ValidationError("Partial key data seems to be invalid for this capsule", "invalid_key")
+
 
 class TrusteeSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedModelSerializer):
     class Meta:
