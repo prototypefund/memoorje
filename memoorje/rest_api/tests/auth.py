@@ -18,7 +18,9 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         response = self.client.post(self.get_api_url(url), data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 1)
-        self.assertEqual(User.objects.get().email, email)
+        user = User.objects.get()
+        self.assertEqual(user.email, email)
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
 
     def test_login(self) -> None:
         """Create a session cookie (login)"""
