@@ -1,7 +1,7 @@
 from django.db.models import Q
 from djeveric.views import ConfirmModelMixin
 from rest_framework import mixins, viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, SAFE_METHODS
 
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, Trustee
 from memoorje.rest_api.serializers import (
@@ -15,12 +15,26 @@ from memoorje.rest_api.serializers import (
 from memoorje.utils import get_authenticated_user, get_receiver_by_token
 
 
+class IsCapsuleOwnerOrReadOnly(IsAuthenticatedOrReadOnly):
+    """
+    Either the user is authenticated and owns the capsule or access is read-only.
+
+    Which capsules are read-only accessible is handled by restricting the queryset.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if isinstance(obj, Capsule):
+            capsule = obj
+            is_read_only = request.method in SAFE_METHODS
+            is_own_capsule = capsule.owner == request.user
+            return is_read_only or is_own_capsule
+        return False
+
+
 class CapsuleViewSet(viewsets.ModelViewSet):
     """Capsule access for authenticated users"""
 
-    # We allow read-only access for non-authenticated users. This is only useful if they provide a receiver token.
-    # Otherwise the queryset is restricted and they get a 404.
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsCapsuleOwnerOrReadOnly]
     serializer_class = CapsuleSerializer
 
     def get_queryset(self):

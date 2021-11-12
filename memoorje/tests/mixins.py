@@ -2,7 +2,12 @@ from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, P
 from memoorje.tests.memoorje import create_test_data_file
 
 
-class UserMixin:
+class BaseMixin:
+    def get_request_headers(self, **kwargs):
+        return {}
+
+
+class UserMixin(BaseMixin):
     user: User
     password: str
     email: str
@@ -63,6 +68,14 @@ class CapsuleReceiverMixin(CapsuleMixin):
         self.receiver_email = email or "test@example.org"
         self.capsule_receiver = CapsuleReceiver.objects.create(capsule=self.capsule, email=self.receiver_email)
         return self.capsule_receiver
+
+    def get_request_headers(self, **kwargs):
+        headers = super().get_request_headers(**kwargs)
+        if "with_receiver_token_for" in kwargs:
+            headers["HTTP_X_MEMOORJE_RECEIVER_TOKEN"] = kwargs[
+                "with_receiver_token_for"
+            ].receiver_token_generator_proxy.make_token()
+        return headers
 
 
 class KeyslotMixin(CapsuleMixin):

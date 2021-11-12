@@ -2,7 +2,7 @@ import json
 
 from rest_framework import status
 
-from memoorje.models import Capsule
+from memoorje.models import Capsule, CapsuleReceiver
 from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
 from memoorje.tests.mixins import CapsuleMixin, CapsuleReceiverMixin
 
@@ -116,6 +116,117 @@ class CapsuleAccessWithReceiverTokenTestCase(CapsuleReceiverMixin, MemoorjeAPITe
         self.create_capsule_receiver()
         response = self.client.get(
             self.get_api_url(url, pk=self.capsule.pk),
-            HTTP_X_MEMOORJE_RECEIVER_TOKEN=self.capsule_receiver.receiver_token_generator_proxy.make_token(),
+            **self.get_request_headers(with_receiver_token_for=self.capsule_receiver),
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_list_capsules(self):
+        """List capsule(s) for the given receiver."""
+        url = "/capsules/"
+        self.create_capsule_receiver()
+        response = self.client.get(
+            self.get_api_url(url), **self.get_request_headers(with_receiver_token_for=self.capsule_receiver)
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_create_capsule(self) -> None:
+        """Creating a capsule is forbidden if not authenticated."""
+        url = "/capsules/"
+        self.create_capsule_receiver()
+        response = self.client.post(
+            self.get_api_url(url), **self.get_request_headers(with_receiver_token_for=self.capsule_receiver)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_capsule(self) -> None:
+        """Updating a capsule is forbidden if not authenticated."""
+        url = "/capsules/{pk}/"
+        self.create_capsule_receiver()
+        response = self.client.put(
+            self.get_api_url(url, pk=self.capsule.pk),
+            **self.get_request_headers(with_receiver_token_for=self.capsule_receiver),
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_capsule(self):
+        """Deleting a capsule is forbidden if not authenticated."""
+        url = "/capsules/{pk}/"
+        self.create_capsule_receiver()
+        response = self.client.delete(
+            self.get_api_url(url, pk=self.capsule.pk),
+            **self.get_request_headers(with_receiver_token_for=self.capsule_receiver),
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class AuthenticatedCapsuleAccessWithReceiverTokenTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
+    def test_retrieve_capsule(self):
+        """Gain access to capsules by providing auth and a receiver token."""
+        url = "/capsules/{pk}/"
+        receiver = self._create_two_capsules_and_authenticate()
+        response = self.client.get(
+            self.get_api_url(url, pk=self.capsule.pk), **self.get_request_headers(with_receiver_token_for=receiver)
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(
+            self.get_api_url(url, pk=receiver.capsule.pk), **self.get_request_headers(with_receiver_token_for=receiver)
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_list_capsules_without_token(self):
+        """List capsule(s) for the given receiver without a receiver token."""
+        response = self._list_capsules(with_token=False)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_list_capsules(self):
+        """List capsule(s) for the given receiver."""
+        response = self._list_capsules(with_token=True)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_create_capsule(self) -> None:
+        """You can still create capsules, even if you supply a token."""
+        url = "/capsules/"
+        self.create_capsule_receiver()
+        self.authenticate_user()
+        response = self.client.post(
+            self.get_api_url(url),
+            data={"name": "test", "description": "test"},
+            **self.get_request_headers(with_receiver_token_for=self.capsule_receiver),
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_delete_own_capsule(self):
+        """You can delete your own capsules."""
+        url = "/capsules/{pk}/"
+        receiver = self._create_two_capsules_and_authenticate()
+        response = self.client.delete(
+            self.get_api_url(url, pk=self.capsule.pk),
+            **self.get_request_headers(with_receiver_token_for=receiver),
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_receiver_capsule(self):
+        """You must not delete a received capsule."""
+        url = "/capsules/{pk}/"
+        receiver = self._create_two_capsules_and_authenticate()
+        response = self.client.delete(
+            self.get_api_url(url, pk=receiver.capsule.pk),
+            **self.get_request_headers(with_receiver_token_for=receiver),
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _create_two_capsules_and_authenticate(self) -> CapsuleReceiver:
+        receiver = self.create_capsule_receiver()
+        self.create_user()
+        self.create_capsule()
+        self.authenticate_user()
+        return receiver
+
+    def _list_capsules(self, with_token: bool):
+        url = "/capsules/"
+        receiver = self._create_two_capsules_and_authenticate()
+        headers = {"with_receiver_token_for": receiver} if with_token else {}
+        return self.client.get(self.get_api_url(url), **self.get_request_headers(**headers))
