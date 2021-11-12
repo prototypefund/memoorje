@@ -4,7 +4,7 @@ from rest_framework import status
 
 from memoorje.models import Capsule
 from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
-from memoorje.tests.mixins import CapsuleMixin
+from memoorje.tests.mixins import CapsuleMixin, CapsuleReceiverMixin
 
 
 class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
@@ -107,3 +107,15 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         response = self.client.delete(self.get_api_url(url, pk=self.capsule.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Capsule.objects.exists())
+
+
+class CapsuleAccessWithReceiverTokenTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
+    def test_retrieve_capsule(self):
+        """Gain access to a capsule by providing a receiver token."""
+        url = "/capsules/{pk}/"
+        self.create_capsule_receiver()
+        response = self.client.get(
+            self.get_api_url(url, pk=self.capsule.pk),
+            HTTP_X_MEMOORJE_RECEIVER_TOKEN=self.capsule_receiver.receiver_token_generator_proxy.make_token(),
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -1,11 +1,13 @@
 from datetime import date
 import hashlib
+from typing import Iterable
 import uuid
 
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -111,13 +113,73 @@ class CapsuleContent(models.Model):
     data = CapsuleDataField()
 
 
+class TokenGenerator(PasswordResetTokenGenerator):
+    def __init__(self, proxy):
+        super().__init__()
+        self.proxy = proxy
+
+    def _make_hash_value(self, instance, timestamp):
+        data = list(self.proxy.get_token_data())
+        assert all(
+            isinstance(item, str) for item in data
+        ), f"Iterable returned by {instance.__class__.__name__}.get_confirmation_token_data must contain strings."
+        serialized_data = "".join(data)
+        return f"{serialized_data}{timestamp}"
+
+
+class CapsuleReceiverAuthenticationTokenGeneratorProxy:
+    token_generator_class = TokenGenerator
+
+    def __init__(self, instance):
+        self.instance = instance
+        self.token_generator = self.token_generator_class(proxy=self)
+
+    def check_token(self, token: str):
+        *_, token = token.partition("-")
+        return self.token_generator.check_token(self.instance, token)
+
+    def make_token(self):
+        return "{}-{}".format(self.instance.pk, self.token_generator.make_token(self.instance))
+
+    def get_token_data(self) -> Iterable[str]:
+        return [
+            # The pk of the capsule receiver ensures that users get access only to the capsule for this receiver.
+            # If the receiver is revoked, the token gets invalid.
+            str(self.instance.pk),
+            # The access is read-only for a given state of the capsule. If the capsule was changed (which shouldn't
+            # happen), access will be denied.
+            str(self.instance.capsule.updated_on),
+        ]
+
+
+class CapsuleReceiverQuerySet(models.QuerySet):
+    def get_by_token(self, token: str):
+        if token is not None:
+            pk, *_ = token.partition("-")
+            try:
+                receiver: CapsuleReceiver = self.get(pk=int(pk))
+                if receiver.receiver_token_generator_proxy.check_token(token):
+                    return receiver
+                else:
+                    raise CapsuleReceiver.DoesNotExist("Invalid token.")
+            except ValueError:
+                raise CapsuleReceiver.DoesNotExist(f"Invalid pk: {pk}.")
+        raise CapsuleReceiver.DoesNotExist("No receiver found for None token.")
+
+
 class CapsuleReceiver(ConfirmableModelMixin, models.Model):
-    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
+    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE, related_name="receivers")
     email = models.EmailField()
     is_email_confirmed = ConfirmationField(email_class=CapsuleReceiverConfirmationEmail)
 
+    objects = models.Manager.from_queryset(CapsuleReceiverQuerySet)()
+
     class Meta:
         unique_together = ["capsule", "email"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.receiver_token_generator_proxy = CapsuleReceiverAuthenticationTokenGeneratorProxy(self)
 
 
 class Keyslot(models.Model):
