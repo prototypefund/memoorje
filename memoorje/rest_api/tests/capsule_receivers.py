@@ -100,7 +100,7 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         """
         self.create_capsule_receiver()
         self.assertEqual(len(mail.outbox), 1)
-        self.assertIn(self.capsule_receiver.get_confirmation_token(), mail.outbox[0].body)
+        self.assertIn(self.capsule_receiver.make_confirmation_token(), mail.outbox[0].body)
 
     def test_confirm_capsule_receiver(self):
         """
@@ -110,7 +110,7 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         self.create_capsule_receiver()
         response = self.client.post(
             self.get_api_url(url, pk=self.capsule_receiver.pk),
-            {"token": self.capsule_receiver.get_confirmation_token()},
+            {"token": self.capsule_receiver.make_confirmation_token()},
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.capsule_receiver.refresh_from_db()
@@ -124,12 +124,12 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         self.create_capsule_receiver()
         response = self.client.post(
             self.get_api_url(url, pk=self.capsule_receiver.pk),
-            {"token": self.capsule_receiver.get_confirmation_token()},
+            {"token": self.capsule_receiver.make_confirmation_token()},
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         response = self.client.post(
             self.get_api_url(url, pk=self.capsule_receiver.pk),
-            {"token": self.capsule_receiver.get_confirmation_token()},
+            {"token": self.capsule_receiver.make_confirmation_token()},
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -142,6 +142,6 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         second = self.create_capsule_receiver("other@example.org")
         response = self.client.post(
             self.get_api_url(url, pk=first.pk),
-            {"token": second.get_confirmation_token()},
+            {"token": second.make_confirmation_token()},
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
