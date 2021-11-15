@@ -1,4 +1,5 @@
 from .auth import UserTestCase  # noqa: F401
+from .capsule_contents import CapsuleContentAccessWithReceiverTokenTestCase  # noqa: F401
 from .capsule_contents import CapsuleContentTestCase  # noqa: F401
 from .capsule_receivers import CapsuleReceiverTestCase  # noqa: F401
 from .capsules import AuthenticatedCapsuleAccessWithReceiverTokenTestCase  # noqa: F401

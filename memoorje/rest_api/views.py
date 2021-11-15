@@ -1,9 +1,10 @@
 from django.db.models import Q
 from djeveric.views import ConfirmModelMixin
 from rest_framework import mixins, viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, SAFE_METHODS
+from rest_framework.permissions import AllowAny
 
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, Trustee
+from memoorje.rest_api.permissions import IsCapsuleOwner, IsCapsuleOwnerOrReadOnly
 from memoorje.rest_api.serializers import (
     CapsuleContentSerializer,
     CapsuleReceiverSerializer,
@@ -13,22 +14,6 @@ from memoorje.rest_api.serializers import (
     TrusteeSerializer,
 )
 from memoorje.utils import get_authenticated_user, get_receiver_by_token
-
-
-class IsCapsuleOwnerOrReadOnly(IsAuthenticatedOrReadOnly):
-    """
-    Either the user is authenticated and owns the capsule or access is read-only.
-
-    Which capsules are read-only accessible is handled by restricting the queryset.
-    """
-
-    def has_object_permission(self, request, view, obj):
-        if isinstance(obj, Capsule):
-            capsule = obj.capsule
-            is_read_only = request.method in SAFE_METHODS
-            is_own_capsule = capsule.owner == request.user
-            return is_read_only or is_own_capsule
-        return False
 
 
 class CapsuleRelatedQuerySetMixin:
@@ -54,14 +39,13 @@ class CapsuleViewSet(CapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
     queryset = Capsule.objects
 
 
-class CapsuleContentViewSet(viewsets.ModelViewSet):
+class CapsuleContentViewSet(CapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
     """Capsule content access for authenticated users"""
 
+    permission_classes = [IsCapsuleOwnerOrReadOnly]
     serializer_class = CapsuleContentSerializer
+    queryset = CapsuleContent.objects
     filterset_fields = ["capsule"]
-
-    def get_queryset(self):
-        return CapsuleContent.objects.filter(capsule__owner=get_authenticated_user(self.request))
 
 
 class CapsuleReceiverViewSet(
@@ -74,6 +58,7 @@ class CapsuleReceiverViewSet(
 ):
     """Capsule receiver access for authenticated users"""
 
+    permission_classes = [IsCapsuleOwner]
     queryset = CapsuleReceiver.objects
     serializer_class = CapsuleReceiverSerializer
     filterset_fields = ["capsule"]
@@ -85,11 +70,10 @@ class CapsuleReceiverViewSet(
 class KeyslotViewSet(viewsets.ModelViewSet):
     """Keyslot access for authenticated users"""
 
+    permission_classes = [IsCapsuleOwner]
     serializer_class = KeyslotSerializer
+    queryset = Keyslot.objects
     filterset_fields = ["capsule"]
-
-    def get_queryset(self):
-        return Keyslot.objects.filter(capsule__owner=get_authenticated_user(self.request))
 
 
 class PartialKeyViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -108,8 +92,7 @@ class TrusteeViewSet(
 ):
     """Trustee access for authenticated users"""
 
+    permission_classes = [IsCapsuleOwner]
     serializer_class = TrusteeSerializer
+    queryset = Trustee.objects
     filterset_fields = ["capsule"]
-
-    def get_queryset(self):
-        return Trustee.objects.filter(capsule__owner=get_authenticated_user(self.request))
