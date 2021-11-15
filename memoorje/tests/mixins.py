@@ -91,6 +91,16 @@ class KeyslotMixin(CapsuleMixin):
         self.keyslot = Keyslot.objects.create(capsule=self.capsule, data=self.data, purpose=self.purpose)
 
 
+class PartialKeyMixin(CapsuleMixin):
+    partial_key: PartialKey
+    data: bytes
+
+    def create_partial_key(self):
+        self.ensure_capsule_exists()
+        self.data = b"Partial key data"
+        self.partial_key = PartialKey.objects.create(capsule=self.capsule, data=self.data)
+
+
 class TrusteeMixin(CapsuleMixin):
     partial_key_data: bytes
     trustee_email: str

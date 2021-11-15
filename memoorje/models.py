@@ -13,7 +13,7 @@ from djeveric.fields import ConfirmationField
 from djeveric.models import ConfirmableModelMixin
 
 from memoorje.data_storage.fields import CapsuleDataField
-from memoorje.emails import CapsuleReceiverConfirmationEmail, ReminderEmail
+from memoorje.emails import CapsuleReceiverConfirmationEmail, CapsuleReceiverReleaseNotificationEmail, ReminderEmail
 from memoorje.tokens import CapsuleReceiverTokenGeneratorProxy
 
 
@@ -100,6 +100,7 @@ class Capsule(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
+    is_released = models.BooleanField(default=False)
 
     # We use a recursive relationship such that the capsule model itself can be handled just like any of the other
     # "capsule related" models (e.g. in views).
@@ -108,6 +109,19 @@ class Capsule(models.Model):
     def touch(self, timestamp=timezone.now()):
         self.updated_on = timestamp
         self.save()
+
+    def release(self) -> bool:
+        if not self.is_released:
+            if self.partial_keys.exists():
+                # TODO: implement
+                self._set_is_released()
+            return self.is_released
+        return False
+
+    def _set_is_released(self):
+        # We prevent Capsule.updated_on from being touched when setting the is_released flag.
+        self._meta.model.objects.update(id=self.id, is_released=True)
+        self.refresh_from_db()
 
 
 class CapsuleContent(models.Model):
@@ -145,6 +159,12 @@ class CapsuleReceiver(ConfirmableModelMixin, models.Model):
         super().__init__(*args, **kwargs)
         self.receiver_token_generator_proxy = CapsuleReceiverTokenGeneratorProxy(self)
 
+    def send_release_notification(self):
+        """Send a capsule release notification to this receiver."""
+        context = {"token": self.receiver_token_generator_proxy.make_token()}
+        email = CapsuleReceiverReleaseNotificationEmail(self.email)
+        email.send(context)
+
 
 class Keyslot(models.Model):
     class Purpose(models.TextChoices):
@@ -157,7 +177,7 @@ class Keyslot(models.Model):
 
 
 class PartialKey(models.Model):
-    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
+    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE, related_name="partial_keys")
     data = models.BinaryField()
 
     @staticmethod

@@ -10,6 +10,11 @@ class CapsuleReceiverConfirmationEmail(BaseEmail):
         return f"pk: {context['pk']}, token: {context['token']}"
 
 
+class CapsuleReceiverReleaseNotificationEmail(BaseEmail):
+    def get_body(self, context: dict[str]) -> str:
+        return "{token}".format(**context)
+
+
 class ReminderEmail(BaseEmail):
     def get_body(self, context: dict[str]) -> str:
         return "Check recipient data for your capsules"
