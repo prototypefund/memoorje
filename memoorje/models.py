@@ -101,6 +101,10 @@ class Capsule(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
 
+    # We use a recursive relationship such that the capsule model itself can be handled just like any of the other
+    # "capsule related" models (e.g. in views).
+    capsule = models.ForeignKey("self", on_delete=models.CASCADE, null=True, related_name="+")
+
     def touch(self, timestamp=timezone.now()):
         self.updated_on = timestamp
         self.save()

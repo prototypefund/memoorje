@@ -24,26 +24,34 @@ class IsCapsuleOwnerOrReadOnly(IsAuthenticatedOrReadOnly):
 
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Capsule):
-            capsule = obj
+            capsule = obj.capsule
             is_read_only = request.method in SAFE_METHODS
             is_own_capsule = capsule.owner == request.user
             return is_read_only or is_own_capsule
         return False
 
 
-class CapsuleViewSet(viewsets.ModelViewSet):
-    """Capsule access for authenticated users"""
-
-    permission_classes = [IsCapsuleOwnerOrReadOnly]
-    serializer_class = CapsuleSerializer
+class CapsuleRelatedQuerySetMixin:
+    """
+    Restricts the query set to objects for which the capsule is either owned by the current user or for which a receiver
+    token exists.
+    """
 
     def get_queryset(self):
         user = get_authenticated_user(self.request)
         receiver = get_receiver_by_token(self.request)
-        query = Q(owner=user)
+        query = Q(capsule__owner=user)
         if receiver is not None:
-            query |= Q(receivers=receiver)
-        return Capsule.objects.filter(query)
+            query |= Q(capsule__receivers=receiver)
+        return self.queryset.filter(query)
+
+
+class CapsuleViewSet(CapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
+    """Capsule access for authenticated users"""
+
+    permission_classes = [IsCapsuleOwnerOrReadOnly]
+    serializer_class = CapsuleSerializer
+    queryset = Capsule.objects
 
 
 class CapsuleContentViewSet(viewsets.ModelViewSet):
