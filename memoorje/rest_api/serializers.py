@@ -5,7 +5,7 @@ from memoorje.rest_api.fields import BinaryField
 from memoorje.utils import get_authenticated_user
 
 
-class RelatedCapsuleSerializerMixin:
+class CapsuleRelatedSerializerMixin:
     """Restricts the queryset for the `capsule` field of the serializer to capsules of the current user."""
 
     def get_capsule_queryset(self):
@@ -25,7 +25,7 @@ class CapsuleSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["created_on", "description", "id", "name", "owner", "updated_on", "url"]
 
 
-class CapsuleContentSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedModelSerializer):
+class CapsuleContentSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):
     metadata = BinaryField()
 
     class Meta:
@@ -33,13 +33,13 @@ class CapsuleContentSerializer(RelatedCapsuleSerializerMixin, serializers.Hyperl
         fields = ["capsule", "data", "id", "metadata", "url"]
 
 
-class CapsuleReceiverSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedModelSerializer):
+class CapsuleReceiverSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CapsuleReceiver
         fields = ["capsule", "email", "id", "url"]
 
 
-class KeyslotSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedModelSerializer):
+class KeyslotSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):
     data = BinaryField()
 
     class Meta:
@@ -63,7 +63,7 @@ class PartialKeySerializer(serializers.HyperlinkedModelSerializer):
             raise serializers.ValidationError("Partial key data seems to be invalid for this capsule", "invalid_key")
 
 
-class TrusteeSerializer(RelatedCapsuleSerializerMixin, serializers.HyperlinkedModelSerializer):
+class TrusteeSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Trustee
         fields = ["capsule", "email", "id", "url"]
