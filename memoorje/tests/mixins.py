@@ -73,9 +73,9 @@ class CapsuleReceiverMixin(CapsuleMixin):
     def get_request_headers(self, **kwargs):
         headers = super().get_request_headers(**kwargs)
         if "with_receiver_token_for" in kwargs:
-            headers["HTTP_X_MEMOORJE_RECEIVER_TOKEN"] = kwargs[
-                "with_receiver_token_for"
-            ].receiver_token_generator_proxy.make_token()
+            receiver = kwargs["with_receiver_token_for"]
+            token = receiver.receiver_token_generator_proxy.make_token()
+            headers["HTTP_X_MEMOORJE_RECEIVER_TOKEN"] = token
         return headers
 
 
