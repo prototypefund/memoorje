@@ -108,6 +108,19 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Capsule.objects.exists())
 
+    def test_list_all_capsules(self):
+        """
+        List all accessible capsules.
+        """
+        url = "/capsules/"
+        self.create_capsule()
+        self.create_user()
+        self.create_capsule()
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
 
 class CapsuleAccessWithReceiverTokenTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
     def test_retrieve_capsule(self):

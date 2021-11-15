@@ -22,7 +22,7 @@ class UserMixin(BaseMixin):
         self.user = User.objects.create_user(self.email, self.password, name="Test Name")
 
     def ensure_user_exists(self):
-        if not hasattr(self, "user"):
+        if not User.objects.exists():
             self.create_user()
 
 
@@ -41,7 +41,8 @@ class CapsuleMixin(UserMixin):
         return self.capsule
 
     def ensure_capsule_exists(self):
-        if not hasattr(self, "capsule"):
+        self.ensure_user_exists()
+        if not Capsule.objects.filter(owner=self.user).exists():
             self.create_capsule()
 
 

@@ -145,3 +145,16 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
             {"token": second.make_confirmation_token()},
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_list_all_capsule_receivers(self):
+        """
+        List all accessible receivers for a capsule.
+        """
+        url = "/capsule-receivers/"
+        self.create_capsule_receiver()
+        self.create_user()
+        self.create_capsule_receiver()
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)

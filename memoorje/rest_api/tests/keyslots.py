@@ -6,7 +6,7 @@ from rest_framework import status
 from memoorje.models import Keyslot
 from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
 from memoorje.tests.memoorje import create_test_data_file
-from memoorje.tests.mixins import KeyslotMixin
+from memoorje.tests.mixins import CapsuleReceiverMixin, KeyslotMixin
 
 
 class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
@@ -120,3 +120,32 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
             self.keyslot.refresh_from_db()
             self.assertEqual(self.keyslot.data, data)
             self.assertEqual(self.keyslot.purpose, purpose)
+
+    def test_list_all_keyslots(self):
+        """
+        List all accessible keyslots for a capsule.
+        """
+        url = "/keyslots/"
+        self.create_keyslot()
+        self.create_user()
+        self.create_keyslot()
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+
+class AuthenticatedKeyslotAccessWithReceiverTokenTestCase(CapsuleReceiverMixin, KeyslotMixin, MemoorjeAPITestCase):
+    def test_list_keyslots(self):
+        """List keyslot(s) for the given receiver."""
+        url = "/keyslots/"
+        receiver = self.create_capsule_receiver()
+        self.create_keyslot()
+        self.create_user()
+        self.create_keyslot()
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url), **self.get_request_headers(with_receiver_token_for=receiver))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotEqual(self.user, receiver)
+        self.assertEqual(Keyslot.objects.count(), 2)
+        self.assertEqual(len(response.data), 1)

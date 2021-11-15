@@ -4,7 +4,7 @@ from rest_framework import status
 
 from memoorje.models import Trustee
 from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
-from memoorje.tests.mixins import TrusteeMixin
+from memoorje.tests.mixins import CapsuleReceiverMixin, TrusteeMixin
 
 
 class TrusteeTestCase(TrusteeMixin, MemoorjeAPITestCase):
@@ -79,3 +79,32 @@ class TrusteeTestCase(TrusteeMixin, MemoorjeAPITestCase):
         response = self.client.delete(self.get_api_url(url, pk=self.trustee.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Trustee.objects.exists())
+
+    def test_list_all_trustees(self):
+        """
+        List all accessible trustees for a capsule.
+        """
+        url = "/trustees/"
+        self.create_trustee()
+        self.create_user()
+        self.create_trustee()
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+
+class AuthenticatedTrusteeAccessWithReceiverTokenTestCase(CapsuleReceiverMixin, TrusteeMixin, MemoorjeAPITestCase):
+    def test_list_trustees(self):
+        """List trustee(s) for the given receiver."""
+        url = "/trustees/"
+        receiver = self.create_capsule_receiver()
+        self.create_trustee()
+        self.create_user()
+        self.create_trustee()
+        self.authenticate_user()
+        response = self.client.get(self.get_api_url(url), **self.get_request_headers(with_receiver_token_for=receiver))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotEqual(self.user, receiver)
+        self.assertEqual(Trustee.objects.count(), 2)
+        self.assertEqual(len(response.data), 1)

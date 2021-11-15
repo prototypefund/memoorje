@@ -16,22 +16,33 @@ from memoorje.rest_api.serializers import (
 from memoorje.utils import get_authenticated_user, get_receiver_by_token
 
 
-class CapsuleRelatedQuerySetMixin:
+class OwnedCapsuleRelatedQueryMixin:
+    def get_query(self):
+        user = get_authenticated_user(self.request)
+        query = Q(capsule__owner=user)
+        return query
+
+
+class OwnedCapsuleRelatedQuerySetMixin(OwnedCapsuleRelatedQueryMixin):
+    def get_queryset(self):
+        return self.queryset.filter(self.get_query())
+
+
+class OwnedOrReceivedCapsuleRelatedQuerySetMixin(OwnedCapsuleRelatedQuerySetMixin):
     """
     Restricts the query set to objects for which the capsule is either owned by the current user or for which a receiver
     token exists.
     """
 
-    def get_queryset(self):
-        user = get_authenticated_user(self.request)
+    def get_query(self):
+        query = super().get_query()
         receiver = get_receiver_by_token(self.request)
-        query = Q(capsule__owner=user)
         if receiver is not None:
             query |= Q(capsule__receivers=receiver)
-        return self.queryset.filter(query)
+        return query
 
 
-class CapsuleViewSet(CapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
+class CapsuleViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
     """Capsule access for authenticated users"""
 
     permission_classes = [IsCapsuleOwnerOrReadOnly]
@@ -39,7 +50,7 @@ class CapsuleViewSet(CapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
     queryset = Capsule.objects
 
 
-class CapsuleContentViewSet(CapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
+class CapsuleContentViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
     """Capsule content access for authenticated users"""
 
     permission_classes = [IsCapsuleOwnerOrReadOnly]
@@ -49,6 +60,7 @@ class CapsuleContentViewSet(CapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
 
 
 class CapsuleReceiverViewSet(
+    OwnedCapsuleRelatedQueryMixin,
     ConfirmModelMixin,
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
@@ -64,10 +76,10 @@ class CapsuleReceiverViewSet(
     filterset_fields = ["capsule"]
 
     def get_basic_queryset(self):
-        return self.queryset.filter(capsule__owner=get_authenticated_user(self.request))
+        return self.queryset.filter(self.get_query())
 
 
-class KeyslotViewSet(viewsets.ModelViewSet):
+class KeyslotViewSet(OwnedCapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
     """Keyslot access for authenticated users"""
 
     permission_classes = [IsCapsuleOwner]
@@ -84,6 +96,7 @@ class PartialKeyViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 
 class TrusteeViewSet(
+    OwnedCapsuleRelatedQuerySetMixin,
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
