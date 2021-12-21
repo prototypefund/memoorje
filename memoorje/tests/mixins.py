@@ -92,6 +92,7 @@ class KeyslotMixin(CapsuleMixin):
 
 
 class PartialKeyMixin(CapsuleMixin):
+    combined_secret: bytes
     partial_key: PartialKey
     data: bytes
 
@@ -99,6 +100,24 @@ class PartialKeyMixin(CapsuleMixin):
         self.ensure_capsule_exists()
         self.data = b"Partial key data"
         self.partial_key = PartialKey.objects.create(capsule=self.capsule, data=self.data)
+
+    def create_combinable_partial_keys(self):
+        self.ensure_capsule_exists()
+        self.combined_secret = b"Arbitrary Password!"
+        PartialKey.objects.create(
+            capsule=self.capsule,
+            data=bytes.fromhex(
+                "01ecbb2bee4722db397100e83b9702aad04776a9c8d5ce24930dc4815f6ca51a3789"
+                "d26a308016d4e04e413042e61b1e5cbf247ef7d6360143920fc3ca62506e2c1e8d0d"
+            ),
+        )
+        PartialKey.objects.create(
+            capsule=self.capsule,
+            data=bytes.fromhex(
+                "02a76763d4633e22d858383ddb87ff624992683809971bb658142221ee208c795089"
+                "d26a308016d4e04e413042e61b1e5cbf247ef7d6360143920fc3ca62506e2c1e8d0d"
+            ),
+        )
 
 
 class TrusteeMixin(CapsuleMixin):

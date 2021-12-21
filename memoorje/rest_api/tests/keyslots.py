@@ -61,14 +61,14 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
         self.assertEqual(response.data["capsule"][0].code, "does_not_exist")
 
     def test_modify_keyslot(self):
-        """Any keyslot modifications should update the capsule's update timestamp."""
+        """Keyslot modifications shouldn't update the capsule's update timestamp."""
         self.create_capsule()
         initial_updated_on = self.capsule.updated_on
         self.create_keyslot()
-        self.assertGreater(self.capsule.updated_on, initial_updated_on)
+        self.assertEqual(self.capsule.updated_on, initial_updated_on)
         initial_updated_on = self.capsule.updated_on
         self.keyslot.delete()
-        self.assertGreater(self.capsule.updated_on, initial_updated_on)
+        self.assertEqual(self.capsule.updated_on, initial_updated_on)
 
     def test_list_keyslots(self):
         """List the keyslots for a capsule."""

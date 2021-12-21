@@ -7,42 +7,21 @@ from memoorje.crypto import (
     _encrypt_secret,
     RecryptError,
 )
-from memoorje.models import Keyslot, PartialKey
-from memoorje.tests.mixins import CapsuleReceiverMixin, KeyslotMixin
+from memoorje.models import Keyslot
+from memoorje.tests.mixins import CapsuleReceiverMixin, KeyslotMixin, PartialKeyMixin
 
 
-class CryptoTestCase(KeyslotMixin, CapsuleReceiverMixin, TestCase):
+class CryptoTestCase(KeyslotMixin, CapsuleReceiverMixin, PartialKeyMixin, TestCase):
     def test_combine_partial_keys_returns_password(self):
         """Given a password and corresponding partial keys, _combine_partial_keys() shall reconstruct the password."""
-        password = b"Arbitrary Password!"
-        partial_keys = [
-            PartialKey(
-                data=bytes.fromhex(
-                    "01ecbb2bee4722db397100e83b9702aad04776a9c8d5ce24930dc4815f6ca51a3789"
-                    "d26a308016d4e04e413042e61b1e5cbf247ef7d6360143920fc3ca62506e2c1e8d0d"
-                )
-            ),
-            PartialKey(
-                data=bytes.fromhex(
-                    "02a76763d4633e22d858383ddb87ff624992683809971bb658142221ee208c795089"
-                    "d26a308016d4e04e413042e61b1e5cbf247ef7d6360143920fc3ca62506e2c1e8d0d"
-                )
-            ),
-        ]
-        result = _combine_partial_keys(partial_keys)
-        self.assertEqual(result, password)
+        self.create_combinable_partial_keys()
+        result = _combine_partial_keys(self.capsule.partial_keys.all())
+        self.assertEqual(result, self.combined_secret)
 
     def test_combine_insufficient_keys_raises_error(self):
         """Providing insufficient key data to _combine_partial_keys() raises an error."""
-        partial_keys = [
-            PartialKey(
-                data=bytes.fromhex(
-                    "01ecbb2bee4722db397100e83b9702aad04776a9c8d5ce24930dc4815f6ca51a3789"
-                    "d26a308016d4e04e413042e61b1e5cbf247ef7d6360143920fc3ca62506e2c1e8d0d"
-                )
-            ),
-        ]
-        self.assertRaises(RecryptError, _combine_partial_keys, partial_keys)
+        self.create_combinable_partial_keys()
+        self.assertRaises(RecryptError, _combine_partial_keys, [self.capsule.partial_keys.first()])
 
     def test_decrypt_secret_returns_secret(self):
         """Given a capsule and a valid password, _decrypt_secret() shall return the secret."""

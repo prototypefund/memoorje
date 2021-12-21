@@ -206,6 +206,6 @@ class Capsule(models.Model):
             if partial_keys.exists():
                 passwords = recrypt_capsule(self, partial_keys)
                 # We prevent Capsule.updated_on from being touched when setting the is_released flag.
-                self._meta.model.objects.update(id=self.id, is_released=True)
+                self._meta.model._default_manager.update(id=self.id, is_released=True)
                 return passwords
         return None

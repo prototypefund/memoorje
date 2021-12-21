@@ -59,5 +59,5 @@ def _encrypt_secret(secret: bytes, password: bytes) -> bytes:
 
 
 def _generate_password() -> str:
-    alphabet = string.printable
+    alphabet = string.ascii_letters + string.digits + string.punctuation
     return "".join(secrets.choice(alphabet) for _ in range(settings.RECIPIENT_PASSWORD_LENGTH))
