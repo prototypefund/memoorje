@@ -13,10 +13,19 @@ class ReleaseTestCase(CapsuleReceiverMixin, KeyslotMixin, PartialKeyMixin, TestC
         management.call_command("releasecapsules")
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn(self.capsule_receiver.receiver_token_generator_proxy.make_token(), mail.outbox[0].body)
+        self.capsule.refresh_from_db()
+        self.assertTrue(self.capsule.is_released)
 
     def test_send_release_notifications_twice(self):
         self._create_release_setup()
         management.call_command("releasecapsules")
+        mail.outbox.clear()
+        management.call_command("releasecapsules")
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_release_capsules_skips_errors(self):
+        self._create_release_setup()
+        self.capsule.partial_keys.last().delete()
         mail.outbox.clear()
         management.call_command("releasecapsules")
         self.assertEqual(len(mail.outbox), 0)
