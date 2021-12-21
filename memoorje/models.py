@@ -1,5 +1,6 @@
 from datetime import date
 import hashlib
+from typing import Mapping, Optional
 import uuid
 
 from django.conf import settings
@@ -11,6 +12,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from djeveric.fields import ConfirmationField
 from djeveric.models import ConfirmableModelMixin
+from memoorje_crypto.formats import EncryptionV1
 
 from memoorje.data_storage.fields import CapsuleDataField
 from memoorje.emails import CapsuleReceiverConfirmationEmail, CapsuleReceiverReleaseNotificationEmail, ReminderEmail
@@ -93,37 +95,6 @@ class User(PermissionsMixin, AbstractBaseUser):
         self.save()
 
 
-class Capsule(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    owner = models.ForeignKey("User", on_delete=models.CASCADE, related_name="capsules")
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    is_released = models.BooleanField(default=False)
-
-    # We use a recursive relationship such that the capsule model itself can be handled just like any of the other
-    # "capsule related" models (e.g. in views).
-    capsule = models.ForeignKey("self", on_delete=models.CASCADE, null=True, related_name="+")
-
-    def touch(self, timestamp=timezone.now()):
-        self.updated_on = timestamp
-        self.save()
-
-    def release(self) -> bool:
-        if not self.is_released:
-            if self.partial_keys.exists():
-                # TODO: implement
-                self._set_is_released()
-            return self.is_released
-        return False
-
-    def _set_is_released(self):
-        # We prevent Capsule.updated_on from being touched when setting the is_released flag.
-        self._meta.model.objects.update(id=self.id, is_released=True)
-        self.refresh_from_db()
-
-
 class CapsuleContent(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
     metadata = models.BinaryField()
@@ -159,9 +130,12 @@ class CapsuleReceiver(ConfirmableModelMixin, models.Model):
         super().__init__(*args, **kwargs)
         self.receiver_token_generator_proxy = CapsuleReceiverTokenGeneratorProxy(self)
 
-    def send_release_notification(self):
+    def send_release_notification(self, password):
         """Send a capsule release notification to this receiver."""
-        context = {"token": self.receiver_token_generator_proxy.make_token()}
+        context = {
+            "password": password,
+            "token": self.receiver_token_generator_proxy.make_token(),
+        }
         email = CapsuleReceiverReleaseNotificationEmail(self.email)
         email.send(context)
 
@@ -171,9 +145,13 @@ class Keyslot(models.Model):
         PASSWORD = "pwd"
         SSS = "sss"
 
-    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
+    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE, related_name="keyslots")
     data = models.BinaryField()
     purpose = models.CharField(max_length=3, choices=Purpose.choices)
+
+    def decrypt(self, password: bytes) -> bytes:
+        encryption = EncryptionV1()
+        return encryption.decrypt(password, self.data)
 
 
 class PartialKey(models.Model):
@@ -193,3 +171,41 @@ class Trustee(models.Model):
 
     class Meta:
         unique_together = ["capsule", "partial_key_hash"]
+
+
+class Capsule(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    owner = models.ForeignKey("User", on_delete=models.CASCADE, related_name="capsules")
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    is_released = models.BooleanField(default=False)
+
+    # We use a recursive relationship such that the capsule model itself can be handled just like any of the other
+    # "capsule related" models (e.g. in views).
+    capsule = models.ForeignKey("self", on_delete=models.CASCADE, null=True, related_name="+")
+
+    def touch(self, timestamp=timezone.now()):
+        self.updated_on = timestamp
+        self.save()
+
+    def release(self) -> Optional[Mapping[CapsuleReceiver, str]]:
+        """
+        Try to release this capsule. "Releasing" means combining all existing partial keys, decrypting the secret and
+        re-encrypting it with a new password.
+
+        Releasing the capsule is only tried if the capsule was not already released and at least one partial key exists.
+
+        :return: A newly created password for each recipient of this capsule. None otherwise.
+        """
+        from memoorje.crypto import recrypt_capsule
+
+        if not self.is_released:
+            partial_keys = self.partial_keys.all()
+            if partial_keys.exists():
+                passwords = recrypt_capsule(self, partial_keys)
+                # We prevent Capsule.updated_on from being touched when setting the is_released flag.
+                self._meta.model.objects.update(id=self.id, is_released=True)
+                return passwords
+        return None

@@ -8,6 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for capsule in Capsule.objects.all():
-            if capsule.release():
-                for receiver in capsule.receivers.all():
-                    receiver.send_release_notification()
+            passwords = capsule.release()
+            if passwords is not None:
+                for receiver, password in passwords.items():
+                    receiver.send_release_notification(password)

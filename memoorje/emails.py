@@ -12,7 +12,7 @@ class CapsuleReceiverConfirmationEmail(BaseEmail):
 
 class CapsuleReceiverReleaseNotificationEmail(BaseEmail):
     def get_body(self, context: dict[str]) -> str:
-        return "{token}".format(**context)
+        return "{password} {token}".format(**context)
 
 
 class ReminderEmail(BaseEmail):

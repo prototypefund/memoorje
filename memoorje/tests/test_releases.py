@@ -16,7 +16,6 @@ class ReleaseTestCase(CapsuleReceiverMixin, PartialKeyMixin, TestCase):
     def test_send_release_notifications_twice(self):
         self.create_capsule_receiver()
         self.create_partial_key()
-        mail.outbox.clear()
         management.call_command("releasecapsules")
         mail.outbox.clear()
         management.call_command("releasecapsules")
