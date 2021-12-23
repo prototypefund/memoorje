@@ -17,6 +17,9 @@ variables:
   DPKG_INSTALL_DISTRIBUTION: bullseye
 
 test::python:
+  before_script:
+    - apt update -y && apt install -y cargo
+    - cargo install --git https://github.com/dsprenkels/sss-cli --branch v0.1
   parallel:
     matrix:
       - IMAGE:

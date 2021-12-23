@@ -3,6 +3,7 @@ Section: web
 Priority: optional
 Maintainer: memoorje maintainers <tach@memoorje.org>
 Build-Depends:
+ cargo,
  debhelper,
  dh-exec,
  dh-python,
