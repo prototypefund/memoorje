@@ -16,7 +16,10 @@ class Command(BaseCommand):
             try:
                 passwords = capsule.release()
                 if passwords is not None:
+                    # send passwords to receivers
                     for receiver, password in passwords.items():
                         receiver.send_release_notification(password)
+                    # remove partial keys
+                    capsule.partial_keys.all().delete()
             except RecryptError as e:
                 logger.info(f"Capsule {capsule.pk} is not released yet and has partial keys but releasing failed ({e})")

@@ -30,6 +30,12 @@ class ReleaseTestCase(CapsuleReceiverMixin, KeyslotMixin, PartialKeyMixin, TestC
         management.call_command("releasecapsules")
         self.assertEqual(len(mail.outbox), 0)
 
+    def test_partial_keys_are_deleted_after_release(self):
+        self._create_release_setup()
+        self.assertEqual(self.capsule.partial_keys.count(), 2)
+        management.call_command("releasecapsules")
+        self.assertEqual(self.capsule.partial_keys.count(), 0)
+
     def _create_release_setup(self):
         self.create_capsule_receiver()
         self.create_combinable_partial_keys()
