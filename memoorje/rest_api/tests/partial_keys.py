@@ -41,3 +41,21 @@ class PartialKeyTestCase(TrusteeMixin, MemoorjeAPITestCase):
         key: PartialKey = PartialKey.objects.first()
         self.assertEqual(key.capsule, self.capsule)
         self.assertEqual(key.data, self.partial_key_data)
+
+    def test_create_partial_key_for_released_capsule(self):
+        url = "/partial-keys/"
+        self.create_trustee()
+        self.capsule.is_released = True
+        self.capsule.save()
+        with create_test_data_file(self.partial_key_data) as data_file:
+            response = self.client.post(
+                self.get_api_url(url),
+                {
+                    "capsule": get_url("capsule", self.capsule),
+                    "data": data_file,
+                },
+                format="multipart",
+            )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(PartialKey.objects.count(), 0)
+        self.assertEqual(response.data["capsule"][0].code, "already_released")

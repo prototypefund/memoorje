@@ -54,6 +54,13 @@ class PartialKeySerializer(serializers.HyperlinkedModelSerializer):
         model = PartialKey
         fields = ["capsule", "data"]
 
+    def validate_capsule(self, value):
+        if value.is_released:
+            raise serializers.ValidationError(
+                "Capsule was already released, not accepting further keys", "already_released"
+            )
+        return value
+
     def validate(self, data):
         data_hash = PartialKey.hash_key_data(data["data"])
         try:
