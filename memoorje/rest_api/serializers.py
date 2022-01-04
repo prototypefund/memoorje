@@ -36,7 +36,7 @@ class CapsuleContentSerializer(CapsuleRelatedSerializerMixin, serializers.Hyperl
 class CapsuleReceiverSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CapsuleReceiver
-        fields = ["capsule", "email", "id", "url"]
+        fields = ["capsule", "email", "id", "is_active", "url"]
 
 
 class KeyslotSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):

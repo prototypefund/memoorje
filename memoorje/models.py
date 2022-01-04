@@ -15,7 +15,12 @@ from djeveric.models import ConfirmableModelMixin
 from memoorje_crypto.formats import EncryptionV1
 
 from memoorje.data_storage.fields import CapsuleDataField
-from memoorje.emails import CapsuleReceiverConfirmationEmail, CapsuleReceiverReleaseNotificationEmail, ReminderEmail
+from memoorje.emails import (
+    CapsuleHintsEmail,
+    CapsuleReceiverConfirmationEmail,
+    CapsuleReceiverReleaseNotificationEmail,
+    ReminderEmail,
+)
 from memoorje.tokens import CapsuleReceiverTokenGeneratorProxy
 
 
@@ -118,6 +123,7 @@ class CapsuleReceiverQuerySet(models.QuerySet):
 
 class CapsuleReceiver(ConfirmableModelMixin, models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE, related_name="receivers")
+    created_on = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
     is_email_confirmed = ConfirmationField(email_class=CapsuleReceiverConfirmationEmail)
 
@@ -129,6 +135,9 @@ class CapsuleReceiver(ConfirmableModelMixin, models.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.receiver_token_generator_proxy = CapsuleReceiverTokenGeneratorProxy(self)
+
+    def is_active(self):
+        return self.is_email_confirmed
 
     def send_release_notification(self, password):
         """Send a capsule release notification to this receiver."""
@@ -209,3 +218,7 @@ class Capsule(models.Model):
                 self._meta.model._default_manager.update(id=self.id, is_released=True)
                 return passwords
         return None
+
+    def send_hints(self, inactive_receivers=None):
+        """Send hints to capsule owner."""
+        self.owner.send_email(CapsuleHintsEmail, {"inactive_receivers": inactive_receivers})

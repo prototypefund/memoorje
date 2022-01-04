@@ -78,6 +78,7 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
                     "capsule": get_url("capsule", self.capsule, response),
                     "email": self.receiver_email,
                     "id": self.capsule_receiver.id,
+                    "isActive": False,
                     "url": get_url("capsulereceiver", self.capsule_receiver, response),
                 },
             ],
