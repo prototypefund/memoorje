@@ -100,8 +100,8 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         An email with a confirmation link should be sent to the capsule receiver.
         """
         self.create_capsule_receiver()
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn(self.capsule_receiver.make_confirmation_token(), mail.outbox[0].body)
+        self.assertGreaterEqual(len(mail.outbox), 1)
+        self.assertIn(self.capsule_receiver.make_confirmation_token(), "".join([m.body for m in mail.outbox]))
 
     def test_confirm_capsule_receiver(self):
         """

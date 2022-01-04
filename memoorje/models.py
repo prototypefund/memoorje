@@ -17,6 +17,7 @@ from memoorje_crypto.formats import EncryptionV1
 from memoorje.data_storage.fields import CapsuleDataField
 from memoorje.emails import (
     CapsuleHintsEmail,
+    CapsuleNotificationEmail,
     CapsuleReceiverConfirmationEmail,
     CapsuleReceiverReleaseNotificationEmail,
     ReminderEmail,
@@ -220,5 +221,9 @@ class Capsule(models.Model):
         return None
 
     def send_hints(self, inactive_receivers=None):
-        """Send hints to capsule owner."""
+        """Send hints regarding notable facts to capsule owner."""
         self.owner.send_email(CapsuleHintsEmail, {"inactive_receivers": inactive_receivers})
+
+    def send_notification(self, recipients_changed=False):
+        """Send a notification email to the capsule owner."""
+        self.owner.send_email(CapsuleNotificationEmail, {})
