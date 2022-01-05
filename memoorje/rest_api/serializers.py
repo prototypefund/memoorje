@@ -74,3 +74,7 @@ class TrusteeSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedMo
     class Meta:
         model = Trustee
         fields = ["capsule", "email", "id", "url"]
+
+
+class AbortCapsuleReleaseSerializer(serializers.Serializer):
+    is_accidental = serializers.BooleanField(default=True)

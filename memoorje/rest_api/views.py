@@ -1,11 +1,15 @@
 from django.db.models import Q
 from djeveric.views import ConfirmModelMixin
 from rest_framework import mixins, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, Trustee
 from memoorje.rest_api.permissions import IsCapsuleOwner, IsCapsuleOwnerOrReadOnly
 from memoorje.rest_api.serializers import (
+    AbortCapsuleReleaseSerializer,
     CapsuleContentSerializer,
     CapsuleReceiverSerializer,
     CapsuleSerializer,
@@ -48,6 +52,24 @@ class CapsuleViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets.ModelV
     permission_classes = [IsCapsuleOwnerOrReadOnly]
     serializer_class = CapsuleSerializer
     queryset = Capsule.objects
+
+    @action(detail=True, methods=["post"], url_path="abort-release")
+    def abort_release(self, request, **kwargs):
+        instance = self.get_object()
+        serializer = AbortCapsuleReleaseSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if not instance.is_released:
+            self.perform_abort_release(instance, **serializer.data)
+        else:
+            raise ValidationError("Cannot abort release of an already released capsule.", code="already_released")
+        return Response(serializer.data)
+
+    def perform_abort_release(self, capsule, is_accidental):
+        if not is_accidental:
+            capsule.keyslots.filter(purpose=Keyslot.Purpose.SSS).delete()
+            capsule.trustees.all().delete()
+        capsule.partial_keys.all().delete()
+        Capsule.objects.update(id=capsule.id, are_partial_key_invitations_sent=False)
 
 
 class CapsuleContentViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):

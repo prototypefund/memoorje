@@ -2,9 +2,9 @@ import json
 
 from rest_framework import status
 
-from memoorje.models import Capsule, CapsuleReceiver
+from memoorje.models import Capsule, CapsuleReceiver, Keyslot, PartialKey, Trustee
 from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
-from memoorje.tests.mixins import CapsuleMixin, CapsuleReceiverMixin
+from memoorje.tests.mixins import CapsuleMixin, CapsuleReceiverMixin, KeyslotMixin, PartialKeyMixin, TrusteeMixin
 
 
 class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
@@ -243,3 +243,27 @@ class AuthenticatedCapsuleAccessWithReceiverTokenTestCase(CapsuleReceiverMixin, 
         receiver = self._create_two_capsules_and_authenticate()
         headers = {"with_receiver_token_for": receiver} if with_token else {}
         return self.client.get(self.get_api_url(url), **self.get_request_headers(**headers))
+
+
+class AbortTestCase(KeyslotMixin, PartialKeyMixin, TrusteeMixin, MemoorjeAPITestCase):
+    def test_abort_removes_partial_keys(self):
+        """Aborting a release process removes all partial keys."""
+        url = "/capsules/{pk}/abort-release/"
+        self.create_partial_key()
+        self.authenticate_user()
+        response = self.client.post(self.get_api_url(url, pk=self.capsule.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(PartialKey.objects.exists())
+
+    def test_abort_unaccidental_release_removes_keyslot_and_trustees(self):
+        """Aborting a release process, which was not accidentally initiated, removes the keyslot and all trustees."""
+        url = "/capsules/{pk}/abort-release/"
+        self.create_keyslot(purpose=Keyslot.Purpose.SSS)
+        self.create_partial_key()
+        self.create_trustee()
+        self.authenticate_user()
+        response = self.client.post(self.get_api_url(url, pk=self.capsule.pk), {"is_accidental": False})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(Keyslot.objects.exists())
+        self.assertFalse(PartialKey.objects.exists())
+        self.assertFalse(Trustee.objects.exists())
