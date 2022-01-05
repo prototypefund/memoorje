@@ -51,7 +51,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
                 "email": self.email,
                 "id": self.user.id,
                 "name": self.user.name,
-                "remind_interval": settings.DEFAULT_REMIND_INTERVAL,
+                "remind_interval": settings.DEFAULT_REMIND_INTERVAL_MONTHS,
             },
         )
 

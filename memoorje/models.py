@@ -61,7 +61,7 @@ class UserManager(BaseUserManager):
 class User(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(_("email address"), unique=True)
     name = models.CharField(max_length=100, blank=True)
-    remind_interval = models.PositiveSmallIntegerField(default=settings.DEFAULT_REMIND_INTERVAL)
+    remind_interval = models.PositiveSmallIntegerField(default=settings.DEFAULT_REMIND_INTERVAL_MONTHS)
     last_reminder_sent_on = models.DateField(null=True, blank=True)
     is_staff = models.BooleanField(
         _("staff status"),

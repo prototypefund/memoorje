@@ -21,7 +21,7 @@ class ReminderTestCase(CapsuleMixin, TestCase):
 
     def test_user_with_old_capsule(self):
         self.create_capsule()
-        self.capsule.created_on -= relativedelta(months=settings.DEFAULT_REMIND_INTERVAL + 1)
+        self.capsule.created_on -= relativedelta(months=settings.DEFAULT_REMIND_INTERVAL_MONTHS + 1)
         self.capsule.save()
         management.call_command("sendreminders")
         self.assertEqual(len(mail.outbox), 1)
@@ -30,7 +30,7 @@ class ReminderTestCase(CapsuleMixin, TestCase):
 
     def test_user_with_old_reminder(self):
         self.create_capsule()
-        old_reminder_date = date.today() - relativedelta(months=settings.DEFAULT_REMIND_INTERVAL + 1)
+        old_reminder_date = date.today() - relativedelta(months=settings.DEFAULT_REMIND_INTERVAL_MONTHS + 1)
         self.user.last_reminder_sent_on = old_reminder_date
         self.user.save()
         management.call_command("sendreminders")
