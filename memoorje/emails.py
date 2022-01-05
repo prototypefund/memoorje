@@ -33,3 +33,8 @@ class CapsuleReceiverReleaseNotificationEmail(BaseEmail):
 class ReminderEmail(BaseEmail):
     def get_body(self, context: dict[str]) -> str:
         return "Check recipient data for your capsules"
+
+
+class TrusteePartialKeyInvitationEmail(BaseEmail):
+    def get_body(self, context: dict[str]) -> str:
+        return "You are invited to provide your partial key"

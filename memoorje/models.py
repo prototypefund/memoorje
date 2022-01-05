@@ -22,6 +22,7 @@ from memoorje.emails import (
     RecipientsChangedNotificationEmail,
     ReleaseInitiatedNotificationEmail,
     ReminderEmail,
+    TrusteePartialKeyInvitationEmail,
 )
 from memoorje.tokens import CapsuleReceiverTokenGeneratorProxy
 
@@ -166,6 +167,7 @@ class Keyslot(models.Model):
 
 
 class PartialKey(models.Model):
+    created_on = models.DateTimeField(auto_now_add=True)
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE, related_name="partial_keys")
     data = models.BinaryField()
 
@@ -175,13 +177,17 @@ class PartialKey(models.Model):
 
 
 class Trustee(models.Model):
-    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE)
+    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE, related_name="trustees")
     email = models.EmailField(blank=True)
     name = models.CharField(max_length=100, blank=True)
     partial_key_hash = models.BinaryField()
 
     class Meta:
         unique_together = ["capsule", "partial_key_hash"]
+
+    def send_partial_key_invitation(self):
+        if self.email:
+            TrusteePartialKeyInvitationEmail(self.email).send({})
 
 
 class Capsule(models.Model):
@@ -192,6 +198,7 @@ class Capsule(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     is_released = models.BooleanField(default=False)
+    are_partial_key_invitations_sent = models.BooleanField(default=False)
 
     # We use a recursive relationship such that the capsule model itself can be handled just like any of the other
     # "capsule related" models (e.g. in views).

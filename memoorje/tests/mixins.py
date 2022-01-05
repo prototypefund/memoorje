@@ -128,7 +128,9 @@ class TrusteeMixin(CapsuleMixin):
     def create_trustee(self):
         self.ensure_capsule_exists()
         self.trustee_email = "trustee@example.org"
-        self.partial_key_data = b"Partial key data according to Shamir's Secret Sharing Scheme"
+        self.partial_key_data = b"Partial key data according to Shamir's Secret Sharing Scheme" + bytes(
+            Trustee.objects.count()
+        )
         self.trustee = Trustee.objects.create(
             capsule=self.capsule,
             email=self.trustee_email,
