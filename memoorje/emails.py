@@ -10,9 +10,14 @@ class CapsuleHintsEmail(BaseEmail):
         return "Your capsule has inactive recipients"
 
 
-class CapsuleNotificationEmail(BaseEmail):
+class RecipientsChangedNotificationEmail(BaseEmail):
     def get_body(self, context: dict[str]) -> str:
         return "Recipients of your capsule have changed"
+
+
+class ReleaseInitiatedNotificationEmail(BaseEmail):
+    def get_body(self, context: dict[str]) -> str:
+        return "Release of the capsule has been initiated"
 
 
 class CapsuleReceiverConfirmationEmail(BaseEmail):
