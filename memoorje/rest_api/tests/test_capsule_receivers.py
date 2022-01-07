@@ -4,7 +4,7 @@ from django.core import mail
 from rest_framework import status
 
 from memoorje.models import CapsuleReceiver
-from memoorje.rest_api.tests.utils import reverse, MemoorjeAPITestCase
+from memoorje.rest_api.tests.utils import MemoorjeAPITestCase, reverse
 from memoorje.tests.mixins import CapsuleReceiverMixin
 
 

@@ -3,7 +3,7 @@ import json
 from rest_framework import status
 
 from memoorje.models import Capsule, CapsuleReceiver, Keyslot, PartialKey, Trustee
-from memoorje.rest_api.tests.utils import reverse, MemoorjeAPITestCase
+from memoorje.rest_api.tests.utils import MemoorjeAPITestCase, reverse
 from memoorje.tests.mixins import CapsuleMixin, CapsuleReceiverMixin, KeyslotMixin, PartialKeyMixin, TrusteeMixin
 
 
