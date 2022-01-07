@@ -31,6 +31,16 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
+    def test_login_with_invalid_credentials(self) -> None:
+        """Trying to login with invalid credentials returns an error."""
+        url = "/login/"
+        self.create_user()
+        data = {"login": self.email, "password": "invalid"}
+        response = self.client.post(self.get_api_url(url), data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["detail"].code, "login-invalid")
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
+
     def test_logout(self) -> None:
         """Remove the session (logout)"""
         url = "/logout/"

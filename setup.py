@@ -29,6 +29,7 @@ setup(
         "djangorestframework-camel-case~=1.2.0",
         "django-downloadview~=2.1.1",
         "django-filter~=2.4.0",
+        "django-otp~=1.0.2",
         "django-rest-registration~=0.6.4",
         "djeveric>=0.4.0",
         "drf-spectacular~=0.18.2",
