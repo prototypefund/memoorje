@@ -5,7 +5,7 @@ import os
 from rest_framework import status
 
 from memoorje.models import CapsuleContent
-from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
+from memoorje.rest_api.tests.utils import reverse, MemoorjeAPITestCase
 from memoorje.tests.memoorje import create_test_data_file
 from memoorje.tests.mixins import CapsuleContentMixin, CapsuleReceiverMixin
 
@@ -33,7 +33,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
                 response = self.client.post(
                     self.get_api_url(url),
                     {
-                        "capsule": get_url("capsule", self.capsule),
+                        "capsule": reverse("capsule", self.capsule),
                         "metadata": metadata_file,
                         "data": data_file,
                     },
@@ -61,7 +61,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         with create_test_data_file(b"test") as data_file:
             with create_test_data_file(b"test") as metadata_file:
                 request_data = {
-                    "capsule": get_url("capsule", self.capsule),
+                    "capsule": reverse("capsule", self.capsule),
                     "metadata": metadata_file,
                     "data": data_file,
                 }
@@ -107,11 +107,11 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
-                    "capsule": get_url("capsule", self.capsule, response),
+                    "capsule": reverse("capsule", self.capsule, response),
                     "data": response.wsgi_request.build_absolute_uri(self.capsule_content.data.url),
                     "id": self.capsule_content.id,
                     "metadata": b64encode(self.metadata).decode(),
-                    "url": get_url("capsulecontent", self.capsule_content, response),
+                    "url": reverse("capsulecontent", self.capsule_content, response),
                 },
             ],
         )

@@ -2,7 +2,7 @@ from django.conf import settings
 from rest_framework import status
 
 from memoorje.models import User
-from memoorje.rest_api.tests.memoorje import MemoorjeAPITestCase
+from memoorje.rest_api.tests.utils import MemoorjeAPITestCase
 from memoorje.tests.mixins import UserMixin
 
 

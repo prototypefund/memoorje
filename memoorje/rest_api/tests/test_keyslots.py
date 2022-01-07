@@ -4,7 +4,7 @@ import json
 from rest_framework import status
 
 from memoorje.models import Keyslot
-from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
+from memoorje.rest_api.tests.utils import reverse, MemoorjeAPITestCase
 from memoorje.tests.memoorje import create_test_data_file
 from memoorje.tests.mixins import CapsuleReceiverMixin, KeyslotMixin
 
@@ -29,7 +29,7 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
             response = self.client.post(
                 self.get_api_url(url),
                 {
-                    "capsule": get_url("capsule", self.capsule),
+                    "capsule": reverse("capsule", self.capsule),
                     "data": data_file,
                     "purpose": purpose,
                 },
@@ -53,7 +53,7 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
         response = self.client.post(
             self.get_api_url(url),
             {
-                "capsule": get_url("capsule", self.capsule),
+                "capsule": reverse("capsule", self.capsule),
             },
             format="multipart",
         )
@@ -81,11 +81,11 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
-                    "capsule": get_url("capsule", self.capsule, response),
+                    "capsule": reverse("capsule", self.capsule, response),
                     "id": self.keyslot.id,
                     "data": b64encode(self.data).decode(),
                     "purpose": self.purpose,
-                    "url": get_url("keyslot", self.keyslot, response),
+                    "url": reverse("keyslot", self.keyslot, response),
                 },
             ],
         )
@@ -110,7 +110,7 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
             response = self.client.put(
                 self.get_api_url(url, pk=self.keyslot.pk),
                 {
-                    "capsule": get_url("capsule", self.capsule),
+                    "capsule": reverse("capsule", self.capsule),
                     "data": data_file,
                     "purpose": purpose,
                 },

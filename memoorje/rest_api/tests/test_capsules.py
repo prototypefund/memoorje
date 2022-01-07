@@ -3,7 +3,7 @@ import json
 from rest_framework import status
 
 from memoorje.models import Capsule, CapsuleReceiver, Keyslot, PartialKey, Trustee
-from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
+from memoorje.rest_api.tests.utils import reverse, MemoorjeAPITestCase
 from memoorje.tests.mixins import CapsuleMixin, CapsuleReceiverMixin, KeyslotMixin, PartialKeyMixin, TrusteeMixin
 
 
@@ -45,7 +45,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
                 "id": str(self.capsule.id),
                 "name": self.capsule_name,
                 "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
-                "url": get_url("capsule", self.capsule, response),
+                "url": reverse("capsule", self.capsule, response),
             },
         )
 
@@ -94,7 +94,7 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
                     "id": str(self.capsule.id),
                     "name": self.capsule_name,
                     "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
-                    "url": get_url("capsule", self.capsule, response),
+                    "url": reverse("capsule", self.capsule, response),
                 },
             ],
         )

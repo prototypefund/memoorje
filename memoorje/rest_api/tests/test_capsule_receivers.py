@@ -4,7 +4,7 @@ from django.core import mail
 from rest_framework import status
 
 from memoorje.models import CapsuleReceiver
-from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
+from memoorje.rest_api.tests.utils import reverse, MemoorjeAPITestCase
 from memoorje.tests.mixins import CapsuleReceiverMixin
 
 
@@ -30,7 +30,7 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         response = self.client.post(
             self.get_api_url(url),
             {
-                "capsule": get_url("capsule", self.capsule),
+                "capsule": reverse("capsule", self.capsule),
                 "email": email,
             },
         )
@@ -51,7 +51,7 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         url = "/capsule-receivers/"
         self.create_capsule()
         request_data = {
-            "capsule": get_url("capsule", self.capsule),
+            "capsule": reverse("capsule", self.capsule),
             "email": "test@example.org",
         }
         self.authenticate_user()
@@ -75,11 +75,11 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
-                    "capsule": get_url("capsule", self.capsule, response),
+                    "capsule": reverse("capsule", self.capsule, response),
                     "email": self.receiver_email,
                     "id": self.capsule_receiver.id,
                     "isActive": False,
-                    "url": get_url("capsulereceiver", self.capsule_receiver, response),
+                    "url": reverse("capsulereceiver", self.capsule_receiver, response),
                 },
             ],
         )

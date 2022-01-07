@@ -1,7 +1,7 @@
 from rest_framework import status
 
 from memoorje.models import PartialKey
-from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
+from memoorje.rest_api.tests.utils import reverse, MemoorjeAPITestCase
 from memoorje.tests.memoorje import create_test_data_file
 from memoorje.tests.mixins import TrusteeMixin
 
@@ -16,7 +16,7 @@ class PartialKeyTestCase(TrusteeMixin, MemoorjeAPITestCase):
             response = self.client.post(
                 self.get_api_url(url),
                 {
-                    "capsule": get_url("capsule", self.capsule),
+                    "capsule": reverse("capsule", self.capsule),
                     "data": data_file,
                 },
                 format="multipart",
@@ -31,7 +31,7 @@ class PartialKeyTestCase(TrusteeMixin, MemoorjeAPITestCase):
             response = self.client.post(
                 self.get_api_url(url),
                 {
-                    "capsule": get_url("capsule", self.capsule),
+                    "capsule": reverse("capsule", self.capsule),
                     "data": data_file,
                 },
                 format="multipart",
@@ -51,7 +51,7 @@ class PartialKeyTestCase(TrusteeMixin, MemoorjeAPITestCase):
             response = self.client.post(
                 self.get_api_url(url),
                 {
-                    "capsule": get_url("capsule", self.capsule),
+                    "capsule": reverse("capsule", self.capsule),
                     "data": data_file,
                 },
                 format="multipart",

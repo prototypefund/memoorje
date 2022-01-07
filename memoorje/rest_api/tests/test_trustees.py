@@ -3,7 +3,7 @@ import json
 from rest_framework import status
 
 from memoorje.models import Trustee
-from memoorje.rest_api.tests.memoorje import get_url, MemoorjeAPITestCase
+from memoorje.rest_api.tests.utils import reverse, MemoorjeAPITestCase
 from memoorje.tests.mixins import CapsuleReceiverMixin, TrusteeMixin
 
 
@@ -25,7 +25,7 @@ class TrusteeTestCase(TrusteeMixin, MemoorjeAPITestCase):
         response = self.client.post(
             self.get_api_url(url),
             {
-                "capsule": get_url("capsule", self.capsule),
+                "capsule": reverse("capsule", self.capsule),
                 "email": email,
             },
         )
@@ -46,7 +46,7 @@ class TrusteeTestCase(TrusteeMixin, MemoorjeAPITestCase):
         response = self.client.post(
             self.get_api_url(url),
             {
-                "capsule": get_url("capsule", self.capsule),
+                "capsule": reverse("capsule", self.capsule),
             },
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -63,10 +63,10 @@ class TrusteeTestCase(TrusteeMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
-                    "capsule": get_url("capsule", self.capsule, response),
+                    "capsule": reverse("capsule", self.capsule, response),
                     "id": self.trustee.id,
                     "email": self.trustee_email,
-                    "url": get_url("trustee", self.trustee, response),
+                    "url": reverse("trustee", self.trustee, response),
                 },
             ],
         )

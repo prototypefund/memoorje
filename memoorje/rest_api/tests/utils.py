@@ -1,9 +1,9 @@
-from rest_framework.reverse import reverse
+from rest_framework.reverse import reverse as drf_reverse
 from rest_framework.test import APITestCase
 
 
-def get_url(basename, instance, response=None):
-    return reverse(f"{basename}-detail", [instance.pk], request=response.wsgi_request if response else None)
+def reverse(basename, instance, response=None):
+    return drf_reverse(f"{basename}-detail", [instance.pk], request=response.wsgi_request if response else None)
 
 
 class MemoorjeAPITestCase(APITestCase):
