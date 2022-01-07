@@ -39,13 +39,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_filters",
+    "django_otp",
+    "django_otp.plugins.otp_totp",
+    "drf_spectacular",
     "rest_framework",
     "rest_registration",
-    "django_filters",
-    "drf_spectacular",
     "memoorje",
     "memoorje.data_storage",
     "memoorje.rest_api",
+    "memoorje_2fa",
 ]
 
 MIDDLEWARE = [
@@ -162,6 +165,7 @@ REST_FRAMEWORK = {
 }
 
 REST_REGISTRATION = {
+    "LOGIN_SERIALIZER_CLASS": "memoorje_2fa.serializers.TwoFactorLoginSerializer",
     "REGISTER_VERIFICATION_ENABLED": False,
     "REGISTER_EMAIL_VERIFICATION_ENABLED": False,
     "RESET_PASSWORD_VERIFICATION_ENABLED": False,

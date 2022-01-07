@@ -1,5 +1,6 @@
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, PartialKey, Trustee, User
 from memoorje.tests.memoorje import create_test_data_file
+from memoorje_2fa.utils import create_default_device_for_user
 
 
 class BaseMixin:
@@ -16,10 +17,12 @@ class UserMixin(BaseMixin):
         self.ensure_user_exists()
         self.client.force_login(user=self.user)
 
-    def create_user(self):
+    def create_user(self, two_factor=False):
         self.email = f"test{User.objects.count()}@example.org"
         self.password = "test12345"
         self.user = User.objects.create_user(self.email, self.password, name="Test Name")
+        if two_factor:
+            create_default_device_for_user(self.user)
 
     def ensure_user_exists(self):
         if not User.objects.exists():
