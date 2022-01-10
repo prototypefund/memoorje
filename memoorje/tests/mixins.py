@@ -1,8 +1,7 @@
-from time import time
-
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, PartialKey, Trustee, User
 from memoorje.tests.memoorje import create_test_data_file
-from memoorje_2fa.utils import create_default_device_for_user
+from memoorje_2fa.users import create_default_device_for_user
+from memoorje_2fa.utils import get_token_for_device
 
 
 class BaseMixin:
@@ -12,7 +11,6 @@ class BaseMixin:
 
 class UserMixin(BaseMixin):
     two_factor_token: str
-    two_factor_key: str
     user: User
     password: str
     email: str
@@ -26,9 +24,8 @@ class UserMixin(BaseMixin):
         self.password = "test12345"
         self.user = User.objects.create_user(self.email, self.password, name="Test Name")
         if is_2fa_enabled:
-            self.two_factor_key = "2a2bbba1092ffdd25a328ad1a0a5f5d61d7aacc4"
-            self.two_factor_token = "154567"
-            create_default_device_for_user(self.user, key=self.two_factor_key, t0=int(time() - (30 * 3)))
+            device = create_default_device_for_user(self.user)
+            self.two_factor_token = get_token_for_device(device)
 
     def ensure_user_exists(self):
         if not User.objects.exists():

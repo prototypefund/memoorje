@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from memoorje.tests.mixins import UserMixin
+from memoorje_2fa.users import is_2fa_enabled_for_user
 
 
 class TwoFactorUserTestCase(UserMixin, APITestCase):
@@ -33,3 +34,11 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.wsgi_request.user.is_authenticated)
+
+    def test_enable_2fa(self):
+        """2FA can be enabled by posting to the enable_2fa endpoint for an authenticated user."""
+        url = "/api/auth/two-factor/"
+        self.authenticate_user()
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(is_2fa_enabled_for_user(self.user))
