@@ -165,7 +165,7 @@ REST_FRAMEWORK = {
 }
 
 REST_REGISTRATION = {
-    "LOGIN_AUTHENTICATOR": "memoorje_2fa.utils.authenticate",
+    "LOGIN_AUTHENTICATOR": "memoorje_2fa.users.authenticate",
     "LOGIN_SERIALIZER_CLASS": "memoorje_2fa.serializers.TwoFactorLoginSerializer",
     "REGISTER_VERIFICATION_ENABLED": False,
     "REGISTER_EMAIL_VERIFICATION_ENABLED": False,
