@@ -1,7 +1,9 @@
+from django_otp.plugins.otp_totp.models import TOTPDevice
+
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, PartialKey, Trustee, User
 from memoorje.tests.memoorje import create_test_data_file
 from memoorje_2fa.users import create_default_device_for_user
-from memoorje_2fa.utils import get_token_for_device
+from memoorje_2fa.utils import get_totp_for_device
 
 
 class BaseMixin:
@@ -10,6 +12,7 @@ class BaseMixin:
 
 
 class UserMixin(BaseMixin):
+    two_factor_device: TOTPDevice
     two_factor_token: str
     user: User
     password: str
@@ -24,8 +27,8 @@ class UserMixin(BaseMixin):
         self.password = "test12345"
         self.user = User.objects.create_user(self.email, self.password, name="Test Name")
         if is_2fa_enabled:
-            device = create_default_device_for_user(self.user)
-            self.two_factor_token = get_token_for_device(device)
+            self.two_factor_device = create_default_device_for_user(self.user)
+            self.two_factor_token = get_totp_for_device(self.two_factor_device).token()
 
     def ensure_user_exists(self):
         if not User.objects.exists():
