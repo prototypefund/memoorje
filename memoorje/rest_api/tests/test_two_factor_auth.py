@@ -1,4 +1,5 @@
 from binascii import unhexlify
+import json
 
 from django_otp.oath import TOTP
 from django_otp.plugins.otp_totp.models import default_key
@@ -75,3 +76,28 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(is_2fa_enabled_for_user(self.user))
+
+    def test_retrieve_2fa_status_disabled(self):
+        """Issuing a GET on the two-factor endpoint of a user with disabled 2FA should return a 404."""
+        url = "/api/auth/two-factor/"
+        self.authenticate_user()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_retrieve_2fa_status_enabled(self):
+        """Issuing a GET on the two-factor endpoint of a user with enabled 2FA should return valid data."""
+        url = "/api/auth/two-factor/"
+        self.create_user(is_2fa_enabled=True)
+        self.authenticate_user()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertDictEqual(json.loads(response.content), {"key": self.two_factor_device.key})
+
+    def test_disable_2fa(self):
+        """2FA can be disabled with DELETE two-factor."""
+        url = "/api/auth/two-factor/"
+        self.create_user(is_2fa_enabled=True)
+        self.authenticate_user()
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(is_2fa_enabled_for_user(self.user))
