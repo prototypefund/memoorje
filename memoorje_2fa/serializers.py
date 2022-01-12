@@ -5,8 +5,8 @@ from rest_framework import serializers
 from rest_framework.exceptions import ErrorDetail
 
 from memoorje.models import User
-from memoorje_2fa.utils import get_token_max_value, get_totp_for_device
 from memoorje_2fa.users import create_default_device_for_user, is_2fa_enabled_for_user
+from memoorje_2fa.utils import get_token_max_value
 
 
 class TwoFactorLoginSerializer(serializers.Serializer):
