@@ -4,8 +4,11 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 
 
 def get_token_for_device(device: TOTPDevice):
-    totp = TOTP(device.bin_key, device.step, device.t0, device.digits, device.drift)
-    return totp.token()
+    return get_totp_for_device(device).token()
+
+
+def get_totp_for_device(device):
+    return TOTP(device.bin_key, device.step, device.t0, device.digits, device.drift)
 
 
 def get_token_max_value():
