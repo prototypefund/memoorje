@@ -60,10 +60,11 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
     def test_enable_2fa_with_invalid_token(self):
         """Enabling 2FA with an invalid combination of key/ token fails."""
         url = "/api/auth/two-factor/"
-        data = {"key": "0123456789ABCDEF0123", "token": 123456}
+        data = {"key": "0123456789ABCDEF0123", "token": "000123"}
         self.authenticate_user()
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("non_field_errors", response.data)
         self.assertEqual(response.data["non_field_errors"][0].code, "invalid-token")
         self.assertFalse(is_2fa_enabled_for_user(self.user))
 
