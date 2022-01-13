@@ -39,6 +39,17 @@ class TwoFactorLoginSerializer(serializers.Serializer):
         return "token" in self.validated_data
 
 
+class TwoFactorDeleteSerializer(serializers.Serializer):
+    password = serializers.CharField()
+
+    def validate_password(self, password: str):
+        username = self.context["request"].user.get_username()
+        user = authenticate(username=username, password=password)
+        if not user:
+            raise serializers.ValidationError("The provided password is invalid", code="invalid-password")
+        return password
+
+
 class TwoFactorSerializer(serializers.HyperlinkedModelSerializer):
     token = serializers.IntegerField(write_only=True, min_value=0, max_value=get_token_max_value())
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())

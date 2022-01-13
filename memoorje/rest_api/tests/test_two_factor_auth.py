@@ -97,10 +97,22 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
         """2FA can be disabled with DELETE two-factor."""
         url = "/api/auth/two-factor/"
         self.create_user(is_2fa_enabled=True)
+        data = {"password": self.password}
         self.authenticate_user()
-        response = self.client.delete(url)
+        response = self.client.delete(url, data)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(is_2fa_enabled_for_user(self.user))
+
+    def test_disable_2fa_fails_with_invalid_password(self):
+        """For disabling 2FA the valid user password must be provided."""
+        url = "/api/auth/two-factor/"
+        data = {"password": "invalid"}
+        self.create_user(is_2fa_enabled=True)
+        self.authenticate_user()
+        response = self.client.delete(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["password"][0].code, "invalid-password")
+        self.assertTrue(is_2fa_enabled_for_user(self.user))
 
     def test_create_backup_tokens(self):
         """Create a set of backup tokens."""
