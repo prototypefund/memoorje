@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate
 from django.db import transaction
+from django_otp.plugins.otp_static.models import StaticDevice
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from rest_framework import serializers
 from rest_framework.exceptions import ErrorDetail
 
 from memoorje.models import User
-from memoorje_2fa.users import create_default_device_for_user, is_2fa_enabled_for_user
+from memoorje_2fa.users import create_backup_tokens_for_user, create_default_device_for_user, is_2fa_enabled_for_user
 from memoorje_2fa.utils import get_token_max_value
 
 
@@ -45,4 +46,28 @@ class TwoFactorSerializer(serializers.HyperlinkedModelSerializer):
     def validate_user(self, user: User):
         if is_2fa_enabled_for_user(user):
             raise serializers.ValidationError("2FA is already enabled for this user", code="already-enabled")
+        return user
+
+
+class StaticTokenField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.token
+
+
+class TwoFactorBackupSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    tokens = StaticTokenField(many=True, read_only=True, source="token_set")
+
+    class Meta:
+        model = StaticDevice
+        fields = ["tokens", "user"]
+
+    def create(self, validated_data):
+        return create_backup_tokens_for_user(validated_data["user"])
+
+    def validate_user(self, user: User):
+        if not is_2fa_enabled_for_user(user):
+            raise serializers.ValidationError(
+                "Backup tokens can only be created if 2FA is enabled", code="two-factor-disabled"
+            )
         return user

@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from memoorje.tests.mixins import UserMixin
-from memoorje_2fa.users import is_2fa_enabled_for_user
+from memoorje_2fa.users import get_named_device_for_user, is_2fa_enabled_for_user
 
 
 class TwoFactorUserTestCase(UserMixin, APITestCase):
@@ -101,3 +101,15 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(is_2fa_enabled_for_user(self.user))
+
+    def test_create_backup_tokens(self):
+        """Create a set of backup tokens."""
+        url = "/api/auth/two-factor/backup-tokens/"
+        self.create_user(is_2fa_enabled=True)
+        self.authenticate_user()
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertDictEqual(
+            json.loads(response.content),
+            {"tokens": list(get_named_device_for_user(self.user, "backup").token_set.values_list("token", flat=True))},
+        )

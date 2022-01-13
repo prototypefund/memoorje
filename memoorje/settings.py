@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_filters",
     "django_otp",
+    "django_otp.plugins.otp_static",
     "django_otp.plugins.otp_totp",
     "drf_spectacular",
     "rest_framework",
@@ -200,3 +201,5 @@ SECRET_SHARE_COMBINE_PATH = Path("~/.cargo/bin/secret-share-combine").expanduser
 INACTIVE_RECEIVER_HINT_DAYS = 7
 
 TRUSTEE_PARTIAL_KEY_INVITATION_GRACE_PERIOD_DAYS = 3
+
+TWO_FACTOR_BACKUP_TOKEN_COUNT = 10

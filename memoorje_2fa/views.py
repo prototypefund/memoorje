@@ -1,7 +1,7 @@
 from django.http import Http404
 from rest_framework import generics, mixins
 
-from memoorje_2fa.serializers import TwoFactorSerializer
+from memoorje_2fa.serializers import TwoFactorBackupSerializer, TwoFactorSerializer
 from memoorje_2fa.users import get_default_device_for_user
 
 
@@ -26,3 +26,12 @@ class TwoFactorView(
         if device is None:
             raise Http404
         return device
+
+
+class TwoFactorBackupView(mixins.CreateModelMixin, generics.GenericAPIView):
+    """Create backup tokens."""
+
+    serializer_class = TwoFactorBackupSerializer
+
+    def post(self, *args, **kwargs):
+        return self.create(*args, **kwargs)
