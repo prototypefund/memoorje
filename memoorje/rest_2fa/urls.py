@@ -1,6 +1,6 @@
 from django.urls import path
 
-from memoorje_2fa.views import TwoFactorBackupView, TwoFactorView
+from memoorje.rest_2fa.views import TwoFactorBackupView, TwoFactorView
 
 urlpatterns = [
     path("two-factor/", TwoFactorView.as_view(), name="two-factor"),

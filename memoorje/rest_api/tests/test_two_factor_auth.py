@@ -6,8 +6,8 @@ from django_otp.plugins.otp_totp.models import default_key
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from memoorje.rest_2fa.users import get_named_device_for_user, is_2fa_enabled_for_user
 from memoorje.tests.mixins import UserMixin
-from memoorje_2fa.users import get_named_device_for_user, is_2fa_enabled_for_user
 
 
 class TwoFactorUserTestCase(UserMixin, APITestCase):

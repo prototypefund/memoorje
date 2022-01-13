@@ -1,9 +1,9 @@
 from django_otp.plugins.otp_totp.models import TOTPDevice
 
 from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, PartialKey, Trustee, User
+from memoorje.rest_2fa.users import create_backup_tokens_for_user, create_default_device_for_user
+from memoorje.rest_2fa.utils import get_totp_for_device
 from memoorje.tests.memoorje import create_test_data_file
-from memoorje_2fa.users import create_backup_tokens_for_user, create_default_device_for_user
-from memoorje_2fa.utils import get_totp_for_device
 
 
 class BaseMixin:

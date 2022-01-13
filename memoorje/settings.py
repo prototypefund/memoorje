@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     "memoorje",
     "memoorje.data_storage",
     "memoorje.rest_api",
-    "memoorje_2fa",
+    "memoorje.rest_2fa",
 ]
 
 MIDDLEWARE = [
@@ -166,8 +166,8 @@ REST_FRAMEWORK = {
 }
 
 REST_REGISTRATION = {
-    "LOGIN_AUTHENTICATOR": "memoorje_2fa.users.authenticate",
-    "LOGIN_SERIALIZER_CLASS": "memoorje_2fa.serializers.TwoFactorLoginSerializer",
+    "LOGIN_AUTHENTICATOR": "memoorje.rest_2fa.users.authenticate",
+    "LOGIN_SERIALIZER_CLASS": "memoorje.rest_2fa.serializers.TwoFactorLoginSerializer",
     "REGISTER_VERIFICATION_ENABLED": False,
     "REGISTER_EMAIL_VERIFICATION_ENABLED": False,
     "RESET_PASSWORD_VERIFICATION_ENABLED": False,

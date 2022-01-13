@@ -1,8 +1,8 @@
 from django.http import Http404
 from rest_framework import generics, mixins
 
-from memoorje_2fa.serializers import TwoFactorBackupSerializer, TwoFactorSerializer
-from memoorje_2fa.users import get_default_device_for_user
+from memoorje.rest_2fa.serializers import TwoFactorBackupSerializer, TwoFactorSerializer
+from memoorje.rest_2fa.users import get_default_device_for_user
 
 
 class TwoFactorView(

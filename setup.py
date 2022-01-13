@@ -22,7 +22,7 @@ setup(
     author="memoorje developers",
     author_email="tach@memoorje.org",
     license="AGPL-3.0-or-later",
-    packages=find_namespace_packages(include=("memoorje", "memoorje.*", "memoorje_2fa", "memoorje_2fa.*")),
+    packages=find_namespace_packages(include=("memoorje", "memoorje.*")),
     install_requires=[
         "django~=3.2.7",
         "djangorestframework~=3.12.1",
