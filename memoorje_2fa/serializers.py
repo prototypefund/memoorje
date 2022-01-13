@@ -6,7 +6,12 @@ from rest_framework import serializers
 from rest_framework.exceptions import ErrorDetail
 
 from memoorje.models import User
-from memoorje_2fa.users import create_backup_tokens_for_user, create_default_device_for_user, is_2fa_enabled_for_user
+from memoorje_2fa.users import (
+    create_backup_tokens_for_user,
+    create_default_device_for_user,
+    get_named_device_for_user,
+    is_2fa_enabled_for_user,
+)
 from memoorje_2fa.utils import get_token_max_value
 
 
@@ -14,14 +19,24 @@ class TwoFactorLoginSerializer(serializers.Serializer):
     login = serializers.EmailField()
     password = serializers.CharField()
     token = serializers.IntegerField(required=False, min_value=0, max_value=get_token_max_value())
+    backup_token = serializers.CharField(required=False)
+
+    def get_device(self, user):
+        return get_named_device_for_user(user, "default" if self._has_default_token() else "backup")
+
+    def get_token(self):
+        return self.validated_data.get("token" if self._has_default_token() else "backup_token")
 
     def validate(self, data):
         user = authenticate(username=data["login"], password=data["password"])
-        if user and is_2fa_enabled_for_user(user) and data.get("token") is None:
+        if user and is_2fa_enabled_for_user(user) and data.get("token") is None and data.get("backup_token") is None:
             raise serializers.ValidationError(
                 "For users with 2FA enabled a token must be provided", code="provide-token"
             )
         return data
+
+    def _has_default_token(self):
+        return "token" in self.validated_data
 
 
 class TwoFactorSerializer(serializers.HyperlinkedModelSerializer):

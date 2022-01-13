@@ -113,3 +113,12 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
             json.loads(response.content),
             {"tokens": list(get_named_device_for_user(self.user, "backup").token_set.values_list("token", flat=True))},
         )
+
+    def test_login_with_valid_backup_token(self) -> None:
+        """Trying to log in to a 2FA account with a valid backup token logs the user in successfully."""
+        url = "/api/auth/login/"
+        self.create_user(is_2fa_enabled=True)
+        data = {"login": self.email, "password": self.password, "backupToken": self.backup_token}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.wsgi_request.user.is_authenticated)

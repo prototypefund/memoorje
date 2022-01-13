@@ -14,8 +14,8 @@ def authenticate(data, **kwargs):
         is_not_found_error = False
         with transaction.atomic():
             if serializer and serializer.is_valid():
-                device = get_default_device_for_user(user)
-                if not device.verify_token(serializer.validated_data["token"]):
+                device = serializer.get_device(user)
+                if not device.verify_token(serializer.get_token()):
                     is_not_found_error = True
             else:
                 is_not_found_error = True
