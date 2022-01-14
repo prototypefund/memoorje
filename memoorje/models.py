@@ -27,6 +27,10 @@ from memoorje.emails import (
 from memoorje.tokens import CapsuleReceiverTokenGeneratorProxy
 
 
+def _format_frontend_link(key, **kwargs):
+    return settings.FRONTEND_LINKS[key].format(**kwargs)
+
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -190,8 +194,8 @@ class Trustee(models.Model):
             TrusteePartialKeyInvitationEmail(self.email).send(
                 {
                     "capsule": self.capsule,
-                    "justification_link": "#",
-                    "partial_key_link": str(self.capsule.pk),
+                    "justification_link": _format_frontend_link("partial_key_justify"),
+                    "partial_key_link": _format_frontend_link("partial_key_create", capsule_pk=self.capsule.pk),
                 }
             )
 

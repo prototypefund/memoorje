@@ -205,3 +205,8 @@ TRUSTEE_PARTIAL_KEY_INVITATION_GRACE_PERIOD_DAYS = 3
 TWO_FACTOR_BACKUP_TOKEN_COUNT = 10
 
 TEMPLATED_EMAIL_TEMPLATE_DIR = "emails/"
+
+FRONTEND_LINKS = {
+    "partial_key_create": "http://localhost:8080/capsules/{capsule_pk}/partial-keys/add",
+    "partial_key_justify": "#",
+}
