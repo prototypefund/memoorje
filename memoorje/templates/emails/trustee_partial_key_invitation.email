@@ -1,5 +1,33 @@
-{% block subject %}{% endblock %}
+{% extends "emails/base.email" %}
 
-{% block html %}
-  <p></p>
+{% load i18n %}
+
+{% block subject %}{% translate "Invitation to provide your partial key as a trustee" %}{% endblock %}
+
+{% block title %}{% translate "Provide your partial key" %}{% endblock %}
+
+{% block content %}
+  <p>
+    {% blocktranslate with capsule_name=capsule.name trimmed %}
+      The release process for the capsule <strong>{{ capsule_name }}</strong> has been started. You are invited to
+      provide your part of the key to the capsule. Please read the capsule description below and make sure, that you
+      agree on opening the capsule.
+    {% endblocktranslate %}
+  </p>
+  <p>
+    {% blocktranslate with capsule_description=capsule.description %}
+      {{ capsule_description }}
+    {% endblocktranslate %}
+  </p>
+  <p>
+    {% blocktranslate trimmed %}
+      If you agree that the capsule contents should be released to the recipients, please provide your part of the key
+      by following this link:
+
+      <a href="{{ partial_key_link }}">{{ partial_key_link }}</a>
+    {% endblocktranslate %}
+  </p>
+  <p>
+    <a href="{{ justification_link }}">{% translate "Why do I get this e-mail?" %}</a>
+  </p>
 {% endblock %}

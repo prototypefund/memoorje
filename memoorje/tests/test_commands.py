@@ -32,3 +32,7 @@ class InvitationTestCase(PartialKeyMixin, TrusteeMixin, TestCase):
         mail.outbox.clear()
         management.call_command("sendpartialkeyinvitations")
         self.assertEqual(len(mail.outbox), 2)
+        for m in mail.outbox:
+            self.assertIn(self.capsule.name, m.body)
+            self.assertIn(self.capsule.description, m.body)
+            self.assertIn(str(self.capsule.pk), m.body)

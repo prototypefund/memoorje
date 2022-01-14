@@ -1,0 +1,9 @@
+{% load i18n %}
+
+{% block html %}
+  <p>
+    memoorje: {% block title %}{% endblock %}
+  </p>
+  {% block content %}
+  {% endblock %}
+{% endblock %}

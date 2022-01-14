@@ -187,7 +187,13 @@ class Trustee(models.Model):
 
     def send_partial_key_invitation(self):
         if self.email:
-            TrusteePartialKeyInvitationEmail(self.email).send({})
+            TrusteePartialKeyInvitationEmail(self.email).send(
+                {
+                    "capsule": self.capsule,
+                    "justification_link": "#",
+                    "partial_key_link": str(self.capsule.pk),
+                }
+            )
 
 
 class Capsule(models.Model):

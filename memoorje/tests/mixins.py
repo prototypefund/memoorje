@@ -45,8 +45,8 @@ class CapsuleMixin(UserMixin):
 
     def create_capsule(self) -> Capsule:
         self.ensure_user_exists()
-        self.capsule_name = "test"
-        self.capsule_description = "test"
+        self.capsule_name = "Test Capsule Name"
+        self.capsule_description = "The description of the test capsule."
         self.capsule = Capsule.objects.create(
             owner=self.user, name=self.capsule_name, description=self.capsule_description
         )
