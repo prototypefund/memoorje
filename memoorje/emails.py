@@ -1,40 +1,55 @@
 from djeveric.emails import ConfirmationEmail
+from templated_email import get_templated_mail
 
 
-class BaseEmail(ConfirmationEmail):
-    pass
+class TemplatedEmail(ConfirmationEmail):
+    template_name: str
+
+    def get_template_name(self):
+        return self.template_name
+
+    def send(self, context):
+        template_name = self.get_template_name()
+        mail = get_templated_mail(
+            context=context,
+            template_name=template_name,
+            to=[self.email],
+        )
+        mail.send()
 
 
-class CapsuleHintsEmail(BaseEmail):
-    def get_body(self, context: dict[str]) -> str:
-        return "Your capsule has inactive recipients"
+# mails sent to the capsule owner
 
 
-class RecipientsChangedNotificationEmail(BaseEmail):
-    def get_body(self, context: dict[str]) -> str:
-        return "Recipients of your capsule have changed"
+class CapsuleHintsEmail(TemplatedEmail):
+    template_name = "owner_capsule_hints_notification"
 
 
-class ReleaseInitiatedNotificationEmail(BaseEmail):
-    def get_body(self, context: dict[str]) -> str:
-        return "Release of the capsule has been initiated"
+class RecipientsChangedNotificationEmail(TemplatedEmail):
+    template_name = "owner_recipients_changed_notification"
 
 
-class CapsuleReceiverConfirmationEmail(BaseEmail):
-    def get_body(self, context: dict[str]) -> str:
-        return f"pk: {context['pk']}, token: {context['token']}"
+class ReleaseInitiatedNotificationEmail(TemplatedEmail):
+    template_name = "owner_release_initiated_notification"
 
 
-class CapsuleReceiverReleaseNotificationEmail(BaseEmail):
-    def get_body(self, context: dict[str]) -> str:
-        return "{password} {token}".format(**context)
+class ReminderEmail(TemplatedEmail):
+    template_name = "owner_reminder"
 
 
-class ReminderEmail(BaseEmail):
-    def get_body(self, context: dict[str]) -> str:
-        return "Check recipient data for your capsules"
+# mails sent to the capsule recipients
 
 
-class TrusteePartialKeyInvitationEmail(BaseEmail):
-    def get_body(self, context: dict[str]) -> str:
-        return "You are invited to provide your partial key"
+class CapsuleReceiverConfirmationEmail(TemplatedEmail):
+    template_name = "recipient_confirmation"
+
+
+class CapsuleReceiverReleaseNotificationEmail(TemplatedEmail):
+    template_name = "recipient_release_notification"
+
+
+# mails sent to the capsule trustees
+
+
+class TrusteePartialKeyInvitationEmail(TemplatedEmail):
+    template_name = "trustee_partial_key_invitation"

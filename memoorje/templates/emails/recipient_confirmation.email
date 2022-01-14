@@ -1,0 +1,5 @@
+{% block subject %}Test subject{% endblock %}
+
+{% block html %}
+  <p>{{ token }}</p>
+{% endblock %}
