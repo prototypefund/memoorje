@@ -40,11 +40,11 @@ class ReminderEmail(TemplatedEmail):
 # mails sent to the capsule recipients
 
 
-class CapsuleReceiverConfirmationEmail(TemplatedEmail):
+class CapsuleRecipientConfirmationEmail(TemplatedEmail):
     template_name = "recipient_confirmation"
 
 
-class CapsuleReceiverReleaseNotificationEmail(TemplatedEmail):
+class CapsuleRecipientReleaseNotificationEmail(TemplatedEmail):
     template_name = "recipient_release_notification"
 
 

@@ -7,7 +7,7 @@ from rest_framework import status
 from memoorje.models import CapsuleContent
 from memoorje.rest_api.tests.utils import MemoorjeAPITestCase, reverse
 from memoorje.tests.memoorje import create_test_data_file
-from memoorje.tests.mixins import CapsuleContentMixin, CapsuleReceiverMixin
+from memoorje.tests.mixins import CapsuleContentMixin, CapsuleRecipientMixin
 
 
 class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
@@ -163,14 +163,14 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
         self.assertEqual(len(response.data), 1)
 
 
-class CapsuleContentAccessWithReceiverTokenTestCase(CapsuleContentMixin, CapsuleReceiverMixin, MemoorjeAPITestCase):
+class CapsuleContentAccessWithRecipientTokenTestCase(CapsuleContentMixin, CapsuleRecipientMixin, MemoorjeAPITestCase):
     def test_retrieve_capsule_content(self):
-        """Gain access to a capsule content by providing a receiver token."""
+        """Gain access to a capsule content by providing a recipient token."""
         url = "/capsule-contents/{pk}/"
         self.create_capsule_content()
-        self.create_capsule_receiver()
+        self.create_capsule_recipient()
         response = self.client.get(
             self.get_api_url(url, pk=self.capsule_content.pk),
-            **self.get_request_headers(with_receiver_token_for=self.capsule_receiver),
+            **self.get_request_headers(with_recipient_token_for=self.capsule_recipient),
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)

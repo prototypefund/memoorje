@@ -17,14 +17,14 @@ from memoorje_crypto.formats import EncryptionV1
 from memoorje.data_storage.fields import CapsuleDataField
 from memoorje.emails import (
     CapsuleHintsEmail,
-    CapsuleReceiverConfirmationEmail,
-    CapsuleReceiverReleaseNotificationEmail,
+    CapsuleRecipientConfirmationEmail,
+    CapsuleRecipientReleaseNotificationEmail,
     RecipientsChangedNotificationEmail,
     ReleaseInitiatedNotificationEmail,
     ReminderEmail,
     TrusteePartialKeyInvitationEmail,
 )
-from memoorje.tokens import CapsuleReceiverTokenGeneratorProxy
+from memoorje.tokens import CapsuleRecipientTokenGeneratorProxy
 
 
 def _format_frontend_link(key, **kwargs):
@@ -113,35 +113,35 @@ class CapsuleContent(models.Model):
     data = CapsuleDataField()
 
 
-class CapsuleReceiverQuerySet(models.QuerySet):
+class CapsuleRecipientQuerySet(models.QuerySet):
     def get_by_token(self, token: str):
         if token is not None:
             pk, *_ = token.partition("-")
             try:
-                receiver: CapsuleReceiver = self.get(pk=int(pk))
-                if receiver.receiver_token_generator_proxy.check_token(token):
-                    return receiver
+                recipient: CapsuleRecipient = self.get(pk=int(pk))
+                if recipient.recipient_token_generator_proxy.check_token(token):
+                    return recipient
                 else:
-                    raise CapsuleReceiver.DoesNotExist("Invalid token.")
+                    raise CapsuleRecipient.DoesNotExist("Invalid token.")
             except ValueError:
-                raise CapsuleReceiver.DoesNotExist(f"Invalid pk: {pk}.")
-        raise CapsuleReceiver.DoesNotExist("No receiver found for None token.")
+                raise CapsuleRecipient.DoesNotExist(f"Invalid pk: {pk}.")
+        raise CapsuleRecipient.DoesNotExist("No recipient found for None token.")
 
 
-class CapsuleReceiver(ConfirmableModelMixin, models.Model):
-    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE, related_name="receivers")
+class CapsuleRecipient(ConfirmableModelMixin, models.Model):
+    capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE, related_name="recipients")
     created_on = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
-    is_email_confirmed = ConfirmationField(email_class=CapsuleReceiverConfirmationEmail)
+    is_email_confirmed = ConfirmationField(email_class=CapsuleRecipientConfirmationEmail)
 
-    objects = models.Manager.from_queryset(CapsuleReceiverQuerySet)()
+    objects = models.Manager.from_queryset(CapsuleRecipientQuerySet)()
 
     class Meta:
         unique_together = ["capsule", "email"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.receiver_token_generator_proxy = CapsuleReceiverTokenGeneratorProxy(self)
+        self.recipient_token_generator_proxy = CapsuleRecipientTokenGeneratorProxy(self)
 
     def get_confirmation_email_context(self) -> Mapping[str, Any]:
         return {
@@ -156,12 +156,12 @@ class CapsuleReceiver(ConfirmableModelMixin, models.Model):
         return self.is_email_confirmed
 
     def send_release_notification(self, password):
-        """Send a capsule release notification to this receiver."""
+        """Send a capsule release notification to this recipient."""
         context = {
             "password": password,
-            "token": self.receiver_token_generator_proxy.make_token(),
+            "token": self.recipient_token_generator_proxy.make_token(),
         }
-        email = CapsuleReceiverReleaseNotificationEmail(self.email)
+        email = CapsuleRecipientReleaseNotificationEmail(self.email)
         email.send(context)
 
 
@@ -227,7 +227,7 @@ class Capsule(models.Model):
         self.updated_on = timestamp
         self.save()
 
-    def release(self) -> Optional[Mapping[CapsuleReceiver, str]]:
+    def release(self) -> Optional[Mapping[CapsuleRecipient, str]]:
         """
         Try to release this capsule. "Releasing" means combining all existing partial keys, decrypting the secret and
         re-encrypting it with a new password.
@@ -247,9 +247,9 @@ class Capsule(models.Model):
                 return passwords
         return None
 
-    def send_hints(self, inactive_receivers=None):
+    def send_hints(self, inactive_recipients=None):
         """Send hints regarding notable facts to capsule owner."""
-        self.owner.send_email(CapsuleHintsEmail, {"inactive_receivers": inactive_receivers})
+        self.owner.send_email(CapsuleHintsEmail, {"inactive_recipients": inactive_recipients})
 
     def send_notification(self, recipients_changed=False, release_initiated=False):
         """Send a notification email to the capsule owner."""

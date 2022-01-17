@@ -5,27 +5,27 @@ from django.core import mail
 from more_itertools import first
 from rest_framework import status
 
-from memoorje.models import CapsuleReceiver
+from memoorje.models import CapsuleRecipient
 from memoorje.rest_api.tests.utils import MemoorjeAPITestCase, reverse
-from memoorje.tests.mixins import CapsuleReceiverMixin
+from memoorje.tests.mixins import CapsuleRecipientMixin
 
 
-class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
-    def test_access_receivers_without_capsule(self):
+class CapsuleRecipientTestCase(CapsuleRecipientMixin, MemoorjeAPITestCase):
+    def test_access_recipients_without_capsule(self):
         """
-        Access capsule receiver list without a capsule given.
+        Access capsule recipient list without a capsule given.
         """
-        url = "/capsule-receivers/"
+        url = "/capsule-recipients/"
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertListEqual(response.data, [])
 
-    def test_create_capsule_receiver(self):
+    def test_create_capsule_recipient(self):
         """
-        Create a receiver for an existing capsule.
+        Create a recipient for an existing capsule.
         """
-        url = "/capsule-receivers/"
+        url = "/capsule-recipients/"
         email = "test@example.org"
         self.create_capsule()
         self.authenticate_user()
@@ -37,20 +37,20 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(CapsuleReceiver.objects.count(), 1)
-        capsule_receiver = CapsuleReceiver.objects.get()
-        self.assertEqual(capsule_receiver.capsule, self.capsule)
-        self.assertEqual(capsule_receiver.email, email)
+        self.assertEqual(CapsuleRecipient.objects.count(), 1)
+        capsule_recipient = CapsuleRecipient.objects.get()
+        self.assertEqual(capsule_recipient.capsule, self.capsule)
+        self.assertEqual(capsule_recipient.email, email)
 
-    def test_create_capsule_receiver_unauthorized(self):
+    def test_create_capsule_recipient_unauthorized(self):
         """
-        Create a receiver for a capsule belonging to another user.
+        Create a recipient for a capsule belonging to another user.
         """
 
         def request(request_url, request_body):
             return self.client.post(self.get_api_url(request_url), request_body)
 
-        url = "/capsule-receivers/"
+        url = "/capsule-recipients/"
         self.create_capsule()
         request_data = {
             "capsule": reverse("capsule", self.capsule),
@@ -64,12 +64,12 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         response = request(url, request_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_list_capsule_receivers(self):
+    def test_list_capsule_recipients(self):
         """
-        List the receivers for a capsule.
+        List the recipients for a capsule.
         """
-        url = "/capsule-receivers/?capsule={pk}"
-        self.create_capsule_receiver()
+        url = "/capsule-recipients/?capsule={pk}"
+        self.create_capsule_recipient()
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url, pk=self.capsule.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -78,87 +78,87 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
             [
                 {
                     "capsule": reverse("capsule", self.capsule, response),
-                    "email": self.receiver_email,
-                    "id": self.capsule_receiver.id,
+                    "email": self.recipient_email,
+                    "id": self.capsule_recipient.id,
                     "isActive": False,
-                    "url": reverse("capsulereceiver", self.capsule_receiver, response),
+                    "url": reverse("capsulerecipient", self.capsule_recipient, response),
                 },
             ],
         )
 
-    def test_delete_capsule_receiver(self):
+    def test_delete_capsule_recipient(self):
         """
-        Delete a capsule receiver.
+        Delete a capsule recipient.
         """
-        url = "/capsule-receivers/{pk}/"
-        self.create_capsule_receiver()
+        url = "/capsule-recipients/{pk}/"
+        self.create_capsule_recipient()
         self.authenticate_user()
-        response = self.client.delete(self.get_api_url(url, pk=self.capsule_receiver.pk))
+        response = self.client.delete(self.get_api_url(url, pk=self.capsule_recipient.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(CapsuleReceiver.objects.exists())
+        self.assertFalse(CapsuleRecipient.objects.exists())
 
-    def test_receiver_creation_sends_confirmation_request(self):
+    def test_recipient_creation_sends_confirmation_request(self):
         """
-        An email with a confirmation link should be sent to the capsule receiver.
+        An email with a confirmation link should be sent to the capsule recipient.
         """
-        self.create_capsule_receiver()
+        self.create_capsule_recipient()
         self.assertGreaterEqual(len(mail.outbox), 1)
-        self.assertIn(self.capsule_receiver.email, [m.to[0] for m in mail.outbox])
-        msg = first(filter(lambda m: m.to[0] == self.capsule_receiver.email, mail.outbox))
-        self.assertIn(self.capsule_receiver.make_confirmation_token(), msg.body)
+        self.assertIn(self.capsule_recipient.email, [m.to[0] for m in mail.outbox])
+        msg = first(filter(lambda m: m.to[0] == self.capsule_recipient.email, mail.outbox))
+        self.assertIn(self.capsule_recipient.make_confirmation_token(), msg.body)
 
-    def test_confirm_capsule_receiver(self):
+    def test_confirm_capsule_recipient(self):
         """
-        Confirm a capsule receivers email address.
+        Confirm a capsule recipient's email address.
         """
-        url = "/capsule-receivers/{pk}/confirm/"
-        self.create_capsule_receiver()
+        url = "/capsule-recipients/{pk}/confirm/"
+        self.create_capsule_recipient()
         response = self.client.post(
-            self.get_api_url(url, pk=self.capsule_receiver.pk),
-            {"token": self.capsule_receiver.make_confirmation_token()},
+            self.get_api_url(url, pk=self.capsule_recipient.pk),
+            {"token": self.capsule_recipient.make_confirmation_token()},
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.capsule_receiver.refresh_from_db()
-        self.assertTrue(self.capsule_receiver.is_email_confirmed)
+        self.capsule_recipient.refresh_from_db()
+        self.assertTrue(self.capsule_recipient.is_email_confirmed)
 
-    def test_confirm_capsule_receiver_twice(self):
+    def test_confirm_capsule_recipient_twice(self):
         """
         A confirmation token for an email address must not be used twice.
         """
-        url = "/capsule-receivers/{pk}/confirm/"
-        self.create_capsule_receiver()
+        url = "/capsule-recipients/{pk}/confirm/"
+        self.create_capsule_recipient()
         response = self.client.post(
-            self.get_api_url(url, pk=self.capsule_receiver.pk),
-            {"token": self.capsule_receiver.make_confirmation_token()},
+            self.get_api_url(url, pk=self.capsule_recipient.pk),
+            {"token": self.capsule_recipient.make_confirmation_token()},
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         response = self.client.post(
-            self.get_api_url(url, pk=self.capsule_receiver.pk),
-            {"token": self.capsule_receiver.make_confirmation_token()},
+            self.get_api_url(url, pk=self.capsule_recipient.pk),
+            {"token": self.capsule_recipient.make_confirmation_token()},
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_confirm_other_capsule_receiver(self):
+    def test_confirm_other_capsule_recipient(self):
         """
-        A confirmation token must not be used for another capsule receiver.
+        A confirmation token must not be used for another capsule recipient.
         """
-        url = "/capsule-receivers/{pk}/confirm/"
-        first = self.create_capsule_receiver()
-        second = self.create_capsule_receiver("other@example.org")
+        url = "/capsule-recipients/{pk}/confirm/"
+        first = self.create_capsule_recipient()
+        second = self.create_capsule_recipient("other@example.org")
         response = self.client.post(
             self.get_api_url(url, pk=first.pk),
             {"token": second.make_confirmation_token()},
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_list_all_capsule_receivers(self):
+    def test_list_all_capsule_recipients(self):
         """
-        List all accessible receivers for a capsule.
+        List all accessible recipients for a capsule.
         """
-        url = "/capsule-receivers/"
-        self.create_capsule_receiver()
+        url = "/capsule-recipients/"
+        self.create_capsule_recipient()
         self.create_user()
-        self.create_capsule_receiver()
+        self.create_capsule_recipient()
         self.authenticate_user()
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)

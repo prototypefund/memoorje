@@ -4,7 +4,7 @@ from rest_framework import status
 
 from memoorje.models import Trustee
 from memoorje.rest_api.tests.utils import MemoorjeAPITestCase, reverse
-from memoorje.tests.mixins import CapsuleReceiverMixin, TrusteeMixin
+from memoorje.tests.mixins import CapsuleRecipientMixin, TrusteeMixin
 
 
 class TrusteeTestCase(TrusteeMixin, MemoorjeAPITestCase):
@@ -94,17 +94,19 @@ class TrusteeTestCase(TrusteeMixin, MemoorjeAPITestCase):
         self.assertEqual(len(response.data), 1)
 
 
-class AuthenticatedTrusteeAccessWithReceiverTokenTestCase(CapsuleReceiverMixin, TrusteeMixin, MemoorjeAPITestCase):
+class AuthenticatedTrusteeAccessWithRecipientTokenTestCase(CapsuleRecipientMixin, TrusteeMixin, MemoorjeAPITestCase):
     def test_list_trustees(self):
-        """List trustee(s) for the given receiver."""
+        """List trustee(s) for the given recipient."""
         url = "/trustees/"
-        receiver = self.create_capsule_receiver()
+        recipient = self.create_capsule_recipient()
         self.create_trustee()
         self.create_user()
         self.create_trustee()
         self.authenticate_user()
-        response = self.client.get(self.get_api_url(url), **self.get_request_headers(with_receiver_token_for=receiver))
+        response = self.client.get(
+            self.get_api_url(url), **self.get_request_headers(with_recipient_token_for=recipient)
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertNotEqual(self.user, receiver)
+        self.assertNotEqual(self.user, recipient)
         self.assertEqual(Trustee.objects.count(), 2)
         self.assertEqual(len(response.data), 1)

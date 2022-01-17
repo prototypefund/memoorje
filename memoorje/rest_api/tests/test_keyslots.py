@@ -6,7 +6,7 @@ from rest_framework import status
 from memoorje.models import Keyslot
 from memoorje.rest_api.tests.utils import MemoorjeAPITestCase, reverse
 from memoorje.tests.memoorje import create_test_data_file
-from memoorje.tests.mixins import CapsuleReceiverMixin, KeyslotMixin
+from memoorje.tests.mixins import CapsuleRecipientMixin, KeyslotMixin
 
 
 class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
@@ -135,17 +135,19 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
         self.assertEqual(len(response.data), 1)
 
 
-class AuthenticatedKeyslotAccessWithReceiverTokenTestCase(CapsuleReceiverMixin, KeyslotMixin, MemoorjeAPITestCase):
+class AuthenticatedKeyslotAccessWithRecipientTokenTestCase(CapsuleRecipientMixin, KeyslotMixin, MemoorjeAPITestCase):
     def test_list_keyslots(self):
-        """List keyslot(s) for the given receiver."""
+        """List keyslot(s) for the given recipient."""
         url = "/keyslots/"
-        receiver = self.create_capsule_receiver()
+        recipient = self.create_capsule_recipient()
         self.create_keyslot()
         self.create_user()
         self.create_keyslot()
         self.authenticate_user()
-        response = self.client.get(self.get_api_url(url), **self.get_request_headers(with_receiver_token_for=receiver))
+        response = self.client.get(
+            self.get_api_url(url), **self.get_request_headers(with_recipient_token_for=recipient)
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertNotEqual(self.user, receiver)
+        self.assertNotEqual(self.user, recipient)
         self.assertEqual(Keyslot.objects.count(), 2)
         self.assertEqual(len(response.data), 1)

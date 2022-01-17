@@ -8,10 +8,10 @@ from memoorje.crypto import (
     RecryptError,
 )
 from memoorje.models import Keyslot
-from memoorje.tests.mixins import CapsuleReceiverMixin, KeyslotMixin, PartialKeyMixin
+from memoorje.tests.mixins import CapsuleRecipientMixin, KeyslotMixin, PartialKeyMixin
 
 
-class CryptoTestCase(KeyslotMixin, CapsuleReceiverMixin, PartialKeyMixin, TestCase):
+class CryptoTestCase(KeyslotMixin, CapsuleRecipientMixin, PartialKeyMixin, TestCase):
     def test_combine_partial_keys_returns_password(self):
         """Given a password and corresponding partial keys, _combine_partial_keys() shall reconstruct the password."""
         self.create_combinable_partial_keys()
@@ -38,10 +38,10 @@ class CryptoTestCase(KeyslotMixin, CapsuleReceiverMixin, PartialKeyMixin, TestCa
 
     def test_create_recipient_keyslots_returns_valid_passwords(self):
         secret = b"Very hidden secret!"
-        self.create_capsule_receiver()
+        self.create_capsule_recipient()
         passwords = _create_recipient_keyslots(self.capsule, secret)
-        self.assertIn(self.capsule_receiver, passwords)
+        self.assertIn(self.capsule_recipient, passwords)
         self.assertEqual(self.capsule.keyslots.filter(purpose=Keyslot.Purpose.PASSWORD).count(), 1)
         keyslot = self.capsule.keyslots.get(purpose=Keyslot.Purpose.PASSWORD)
-        result = keyslot.decrypt(passwords[self.capsule_receiver])
+        result = keyslot.decrypt(passwords[self.capsule_recipient])
         self.assertEqual(result, secret)

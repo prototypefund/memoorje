@@ -9,16 +9,16 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = "Sends notifications to capsule receivers when the capsule was released"
+    help = "Sends notifications to capsule recipients when the capsule was released"
 
     def handle(self, *args, **options):
         for capsule in Capsule.objects.all():
             try:
                 passwords = capsule.release()
                 if passwords is not None:
-                    # send passwords to receivers
-                    for receiver, password in passwords.items():
-                        receiver.send_release_notification(password)
+                    # send passwords to recipients
+                    for recipient, password in passwords.items():
+                        recipient.send_release_notification(password)
                     # remove partial keys
                     capsule.partial_keys.all().delete()
             except RecryptError as e:

@@ -1,6 +1,6 @@
 from django_otp.plugins.otp_totp.models import TOTPDevice
 
-from memoorje.models import Capsule, CapsuleContent, CapsuleReceiver, Keyslot, PartialKey, Trustee, User
+from memoorje.models import Capsule, CapsuleContent, CapsuleRecipient, Keyslot, PartialKey, Trustee, User
 from memoorje.rest_2fa.users import create_backup_tokens_for_user, create_default_device_for_user
 from memoorje.rest_2fa.utils import get_totp_for_device
 from memoorje.tests.memoorje import create_test_data_file
@@ -72,22 +72,22 @@ class CapsuleContentMixin(CapsuleMixin):
             self.capsule_content.data.save("testfile", f)
 
 
-class CapsuleReceiverMixin(CapsuleMixin):
-    capsule_receiver: CapsuleReceiver
-    receiver_email: str
+class CapsuleRecipientMixin(CapsuleMixin):
+    capsule_recipient: CapsuleRecipient
+    recipient_email: str
 
-    def create_capsule_receiver(self, email=None):
+    def create_capsule_recipient(self, email=None):
         self.ensure_capsule_exists()
-        self.receiver_email = email or "recipient@example.org"
-        self.capsule_receiver = CapsuleReceiver.objects.create(capsule=self.capsule, email=self.receiver_email)
-        return self.capsule_receiver
+        self.recipient_email = email or "recipient@example.org"
+        self.capsule_recipient = CapsuleRecipient.objects.create(capsule=self.capsule, email=self.recipient_email)
+        return self.capsule_recipient
 
     def get_request_headers(self, **kwargs):
         headers = super().get_request_headers(**kwargs)
-        if "with_receiver_token_for" in kwargs:
-            receiver = kwargs["with_receiver_token_for"]
-            token = receiver.receiver_token_generator_proxy.make_token()
-            headers["HTTP_X_MEMOORJE_RECEIVER_TOKEN"] = token
+        if "with_recipient_token_for" in kwargs:
+            recipient = kwargs["with_recipient_token_for"]
+            token = recipient.recipient_token_generator_proxy.make_token()
+            headers["HTTP_X_MEMOORJE_RECIPIENT_TOKEN"] = token
         return headers
 
 

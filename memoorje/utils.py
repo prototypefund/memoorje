@@ -1,6 +1,6 @@
 from rest_framework.request import Request
 
-from memoorje.models import CapsuleReceiver
+from memoorje.models import CapsuleRecipient
 
 
 def get_authenticated_user(request):
@@ -9,9 +9,9 @@ def get_authenticated_user(request):
     return None
 
 
-def get_receiver_by_token(request: Request):
-    token = request.headers.get("X-Memoorje-Receiver-Token")
+def get_recipient_by_token(request: Request):
+    token = request.headers.get("X-Memoorje-Recipient-Token")
     try:
-        return CapsuleReceiver.objects.get_by_token(token)
-    except CapsuleReceiver.DoesNotExist:
+        return CapsuleRecipient.objects.get_by_token(token)
+    except CapsuleRecipient.DoesNotExist:
         return None

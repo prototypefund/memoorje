@@ -4,7 +4,7 @@ from rest_framework import routers
 
 from memoorje.rest_api.views import (
     CapsuleContentViewSet,
-    CapsuleReceiverViewSet,
+    CapsuleRecipientViewSet,
     CapsuleViewSet,
     KeyslotViewSet,
     PartialKeyViewSet,
@@ -14,7 +14,7 @@ from memoorje.rest_api.views import (
 router = routers.SimpleRouter()
 router.register(r"capsules", CapsuleViewSet, basename="capsule")
 router.register(r"capsule-contents", CapsuleContentViewSet, basename="capsulecontent")
-router.register(r"capsule-receivers", CapsuleReceiverViewSet, basename="capsulereceiver")
+router.register(r"capsule-recipients", CapsuleRecipientViewSet, basename="capsulerecipient")
 router.register(r"keyslots", KeyslotViewSet, basename="keyslot")
 router.register(r"partial-keys", PartialKeyViewSet, basename="partialkey")
 router.register(r"trustees", TrusteeViewSet, basename="trustee")

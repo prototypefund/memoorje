@@ -7,14 +7,14 @@ from typing import Iterable, Mapping
 from django.conf import settings
 from memoorje_crypto.formats import EncryptionV1
 
-from memoorje.models import Capsule, CapsuleReceiver, Keyslot, PartialKey
+from memoorje.models import Capsule, CapsuleRecipient, Keyslot, PartialKey
 
 
 class RecryptError(Exception):
     pass
 
 
-def recrypt_capsule(capsule: "Capsule", partial_keys: Iterable["PartialKey"]) -> Mapping["CapsuleReceiver", str]:
+def recrypt_capsule(capsule: "Capsule", partial_keys: Iterable["PartialKey"]) -> Mapping["CapsuleRecipient", str]:
     password = _combine_partial_keys(partial_keys)
     secret = _decrypt_secret(capsule, password)
     return _create_recipient_keyslots(capsule, secret)
@@ -32,9 +32,9 @@ def _combine_partial_keys(partial_keys: Iterable["PartialKey"]) -> bytes:
         raise RecryptError("secret-share-combine returned non-zero exit status.")
 
 
-def _create_recipient_keyslots(capsule: "Capsule", secret: bytes) -> Mapping["CapsuleReceiver", str]:
+def _create_recipient_keyslots(capsule: "Capsule", secret: bytes) -> Mapping["CapsuleRecipient", str]:
     result = {}
-    for recipient in capsule.receivers.all():
+    for recipient in capsule.recipients.all():
         new_password = _generate_password()
         new_data = _encrypt_secret(secret, new_password.encode())
         capsule.keyslots.create(purpose=Keyslot.Purpose.PASSWORD, data=new_data)
