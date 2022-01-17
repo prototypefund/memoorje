@@ -1,5 +1,29 @@
-{% block subject %}Test subject{% endblock %}
+{% extends "emails/base.email" %}
 
-{% block html %}
-  <p>{{ token }}</p>
+{% load i18n %}
+
+{% block subject %}{% translate "Capsule recipient confirmation" %}{% endblock %}
+
+{% block title %}{% translate "Confirm your e-mail address as a capsule recipient" %}{% endblock %}
+
+{% block content %}
+  <p>
+    {% blocktranslate with capsule_name=capsule.name trimmed %}
+      You have been selected as a recipient for the contents of the capsule <strong>{{ capsule_name }}</strong>. Please
+      read the capsule description below and confirm your recipient status afterwards.
+    {% endblocktranslate %}
+  </p>
+  <p>
+    {{ capsule.description }}
+  </p>
+  <p>
+    {% blocktranslate trimmed %}
+      Please confirm your recipient status by following this link:
+    {% endblocktranslate %}
+
+    <a href="{{ confirm_link }}">{{ confirm_link }}</a>
+  </p>
+  <p>
+    <a href="{{ justification_link }}">{% translate "Why do I get this e-mail?" %}</a>
+  </p>
 {% endblock %}

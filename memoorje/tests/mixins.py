@@ -78,7 +78,7 @@ class CapsuleReceiverMixin(CapsuleMixin):
 
     def create_capsule_receiver(self, email=None):
         self.ensure_capsule_exists()
-        self.receiver_email = email or "test@example.org"
+        self.receiver_email = email or "recipient@example.org"
         self.capsule_receiver = CapsuleReceiver.objects.create(capsule=self.capsule, email=self.receiver_email)
         return self.capsule_receiver
 

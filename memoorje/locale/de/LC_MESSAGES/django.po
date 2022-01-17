@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-17 09:21+0100\n"
+"POT-Creation-Date: 2022-01-17 11:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: templates/emails/trustee_partial_key_invitation.email:5
+#: memoorje/templates/emails/recipient_confirmation.email:5
+msgid "Capsule recipient confirmation"
+msgstr "Bestätigung als Kapselempfänger:in"
+
+#: memoorje/templates/emails/recipient_confirmation.email:7
+msgid "Confirm your e-mail address as a capsule recipient"
+msgstr "Bestätige deine E-Mail-Adresse als Kapselempfänger:in"
+
+#: memoorje/templates/emails/recipient_confirmation.email:11
+#, python-format
+msgid ""
+"You have been selected as a recipient for the contents of the capsule "
+"<strong>%(capsule_name)s</strong>. Please read the capsule description below "
+"and confirm your recipient status afterwards."
+msgstr ""
+"Du wurdest als Empfänger:in für die Inhalte der Kapsel <strong>%(capsule_name)s</strong> "
+"ausgewählt. Bitte lies dir die folgende Kapselbeschreibung durch und bestätige "
+"anschließend deinen Empfänger:innenstatus."
+
+#: memoorje/templates/emails/recipient_confirmation.email:20
+msgid "Please confirm your recipient status by following this link:"
+msgstr "Bitte bestätige deinen Empfänger:innenstatus durch Aufruf dieses Links:"
+
+#: memoorje/templates/emails/recipient_confirmation.email:27
+#: memoorje/templates/emails/trustee_partial_key_invitation.email:29
+msgid "Why do I get this e-mail?"
+msgstr "Warum bekomme ich diese E-Mail?"
+
+#: memoorje/templates/emails/trustee_partial_key_invitation.email:5
 msgid "Invitation to provide your partial key as a trustee"
 msgstr "Einladung zum Einreichen eines Teilschlüssels als Vertrauensperson"
 
-#: templates/emails/trustee_partial_key_invitation.email:7
+#: memoorje/templates/emails/trustee_partial_key_invitation.email:7
 msgid "Provide your partial key"
 msgstr "Reiche deinen Teilschlüssel ein"
 
-#: templates/emails/trustee_partial_key_invitation.email:11
+#: memoorje/templates/emails/trustee_partial_key_invitation.email:11
 #, python-format
 msgid ""
 "The release process for the capsule <strong>%(capsule_name)s</strong> has "
@@ -35,18 +63,15 @@ msgid ""
 "agree on opening the capsule."
 msgstr ""
 "Der Prozess zur Freigabe der Kapsel <strong>%(capsule_name)s</strong> hat "
-"begonnen. Du bist eingeladen, deinen Teil des Schlüssels zur Kapsel einzureichen. "
-"Bitte lies die nachfolgende Kapselbeschreibung und stelle sicher, dass du mit "
-"der Öffnung der Kapsel einverstanden bist."
+"begonnen. Du bist eingeladen, deinen Teil des Schlüssels zur Kapsel "
+"einzureichen. Bitte lies die nachfolgende Kapselbeschreibung und stelle "
+"sicher, dass du mit der Öffnung der Kapsel einverstanden bist."
 
-#: templates/emails/trustee_partial_key_invitation.email:21
+#: memoorje/templates/emails/trustee_partial_key_invitation.email:21
 msgid ""
 "If you agree that the capsule contents should be released to the recipients, "
 "please provide your part of the key by following this link:"
 msgstr ""
-"Wenn du einverstanden bist, dass die Kapselinhalte für die Empfänger:innen freigegeben sollen, "
-"reiche bitte deinen Teilschlüssel unter dem folgenden Link ein:"
-
-#: templates/emails/trustee_partial_key_invitation.email:29
-msgid "Why do I get this e-mail?"
-msgstr "Warum bekomme ich diese E-Mail?"
+"Wenn du einverstanden bist, dass die Kapselinhalte für die Empfänger:innen "
+"freigegeben sollen, reiche bitte deinen Teilschlüssel unter dem folgenden "
+"Link ein:"

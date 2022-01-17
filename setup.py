@@ -32,7 +32,7 @@ setup(
         "django-otp~=1.0.2",
         "django-rest-registration~=0.6.4",
         "django-templated-email~=3.0.0",
-        "djeveric>=0.4.0",
+        "djeveric>=0.5.0",
         "drf-spectacular~=0.18.2",
         "html2text~=2020.1.16",
         "memoorje_crypto",

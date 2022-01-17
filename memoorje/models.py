@@ -1,6 +1,6 @@
 from datetime import date
 import hashlib
-from typing import Mapping, Optional
+from typing import Any, Mapping, Optional
 import uuid
 
 from django.conf import settings
@@ -142,6 +142,15 @@ class CapsuleReceiver(ConfirmableModelMixin, models.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.receiver_token_generator_proxy = CapsuleReceiverTokenGeneratorProxy(self)
+
+    def get_confirmation_email_context(self) -> Mapping[str, Any]:
+        return {
+            "capsule": self.capsule,
+            "confirm_link": _format_frontend_link(
+                "capsule_recipient_confirm", pk=self.pk, token=self.make_confirmation_token()
+            ),
+            "justification_link": _format_frontend_link("capsule_recipient_justify"),
+        }
 
     def is_active(self):
         return self.is_email_confirmed

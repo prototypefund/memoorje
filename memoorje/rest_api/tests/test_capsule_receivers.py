@@ -1,6 +1,8 @@
+from builtins import filter
 import json
 
 from django.core import mail
+from more_itertools import first
 from rest_framework import status
 
 from memoorje.models import CapsuleReceiver
@@ -101,7 +103,9 @@ class CapsuleReceiverTestCase(CapsuleReceiverMixin, MemoorjeAPITestCase):
         """
         self.create_capsule_receiver()
         self.assertGreaterEqual(len(mail.outbox), 1)
-        self.assertIn(self.capsule_receiver.make_confirmation_token(), "".join([m.body for m in mail.outbox]))
+        self.assertIn(self.capsule_receiver.email, [m.to[0] for m in mail.outbox])
+        msg = first(filter(lambda m: m.to[0] == self.capsule_receiver.email, mail.outbox))
+        self.assertIn(self.capsule_receiver.make_confirmation_token(), msg.body)
 
     def test_confirm_capsule_receiver(self):
         """
