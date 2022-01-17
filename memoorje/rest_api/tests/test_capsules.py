@@ -3,7 +3,7 @@ import json
 from rest_framework import status
 
 from memoorje.models import Capsule, CapsuleReceiver, Keyslot, PartialKey, Trustee
-from memoorje.rest_api.tests.utils import MemoorjeAPITestCase, reverse
+from memoorje.rest_api.tests.utils import format_time, MemoorjeAPITestCase, reverse
 from memoorje.tests.mixins import CapsuleMixin, CapsuleReceiverMixin, KeyslotMixin, PartialKeyMixin, TrusteeMixin
 
 
@@ -40,11 +40,11 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
         self.assertDictEqual(
             json.loads(response.content),
             {
-                "createdOn": self.capsule.created_on.isoformat()[:-6] + "Z",
+                "createdOn": format_time(self.capsule.created_on),
                 "description": self.capsule_description,
                 "id": str(self.capsule.id),
                 "name": self.capsule_name,
-                "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
+                "updatedOn": format_time(self.capsule.updated_on),
                 "url": reverse("capsule", self.capsule, response),
             },
         )
@@ -89,11 +89,11 @@ class CapsuleTestCase(CapsuleMixin, MemoorjeAPITestCase):
             json.loads(response.content),
             [
                 {
-                    "createdOn": self.capsule.created_on.isoformat()[:-6] + "Z",
+                    "createdOn": format_time(self.capsule.created_on),
                     "description": self.capsule_description,
                     "id": str(self.capsule.id),
                     "name": self.capsule_name,
-                    "updatedOn": self.capsule.updated_on.isoformat()[:-6] + "Z",
+                    "updatedOn": format_time(self.capsule.updated_on),
                     "url": reverse("capsule", self.capsule, response),
                 },
             ],

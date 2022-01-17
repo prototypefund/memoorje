@@ -17,6 +17,7 @@ __pycache__/
 /debian/python3-memoorje/
 /debian/memoorje/
 /debian/tmp/
+*.mo
 
 node_modules/
 app/dist/

@@ -15,17 +15,15 @@
     {% endblocktranslate %}
   </p>
   <p>
-    {% blocktranslate with capsule_description=capsule.description %}
-      {{ capsule_description }}
-    {% endblocktranslate %}
+    {{ capsule.description }}
   </p>
   <p>
     {% blocktranslate trimmed %}
       If you agree that the capsule contents should be released to the recipients, please provide your part of the key
       by following this link:
-
-      <a href="{{ partial_key_link }}">{{ partial_key_link }}</a>
     {% endblocktranslate %}
+
+    <a href="{{ partial_key_link }}">{{ partial_key_link }}</a>
   </p>
   <p>
     <a href="{{ justification_link }}">{% translate "Why do I get this e-mail?" %}</a>

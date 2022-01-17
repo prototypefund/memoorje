@@ -1,0 +1,52 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-17 09:21+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/emails/trustee_partial_key_invitation.email:5
+msgid "Invitation to provide your partial key as a trustee"
+msgstr "Einladung zum Einreichen eines Teilschlüssels als Vertrauensperson"
+
+#: templates/emails/trustee_partial_key_invitation.email:7
+msgid "Provide your partial key"
+msgstr "Reiche deinen Teilschlüssel ein"
+
+#: templates/emails/trustee_partial_key_invitation.email:11
+#, python-format
+msgid ""
+"The release process for the capsule <strong>%(capsule_name)s</strong> has "
+"been started. You are invited to provide your part of the key to the "
+"capsule. Please read the capsule description below and make sure, that you "
+"agree on opening the capsule."
+msgstr ""
+"Der Prozess zur Freigabe der Kapsel <strong>%(capsule_name)s</strong> hat "
+"begonnen. Du bist eingeladen, deinen Teil des Schlüssels zur Kapsel einzureichen. "
+"Bitte lies die nachfolgende Kapselbeschreibung und stelle sicher, dass du mit "
+"der Öffnung der Kapsel einverstanden bist."
+
+#: templates/emails/trustee_partial_key_invitation.email:21
+msgid ""
+"If you agree that the capsule contents should be released to the recipients, "
+"please provide your part of the key by following this link:"
+msgstr ""
+"Wenn du einverstanden bist, dass die Kapselinhalte für die Empfänger:innen freigegeben sollen, "
+"reiche bitte deinen Teilschlüssel unter dem folgenden Link ein:"
+
+#: templates/emails/trustee_partial_key_invitation.email:29
+msgid "Why do I get this e-mail?"
+msgstr "Warum bekomme ich diese E-Mail?"
