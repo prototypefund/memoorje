@@ -1,3 +1,5 @@
+import re
+
 from django.core import mail
 from django.test import TestCase
 
@@ -18,4 +20,4 @@ class CapsuleNotificationTestCase(CapsuleRecipientMixin, TrusteeMixin, TestCase)
         mail.outbox.clear()
         PartialKey.objects.create(capsule=self.capsule, data=self.partial_key_data)
         self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("Release of the capsule has been initiated", mail.outbox[0].body)
+        self.assertIn(self.capsule.name, re.sub(r"\s", " ", mail.outbox[0].body))

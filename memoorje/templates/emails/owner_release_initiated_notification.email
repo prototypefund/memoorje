@@ -1,5 +1,21 @@
-{% block subject %}Test subject{% endblock %}
+{% extends "emails/base.email" %}
 
-{% block html %}
-  <p>Release of the capsule has been initiated</p>
+{% load i18n %}
+
+{% block subject %}{% translate "Capsule release initiated" %}{% endblock %}
+
+{% block title %}{% translate "The release of your capsule has been initiated" %}{% endblock %}
+
+{% block content %}
+  <p>
+    {% blocktranslate with capsule_name=capsule.name trimmed %}
+      This is just a notification that the release of your capsule <strong>{{ capsule_name }}</strong> has been
+      initiated. If you believe that this shouldn't happen you might want abort the release process:
+    {% endblocktranslate %}
+
+    <a href="{{ abort_link }}">{{ abort_link }}</a>
+  </p>
+  <p>
+    <a href="{{ justification_link }}">{% translate "Why do I get this e-mail?" %}</a>
+  </p>
 {% endblock %}

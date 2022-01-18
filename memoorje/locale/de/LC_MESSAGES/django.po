@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-18 12:53+0100\n"
+"POT-Creation-Date: 2022-01-18 13:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: memoorje/templates/emails/owner_release_initiated_notification.email:5
+#, fuzzy
+#| msgid "Capsule recipient confirmation"
+msgid "Capsule release initiated"
+msgstr "Bestätigung als Kapselempfänger:in"
+
+#: memoorje/templates/emails/owner_release_initiated_notification.email:7
+msgid "The release of your capsule has been initiated"
+msgstr "Der Freigabeprozess deiner Kapsel wurde begonnen"
+
+#: memoorje/templates/emails/owner_release_initiated_notification.email:11
+#, python-format
+msgid ""
+"This is just a notification that the release of your capsule <strong>"
+"%(capsule_name)s</strong> has been initiated. If you believe that this "
+"shouldn't happen you might want abort the release process:"
+msgstr ""
+"Dies ist nur eine Benachrichtigung, dass der Freigabeprozess deiner Kapsel "
+"<strong>%(capsule_name)s</strong> begonnen wurde. Wenn du denkst, dass dies "
+"nicht passieren sollte, kannst du die Freigabe abbrechen:"
+
+#: memoorje/templates/emails/owner_release_initiated_notification.email:19
+#: memoorje/templates/emails/owner_reminder.email:27
+#: memoorje/templates/emails/recipient_confirmation.email:27
+#: memoorje/templates/emails/recipient_release_notification.email:28
+#: memoorje/templates/emails/trustee_partial_key_invitation.email:29
+msgid "Why do I get this e-mail?"
+msgstr "Warum bekomme ich diese E-Mail?"
 
 #: memoorje/templates/emails/owner_reminder.email:5
 msgid "Capsule reminder"
@@ -43,18 +72,12 @@ msgid ""
 "contents might not be deliverable. So you might want to check your capsule "
 "contacts by following this link:"
 msgstr ""
-"Das Freigeben funktioniert nur, falls wenigstens die Mindestanzahl der Vertrauenspersonen "
-"beim Öffnen der Kapsel helfen sobald es soweit ist. Und natürlich sollten auch die "
-"Daten der Kapselempfänger:innen aktuell sein. Andernfalls können die Kapselinhalte "
-"möglicherweise nicht zugestellt werden. Daher möchtest du alle Kontakte vielleicht "
-"in Gedanken einmal durchgehen, dabei kann dir die folgende Aufstellung helfen:"
-
-#: memoorje/templates/emails/owner_reminder.email:27
-#: memoorje/templates/emails/recipient_confirmation.email:27
-#: memoorje/templates/emails/recipient_release_notification.email:28
-#: memoorje/templates/emails/trustee_partial_key_invitation.email:29
-msgid "Why do I get this e-mail?"
-msgstr "Warum bekomme ich diese E-Mail?"
+"Das Freigeben funktioniert nur, falls wenigstens die Mindestanzahl der "
+"Vertrauenspersonen beim Öffnen der Kapsel helfen sobald es soweit ist. Und "
+"natürlich sollten auch die Daten der Kapselempfänger:innen aktuell sein. "
+"Andernfalls können die Kapselinhalte möglicherweise nicht zugestellt werden. "
+"Daher möchtest du alle Kontakte vielleicht in Gedanken einmal durchgehen, "
+"dabei kann dir die folgende Aufstellung helfen:"
 
 #: memoorje/templates/emails/recipient_confirmation.email:5
 msgid "Capsule recipient confirmation"

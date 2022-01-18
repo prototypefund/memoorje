@@ -232,4 +232,4 @@ class Capsule(models.Model):
         if recipients_changed:
             self.owner.send_email(RecipientsChangedNotificationEmail)
         if release_initiated:
-            self.owner.send_email(ReleaseInitiatedNotificationEmail)
+            self.owner.send_email(ReleaseInitiatedNotificationEmail, instance=self)
