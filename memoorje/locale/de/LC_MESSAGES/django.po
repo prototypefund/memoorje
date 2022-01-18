@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-17 11:28+0100\n"
+"POT-Creation-Date: 2022-01-18 12:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,44 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: memoorje/templates/emails/owner_reminder.email:5
+msgid "Capsule reminder"
+msgstr "Erinnerung an Kapseln"
+
+#: memoorje/templates/emails/owner_reminder.email:7
+msgid "Please check your capsules"
+msgstr "Bitte überprüfe deine Kapseln"
+
+#: memoorje/templates/emails/owner_reminder.email:11
+#, fuzzy, python-format
+#| msgid "You own %(capsule_count)s capsule."
+#| msgid_plural "You own %(capsule_count)s capsules."
+msgid "You own one capsule."
+msgid_plural "You own %(capsule_count)s capsules."
+msgstr[0] "Dir gehört eine Kapsel."
+msgstr[1] "Dir gehören %(capsule_count)s Kapseln."
+
+#: memoorje/templates/emails/owner_reminder.email:17
+msgid ""
+"The release process will only work, if the minimum amount of trustees will "
+"help to unlock your capsule once it will become appropriate. And of course "
+"the capsule recipients' data should be up-to-date. Otherwise, the capsule "
+"contents might not be deliverable. So you might want to check your capsule "
+"contacts by following this link:"
+msgstr ""
+"Das Freigeben funktioniert nur, falls wenigstens die Mindestanzahl der Vertrauenspersonen "
+"beim Öffnen der Kapsel helfen sobald es soweit ist. Und natürlich sollten auch die "
+"Daten der Kapselempfänger:innen aktuell sein. Andernfalls können die Kapselinhalte "
+"möglicherweise nicht zugestellt werden. Daher möchtest du alle Kontakte vielleicht "
+"in Gedanken einmal durchgehen, dabei kann dir die folgende Aufstellung helfen:"
+
+#: memoorje/templates/emails/owner_reminder.email:27
+#: memoorje/templates/emails/recipient_confirmation.email:27
+#: memoorje/templates/emails/recipient_release_notification.email:28
+#: memoorje/templates/emails/trustee_partial_key_invitation.email:29
+msgid "Why do I get this e-mail?"
+msgstr "Warum bekomme ich diese E-Mail?"
 
 #: memoorje/templates/emails/recipient_confirmation.email:5
 msgid "Capsule recipient confirmation"
@@ -33,18 +71,48 @@ msgid ""
 "<strong>%(capsule_name)s</strong>. Please read the capsule description below "
 "and confirm your recipient status afterwards."
 msgstr ""
-"Du wurdest als Empfänger:in für die Inhalte der Kapsel <strong>%(capsule_name)s</strong> "
-"ausgewählt. Bitte lies dir die folgende Kapselbeschreibung durch und bestätige "
-"anschließend deinen Empfänger:innenstatus."
+"Du wurdest als Empfänger:in für die Inhalte der Kapsel <strong>"
+"%(capsule_name)s</strong> ausgewählt. Bitte lies dir die folgende "
+"Kapselbeschreibung durch und bestätige anschließend deinen Empfänger:"
+"innenstatus."
 
 #: memoorje/templates/emails/recipient_confirmation.email:20
 msgid "Please confirm your recipient status by following this link:"
-msgstr "Bitte bestätige deinen Empfänger:innenstatus durch Aufruf dieses Links:"
+msgstr ""
+"Bitte bestätige deinen Empfänger:innenstatus durch Aufruf dieses Links:"
 
-#: memoorje/templates/emails/recipient_confirmation.email:27
-#: memoorje/templates/emails/trustee_partial_key_invitation.email:29
-msgid "Why do I get this e-mail?"
-msgstr "Warum bekomme ich diese E-Mail?"
+#: memoorje/templates/emails/recipient_release_notification.email:5
+#, fuzzy
+#| msgid "Capsule recipient confirmation"
+msgid "Capsule recipient release notification"
+msgstr "Bestätigung als Kapselempfänger:in"
+
+#: memoorje/templates/emails/recipient_release_notification.email:7
+msgid "A capsule has been released to you"
+msgstr ""
+
+#: memoorje/templates/emails/recipient_release_notification.email:11
+#, fuzzy, python-format
+#| msgid ""
+#| "You have been selected as a recipient for the contents of the capsule "
+#| "<strong>%(capsule_name)s</strong>. Please read the capsule description "
+#| "below and confirm your recipient status afterwards."
+msgid ""
+"You are registered as a recipient of the capsule <strong>%(capsule_name)s</"
+"strong>. The capsule has been released. Please read the following capsule "
+"description carefully."
+msgstr ""
+"Du wurdest als Empfänger:in für die Inhalte der Kapsel <strong>"
+"%(capsule_name)s</strong> ausgewählt. Bitte lies dir die folgende "
+"Kapselbeschreibung durch und bestätige anschließend deinen Empfänger:"
+"innenstatus."
+
+#: memoorje/templates/emails/recipient_release_notification.email:20
+#, python-format
+msgid ""
+"You will receive your password (%(password)s) within a letter. You may then "
+"access the capsule contents by following this link:"
+msgstr ""
 
 #: memoorje/templates/emails/trustee_partial_key_invitation.email:5
 msgid "Invitation to provide your partial key as a trustee"

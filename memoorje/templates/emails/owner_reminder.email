@@ -8,8 +8,14 @@
 
 {% block content %}
   <p>
-    {% blocktranslate with capsule_count=user.capsules.all|length trimmed %}
-      You own {{ capsule_count }} capsule{{ capsule_count|pluralize }}. The release process will only work, if the
+    {% blocktranslate with count capsule_count=user.capsules.all|length trimmed %}
+      You own one capsule.
+    {% plural %}
+      You own {{ capsule_count }} capsules.
+    {% endblocktranslate %}
+
+    {% blocktranslate trimmed %}
+      The release process will only work, if the
       minimum amount of trustees will help to unlock your capsule once it will become appropriate. And of course the
       capsule recipients' data should be up-to-date. Otherwise, the capsule contents might not be deliverable. So you
       might want to check your capsule contacts by following this link:
