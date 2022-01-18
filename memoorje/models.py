@@ -230,6 +230,6 @@ class Capsule(models.Model):
     def send_notification(self, recipients_changed=False, release_initiated=False):
         """Send a notification email to the capsule owner."""
         if recipients_changed:
-            self.owner.send_email(RecipientsChangedNotificationEmail)
+            self.owner.send_email(RecipientsChangedNotificationEmail, instance=self)
         if release_initiated:
             self.owner.send_email(ReleaseInitiatedNotificationEmail, instance=self)

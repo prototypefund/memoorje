@@ -1,5 +1,19 @@
-{% block subject %}Test subject{% endblock %}
+{% extends "emails/base.email" %}
 
-{% block html %}
-  <p>Recipients of your capsule have changed</p>
+{% load i18n %}
+
+{% block subject %}{% translate "Capsule recipients changed" %}{% endblock %}
+
+{% block title %}{% translate "Capsule recipients changed" %}{% endblock %}
+
+{% block content %}
+  <p>
+    {% blocktranslate with capsule_name=capsule.name trimmed %}
+      The recipients of your capsule <strong>{{ capsule_name }}</strong> were changed. If you didn't change them you
+      should notify us and check your account's security.
+    {% endblocktranslate %}
+  </p>
+  <p>
+    <a href="{{ justification_link }}">{% translate "Why do I get this e-mail?" %}</a>
+  </p>
 {% endblock %}

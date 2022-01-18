@@ -35,6 +35,13 @@ class CapsuleHintsEmail(TemplatedEmail):
 class RecipientsChangedNotificationEmail(TemplatedEmail):
     template_name = "owner_recipients_changed_notification"
 
+    def get_context(self, **kwargs):
+        capsule = kwargs["instance"]
+        return {
+            "capsule": capsule,
+            "justify_link": self.format_link("capsule_recipient_change_justify"),
+        }
+
 
 class ReleaseInitiatedNotificationEmail(TemplatedEmail):
     template_name = "owner_release_initiated_notification"

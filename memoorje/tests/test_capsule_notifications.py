@@ -13,7 +13,7 @@ class CapsuleNotificationTestCase(CapsuleRecipientMixin, TrusteeMixin, TestCase)
         mail.outbox.clear()
         self.create_capsule_recipient()
         self.assertGreaterEqual(len(mail.outbox), 1)
-        self.assertIn("Recipients of your capsule have changed", "".join([m.body for m in mail.outbox]))
+        self.assertIn(self.capsule.name, re.sub(r"\s", " ", mail.outbox[0].body))
 
     def test_create_partial_key_sends_notification(self):
         self.create_trustee()

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-18 13:09+0100\n"
+"POT-Creation-Date: 2022-01-18 13:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: memoorje/templates/emails/owner_recipients_changed_notification.email:5
+#: memoorje/templates/emails/owner_recipients_changed_notification.email:7
+#, fuzzy
+#| msgid "Capsule recipient confirmation"
+msgid "Capsule recipients changed"
+msgstr "Kapselempfänger:innen geändert"
+
+#: memoorje/templates/emails/owner_recipients_changed_notification.email:11
+#, python-format
+msgid ""
+"The recipients of your capsule <strong>%(capsule_name)s</strong> were "
+"changed. If you didn't change them you should notify us and check your "
+"account's security."
+msgstr ""
+"Die Empfänger:innen deiner Kapsel <strong>%(capsule_name)s</strong> wurden "
+"geändert. Wenn du sie nicht geändert hast, solltest du uns informieren und die "
+"Sicherheit deines Benutzer:innenkontos überprüfen."
+
+#: memoorje/templates/emails/owner_recipients_changed_notification.email:17
+#: memoorje/templates/emails/owner_release_initiated_notification.email:19
+#: memoorje/templates/emails/owner_reminder.email:27
+#: memoorje/templates/emails/recipient_confirmation.email:27
+#: memoorje/templates/emails/recipient_release_notification.email:28
+#: memoorje/templates/emails/trustee_partial_key_invitation.email:29
+msgid "Why do I get this e-mail?"
+msgstr "Warum bekomme ich diese E-Mail?"
+
 #: memoorje/templates/emails/owner_release_initiated_notification.email:5
 #, fuzzy
 #| msgid "Capsule recipient confirmation"
 msgid "Capsule release initiated"
-msgstr "Bestätigung als Kapselempfänger:in"
+msgstr "Kapselfreigabe begonnen"
 
 #: memoorje/templates/emails/owner_release_initiated_notification.email:7
 msgid "The release of your capsule has been initiated"
@@ -38,14 +65,6 @@ msgstr ""
 "Dies ist nur eine Benachrichtigung, dass der Freigabeprozess deiner Kapsel "
 "<strong>%(capsule_name)s</strong> begonnen wurde. Wenn du denkst, dass dies "
 "nicht passieren sollte, kannst du die Freigabe abbrechen:"
-
-#: memoorje/templates/emails/owner_release_initiated_notification.email:19
-#: memoorje/templates/emails/owner_reminder.email:27
-#: memoorje/templates/emails/recipient_confirmation.email:27
-#: memoorje/templates/emails/recipient_release_notification.email:28
-#: memoorje/templates/emails/trustee_partial_key_invitation.email:29
-msgid "Why do I get this e-mail?"
-msgstr "Warum bekomme ich diese E-Mail?"
 
 #: memoorje/templates/emails/owner_reminder.email:5
 msgid "Capsule reminder"
@@ -108,11 +127,11 @@ msgstr ""
 #, fuzzy
 #| msgid "Capsule recipient confirmation"
 msgid "Capsule recipient release notification"
-msgstr "Bestätigung als Kapselempfänger:in"
+msgstr "Freigabebenachrichtigung für Kapselempfänger:in"
 
 #: memoorje/templates/emails/recipient_release_notification.email:7
 msgid "A capsule has been released to you"
-msgstr ""
+msgstr "Eine Kapsel wurde für dich freigegeben"
 
 #: memoorje/templates/emails/recipient_release_notification.email:11
 #, fuzzy, python-format
@@ -136,6 +155,8 @@ msgid ""
 "You will receive your password (%(password)s) within a letter. You may then "
 "access the capsule contents by following this link:"
 msgstr ""
+"Du erhältst dein Kennwort (%(password)s) in einem Brief. Anschließend kannst "
+"du auf die Kapselinhalte unter folgendem Link zugreifen:"
 
 #: memoorje/templates/emails/trustee_partial_key_invitation.email:5
 msgid "Invitation to provide your partial key as a trustee"

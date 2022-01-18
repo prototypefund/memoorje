@@ -211,6 +211,7 @@ FRONTEND_LINKS = {
     "capsule_release_abort_justify": "#",
     "capsule_token_access": "http://localhost:8080/capsules/{pk}/recipient_access/{token}",
     "capsule_token_access_justify": "#",
+    "capsule_recipient_change_justify": "#",
     "capsule_recipient_confirm": "http://localhost:8080/capsule-recipients/{pk}/confirm/{token}",
     "capsule_recipient_confirm_justify": "#",
     "partial_key_create": "http://localhost:8080/capsules/{capsule_pk}/partial-keys/add",
