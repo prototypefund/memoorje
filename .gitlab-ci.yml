@@ -39,6 +39,7 @@ test::python:
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}:${PUBLISH_VERSION}"
+      --skip-tls-verify
 
 deploy::docker:
   extends: .build-docker-image
@@ -53,3 +54,4 @@ deploy::docker-rolling:
     PUBLISH_VERSION: rolling
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  allow_failure: true
