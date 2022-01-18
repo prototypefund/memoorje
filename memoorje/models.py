@@ -1,6 +1,6 @@
 from datetime import date
 import hashlib
-from typing import Any, Mapping, Optional
+from typing import Mapping, Optional
 import uuid
 
 from django.conf import settings
@@ -25,10 +25,6 @@ from memoorje.emails import (
     TrusteePartialKeyInvitationEmail,
 )
 from memoorje.tokens import CapsuleRecipientTokenGeneratorProxy
-
-
-def _format_frontend_link(key, **kwargs):
-    return settings.FRONTEND_LINKS[key].format(**kwargs)
 
 
 class UserManager(BaseUserManager):
@@ -96,9 +92,9 @@ class User(PermissionsMixin, AbstractBaseUser):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-    def send_email(self, email_class, context):
+    def send_email(self, email_class, kwargs):
         """Send an email to this user."""
-        email_class(self.email).send(context)
+        email_class(self.email).send(**kwargs)
 
     def send_reminder(self):
         """Send a reminder to this user."""
@@ -143,26 +139,12 @@ class CapsuleRecipient(ConfirmableModelMixin, models.Model):
         super().__init__(*args, **kwargs)
         self.recipient_token_generator_proxy = CapsuleRecipientTokenGeneratorProxy(self)
 
-    def get_confirmation_email_context(self) -> Mapping[str, Any]:
-        return {
-            "capsule": self.capsule,
-            "confirm_link": _format_frontend_link(
-                "capsule_recipient_confirm", pk=self.pk, token=self.make_confirmation_token()
-            ),
-            "justification_link": _format_frontend_link("capsule_recipient_justify"),
-        }
-
     def is_active(self):
         return self.is_email_confirmed
 
     def send_release_notification(self, password):
         """Send a capsule release notification to this recipient."""
-        context = {
-            "password": password,
-            "token": self.recipient_token_generator_proxy.make_token(),
-        }
-        email = CapsuleRecipientReleaseNotificationEmail(self.email)
-        email.send(context)
+        CapsuleRecipientReleaseNotificationEmail(self.email).send(instance=self, password=password)
 
 
 class Keyslot(models.Model):
@@ -200,13 +182,7 @@ class Trustee(models.Model):
 
     def send_partial_key_invitation(self):
         if self.email:
-            TrusteePartialKeyInvitationEmail(self.email).send(
-                {
-                    "capsule": self.capsule,
-                    "justification_link": _format_frontend_link("partial_key_justify"),
-                    "partial_key_link": _format_frontend_link("partial_key_create", capsule_pk=self.capsule.pk),
-                }
-            )
+            TrusteePartialKeyInvitationEmail(self.email).send(instance=self)
 
 
 class Capsule(models.Model):
@@ -243,7 +219,7 @@ class Capsule(models.Model):
             if partial_keys.exists():
                 passwords = recrypt_capsule(self, partial_keys)
                 # We prevent Capsule.updated_on from being touched when setting the is_released flag.
-                self._meta.model._default_manager.update(id=self.id, is_released=True)
+                self._meta.model._default_manager.update(id=self.id, is_released=True)  # noqa
                 return passwords
         return None
 

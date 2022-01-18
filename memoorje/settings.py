@@ -207,8 +207,10 @@ TWO_FACTOR_BACKUP_TOKEN_COUNT = 10
 TEMPLATED_EMAIL_TEMPLATE_DIR = "emails/"
 
 FRONTEND_LINKS = {
+    "capsule_token_access": "http://localhost:8080/capsules/{pk}/recipient_access/{token}",
+    "capsule_token_access_justify": "#",
     "capsule_recipient_confirm": "http://localhost:8080/capsule-recipients/{pk}/confirm/{token}",
-    "capsule_recipient_justify": "#",
+    "capsule_recipient_confirm_justify": "#",
     "partial_key_create": "http://localhost:8080/capsules/{capsule_pk}/partial-keys/add",
-    "partial_key_justify": "#",
+    "partial_key_create_justify": "#",
 }
