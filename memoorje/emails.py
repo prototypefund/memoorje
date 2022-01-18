@@ -1,6 +1,13 @@
 from django.conf import settings
 from djeveric.emails import ConfirmationEmail
+from html2text import HTML2Text
 from templated_email import get_templated_mail
+
+
+def convert_html_to_text(html):
+    converter = HTML2Text()
+    converter.protect_links = True
+    return converter.handle(html)
 
 
 class TemplatedEmail(ConfirmationEmail):

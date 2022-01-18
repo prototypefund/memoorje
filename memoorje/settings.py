@@ -13,7 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from memoorje.emails import convert_html_to_text
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = Path(os.environ.get("MEMOORJE_DATA_DIR", BASE_DIR))
 
@@ -203,6 +204,8 @@ INACTIVE_RECIPIENT_HINT_DAYS = 7
 TRUSTEE_PARTIAL_KEY_INVITATION_GRACE_PERIOD_DAYS = 3
 
 TWO_FACTOR_BACKUP_TOKEN_COUNT = 10
+
+TEMPLATED_EMAIL_PLAIN_FUNCTION = convert_html_to_text
 
 TEMPLATED_EMAIL_TEMPLATE_DIR = "emails/"
 
