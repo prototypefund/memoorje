@@ -8,7 +8,7 @@
 
 {% block content %}
   <p>
-    {% blocktranslate with count capsule_count=user.capsules.all|length trimmed %}
+    {% blocktranslate count capsule_count=user.capsules.all|length trimmed %}
       You own one capsule.
     {% plural %}
       You own {{ capsule_count }} capsules.
