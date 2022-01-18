@@ -1,5 +1,30 @@
-{% block subject %}{% endblock %}
+{% extends "emails/base.email" %}
 
-{% block html %}
-  <p></p>
+{% load i18n %}
+
+{% block subject %}{% translate "Hints for your capsule available" %}{% endblock %}
+
+{% block title %}{% translate "Hints available" %}{% endblock %}
+
+{% block content %}
+  <p>
+    {% blocktranslate with capsule_name=capsule.name trimmed %}
+      There are hints regarding your capsule <strong>{{ capsule_name }}</strong> available.
+    {% endblocktranslate %}
+
+    {% if inactive_recipients %}
+      {% blocktranslate trimmed %}
+        The following recipients of your capsule didn't confirm their recipient status yet. You might want to remind
+        them of doing so.
+      {% endblocktranslate %}
+      <ul>
+        {% for recipient in inactive_recipients %}
+          <li>{{ recipient.email }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </p>
+  <p>
+    <a href="{{ justification_link }}">{% translate "Why do I get this e-mail?" %}</a>
+  </p>
 {% endblock %}

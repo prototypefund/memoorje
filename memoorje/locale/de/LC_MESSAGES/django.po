@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-18 13:24+0100\n"
+"POT-Creation-Date: 2022-01-18 13:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,41 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: memoorje/templates/emails/owner_capsule_hints_notification.email:5
+msgid "Hints for your capsule available"
+msgstr "Hinweise für deine Kapsel verfügbar"
+
+#: memoorje/templates/emails/owner_capsule_hints_notification.email:7
+msgid "Hints available"
+msgstr "Hinweise verfügbar"
+
+#: memoorje/templates/emails/owner_capsule_hints_notification.email:11
+#, python-format
+msgid ""
+"There are hints regarding your capsule <strong>%(capsule_name)s</strong> "
+"available."
+msgstr ""
+"Es sind Hinweise für deine Kapsel <strong>%(capsule_name)s</strong> "
+"verfügbar."
+
+#: memoorje/templates/emails/owner_capsule_hints_notification.email:16
+msgid ""
+"The following recipients of your capsule didn't confirm their recipient "
+"status yet. You might want to remind them of doing so."
+msgstr ""
+"Die folgenden Empfänger:innen deiner Kapsel haben bisher nicht ihren Empfänger:innenstatus"
+"bestätigt. Vielleicht möchtest du sie daran erinnern."
+
+#: memoorje/templates/emails/owner_capsule_hints_notification.email:28
+#: memoorje/templates/emails/owner_recipients_changed_notification.email:17
+#: memoorje/templates/emails/owner_release_initiated_notification.email:19
+#: memoorje/templates/emails/owner_reminder.email:27
+#: memoorje/templates/emails/recipient_confirmation.email:27
+#: memoorje/templates/emails/recipient_release_notification.email:28
+#: memoorje/templates/emails/trustee_partial_key_invitation.email:29
+msgid "Why do I get this e-mail?"
+msgstr "Warum bekomme ich diese E-Mail?"
 
 #: memoorje/templates/emails/owner_recipients_changed_notification.email:5
 #: memoorje/templates/emails/owner_recipients_changed_notification.email:7
@@ -33,17 +68,8 @@ msgid ""
 "account's security."
 msgstr ""
 "Die Empfänger:innen deiner Kapsel <strong>%(capsule_name)s</strong> wurden "
-"geändert. Wenn du sie nicht geändert hast, solltest du uns informieren und die "
-"Sicherheit deines Benutzer:innenkontos überprüfen."
-
-#: memoorje/templates/emails/owner_recipients_changed_notification.email:17
-#: memoorje/templates/emails/owner_release_initiated_notification.email:19
-#: memoorje/templates/emails/owner_reminder.email:27
-#: memoorje/templates/emails/recipient_confirmation.email:27
-#: memoorje/templates/emails/recipient_release_notification.email:28
-#: memoorje/templates/emails/trustee_partial_key_invitation.email:29
-msgid "Why do I get this e-mail?"
-msgstr "Warum bekomme ich diese E-Mail?"
+"geändert. Wenn du sie nicht geändert hast, solltest du uns informieren und "
+"die Sicherheit deines Benutzer:innenkontos überprüfen."
 
 #: memoorje/templates/emails/owner_release_initiated_notification.email:5
 #, fuzzy

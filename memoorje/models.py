@@ -225,7 +225,7 @@ class Capsule(models.Model):
 
     def send_hints(self, inactive_recipients=None):
         """Send hints regarding notable facts to capsule owner."""
-        self.owner.send_email(CapsuleHintsEmail, inactive_recipients=inactive_recipients)
+        self.owner.send_email(CapsuleHintsEmail, instance=self, inactive_recipients=inactive_recipients)
 
     def send_notification(self, recipients_changed=False, release_initiated=False):
         """Send a notification email to the capsule owner."""

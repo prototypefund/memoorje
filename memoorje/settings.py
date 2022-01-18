@@ -207,6 +207,7 @@ TWO_FACTOR_BACKUP_TOKEN_COUNT = 10
 TEMPLATED_EMAIL_TEMPLATE_DIR = "emails/"
 
 FRONTEND_LINKS = {
+    "capsule_hints_justify": "#",
     "capsule_release_abort": "http://localhost:8080/capsules/{pk}/release/abort",
     "capsule_release_abort_justify": "#",
     "capsule_token_access": "http://localhost:8080/capsules/{pk}/recipient_access/{token}",
