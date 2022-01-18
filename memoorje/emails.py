@@ -43,6 +43,14 @@ class ReleaseInitiatedNotificationEmail(TemplatedEmail):
 class ReminderEmail(TemplatedEmail):
     template_name = "owner_reminder"
 
+    def get_context(self, **kwargs):
+        user = kwargs["instance"]
+        return {
+            "check_link": self.format_link("user_reminder_check"),
+            "justify_link": self.format_link("user_reminder_check_justify"),
+            "user": user,
+        }
+
 
 # mails sent to the capsule recipients
 

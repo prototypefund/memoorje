@@ -213,4 +213,6 @@ FRONTEND_LINKS = {
     "capsule_recipient_confirm_justify": "#",
     "partial_key_create": "http://localhost:8080/capsules/{capsule_pk}/partial-keys/add",
     "partial_key_create_justify": "#",
+    "user_reminder_check": "http://localhost:8080/capsules/check",
+    "user_reminder_check_justify": "#",
 }

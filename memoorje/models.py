@@ -92,13 +92,13 @@ class User(PermissionsMixin, AbstractBaseUser):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-    def send_email(self, email_class, kwargs):
+    def send_email(self, email_class, **kwargs):
         """Send an email to this user."""
         email_class(self.email).send(**kwargs)
 
     def send_reminder(self):
         """Send a reminder to this user."""
-        self.send_email(ReminderEmail, {})
+        self.send_email(ReminderEmail, instance=self)
         self.last_reminder_sent_on = date.today()
         self.save()
 
@@ -225,11 +225,11 @@ class Capsule(models.Model):
 
     def send_hints(self, inactive_recipients=None):
         """Send hints regarding notable facts to capsule owner."""
-        self.owner.send_email(CapsuleHintsEmail, {"inactive_recipients": inactive_recipients})
+        self.owner.send_email(CapsuleHintsEmail, inactive_recipients=inactive_recipients)
 
     def send_notification(self, recipients_changed=False, release_initiated=False):
         """Send a notification email to the capsule owner."""
         if recipients_changed:
-            self.owner.send_email(RecipientsChangedNotificationEmail, {})
+            self.owner.send_email(RecipientsChangedNotificationEmail)
         if release_initiated:
-            self.owner.send_email(ReleaseInitiatedNotificationEmail, {})
+            self.owner.send_email(ReleaseInitiatedNotificationEmail)
