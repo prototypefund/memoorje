@@ -6,7 +6,10 @@ from templated_email import get_templated_mail
 
 def convert_html_to_text(html):
     converter = HTML2Text()
-    converter.protect_links = True
+    converter.inline_links = False
+    converter.protect_links = False
+    converter.use_automatic_links = False
+    converter.wrap_links = False
     return converter.handle(html)
 
 
