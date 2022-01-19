@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_registration",
     "memoorje",
+    "memoorje.accounting",
     "memoorje.data_storage",
     "memoorje.rest_api",
     "memoorje.rest_2fa",
@@ -223,3 +224,5 @@ FRONTEND_LINKS = {
     "user_reminder_check": "http://localhost:8080/capsules/check",
     "user_reminder_check_justify": "#",
 }
+
+MONTHLY_DUE_PER_CAPSULE = 1
