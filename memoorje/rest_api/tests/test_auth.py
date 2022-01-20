@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from rest_framework import status
 
@@ -56,13 +58,13 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertDictEqual(
-            response.data,
+            json.loads(response.content),
             {
-                "account_balance": str(self.user.transactions.get_balance()),
+                "accountBalance": str(self.user.transactions.get_balance()),
                 "email": self.email,
                 "id": self.user.id,
                 "name": self.user.name,
-                "remind_interval": settings.DEFAULT_REMIND_INTERVAL_MONTHS,
+                "remindInterval": settings.DEFAULT_REMIND_INTERVAL_MONTHS,
             },
         )
 
