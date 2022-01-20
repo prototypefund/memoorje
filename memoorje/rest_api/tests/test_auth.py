@@ -58,6 +58,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self.assertDictEqual(
             response.data,
             {
+                "account_balance": str(self.user.transactions.get_balance()),
                 "email": self.email,
                 "id": self.user.id,
                 "name": self.user.name,

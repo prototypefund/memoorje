@@ -170,19 +170,10 @@ REST_FRAMEWORK = {
 REST_REGISTRATION = {
     "LOGIN_AUTHENTICATOR": "memoorje.rest_2fa.users.authenticate",
     "LOGIN_SERIALIZER_CLASS": "memoorje.rest_2fa.serializers.TwoFactorLoginSerializer",
+    "PROFILE_SERIALIZER_CLASS": "memoorje.rest_api.serializers.UserSerializer",
     "REGISTER_VERIFICATION_ENABLED": False,
     "REGISTER_EMAIL_VERIFICATION_ENABLED": False,
     "RESET_PASSWORD_VERIFICATION_ENABLED": False,
-    "USER_HIDDEN_FIELDS": [
-        "date_joined",
-        "groups",
-        "is_active",
-        "is_staff",
-        "is_superuser",
-        "last_login",
-        "last_reminder_sent_on",
-        "user_permissions",
-    ],
 }
 
 SPECTACULAR_SETTINGS = {

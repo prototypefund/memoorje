@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from memoorje.models import Capsule, CapsuleContent, CapsuleRecipient, Keyslot, PartialKey, Trustee
+from memoorje.models import Capsule, CapsuleContent, CapsuleRecipient, Keyslot, PartialKey, Trustee, User
 from memoorje.rest_api.fields import BinaryField
 from memoorje.utils import get_authenticated_user
 
@@ -74,6 +74,14 @@ class TrusteeSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedMo
     class Meta:
         model = Trustee
         fields = ["capsule", "email", "id", "url"]
+
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    account_balance = serializers.DecimalField(max_digits=8, decimal_places=2, source="transactions.get_balance")
+
+    class Meta:
+        model = User
+        fields = ["account_balance", "email", "id", "name", "remind_interval"]
 
 
 class AbortCapsuleReleaseSerializer(serializers.Serializer):
