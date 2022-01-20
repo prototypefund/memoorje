@@ -21,6 +21,7 @@ router.register(r"trustees", TrusteeViewSet, basename="trustee")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("accounting/", include("memoorje.accounting.urls")),
     path("auth/", include("rest_registration.api.urls")),
     path("auth/", include("memoorje.rest_2fa.urls")),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
