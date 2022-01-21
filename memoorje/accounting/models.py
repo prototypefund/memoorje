@@ -4,6 +4,21 @@ from django.db import models
 from django.db.models import Sum
 
 
+class ExpenseType(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+class Expense(models.Model):
+    created_on = models.DateTimeField(auto_now_add=True)
+    creator_name = models.CharField(max_length=100)
+    type = models.ForeignKey("ExpenseType", on_delete=models.SET_NULL, null=True)
+    description = models.CharField(max_length=255)
+    amount = models.DecimalField(max_digits=8, decimal_places=2)
+
+
 class TransactionManager(models.Manager):
     def get_balance(self):
         return self.get_queryset().aggregate(Sum("amount"))["amount__sum"] or Decimal("0.00")
