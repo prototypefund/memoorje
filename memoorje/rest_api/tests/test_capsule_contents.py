@@ -109,6 +109,7 @@ class CapsuleContentTestCase(CapsuleContentMixin, MemoorjeAPITestCase):
                 {
                     "capsule": reverse("capsule", self.capsule, response),
                     "data": response.wsgi_request.build_absolute_uri(self.capsule_content.data.url),
+                    "dataSizeBytes": self.capsule_content.data.size,
                     "id": self.capsule_content.id,
                     "metadata": b64encode(self.metadata).decode(),
                     "url": reverse("capsulecontent", self.capsule_content, response),
