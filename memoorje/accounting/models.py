@@ -1,7 +1,16 @@
 from decimal import Decimal
 
+from dateutil.relativedelta import relativedelta
+from django.conf import settings
 from django.db import models
 from django.db.models import Sum
+from django.utils.timezone import now
+
+
+class CurrencyField(models.DecimalField):
+    def __init__(self, **kwargs):
+        kwargs.update(settings.CURRENCY_REPRESENTATION)
+        super().__init__(**kwargs)
 
 
 class ExpenseType(models.Model):
@@ -11,17 +20,26 @@ class ExpenseType(models.Model):
         return self.name
 
 
+class ExpenseQuerySet(models.QuerySet):
+    def get_amount_sum(self):
+        reference_period = relativedelta(months=settings.EXPENSE_TYPE_AMOUNT_SUM_REFERENCE_PERIOD_MONTHS)
+        amount_sum = self.filter(created_on__gt=now() - reference_period).aggregate(Sum("amount"))
+        return amount_sum["amount__sum"] or Decimal(0)
+
+
 class Expense(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     creator_name = models.CharField(max_length=100)
-    type = models.ForeignKey("ExpenseType", on_delete=models.SET_NULL, null=True)
+    type = models.ForeignKey("ExpenseType", on_delete=models.SET_NULL, null=True, related_name="expenses")
     description = models.CharField(max_length=255)
-    amount = models.DecimalField(max_digits=8, decimal_places=2)
+    amount = CurrencyField()
+
+    objects = models.Manager.from_queryset(ExpenseQuerySet)()
 
 
 class TransactionManager(models.Manager):
     def get_balance(self):
-        return self.get_queryset().aggregate(Sum("amount"))["amount__sum"] or Decimal("0.00")
+        return self.get_queryset().aggregate(Sum("amount"))["amount__sum"] or Decimal(0)
 
 
 class Transaction(models.Model):
@@ -47,6 +65,6 @@ class Transaction(models.Model):
     # description, purpose, subject or any other notes
     description = models.CharField(max_length=255)
     # the actual amount (positive = incoming)
-    amount = models.DecimalField(max_digits=8, decimal_places=2)
+    amount = CurrencyField()
 
     objects = TransactionManager()

@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework import status
 
 from memoorje.models import User
-from memoorje.rest_api.tests.utils import MemoorjeAPITestCase
+from memoorje.rest_api.tests.utils import format_decimal, MemoorjeAPITestCase
 from memoorje.tests.mixins import UserMixin
 
 
@@ -60,7 +60,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self.assertDictEqual(
             json.loads(response.content),
             {
-                "accountBalance": str(self.user.transactions.get_balance()),
+                "accountBalance": format_decimal(self.user.transactions.get_balance(), ".01"),
                 "email": self.email,
                 "id": self.user.id,
                 "name": self.user.name,

@@ -6,9 +6,9 @@ from django.core import management
 from django.test import TestCase
 from rest_framework import status
 
-from memoorje.accounting.models import Transaction
+from memoorje.accounting.models import Expense, ExpenseType, Transaction
 from memoorje.rest_api.tests.utils import format_decimal, format_time
-from memoorje.tests.mixins import CapsuleMixin, UserMixin
+from memoorje.tests.mixins import CapsuleMixin
 
 
 class AccountingTestCase(CapsuleMixin, TestCase):
@@ -19,8 +19,6 @@ class AccountingTestCase(CapsuleMixin, TestCase):
         management.call_command("chargedues")
         self.assertEqual(Transaction.objects.count(), 1)
 
-
-class APITestCase(UserMixin, TestCase):
     def test_account_balance(self) -> None:
         url = "/api/auth/profile/"
         self.create_transaction(amount=23)
@@ -47,6 +45,37 @@ class APITestCase(UserMixin, TestCase):
                 }
             ],
         )
+
+    def test_list_expense_types(self):
+        url = "/api/accounting/expense-types/"
+        self.create_capsule()
+        self.create_capsule()
+        self.create_expense_type()
+        self.create_expense(expense_type=self.expense_type)
+        self.create_expense(expense_type=None, amount=12)
+        self.authenticate_user()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual(
+            json.loads(response.content),
+            [
+                {
+                    "amountSumPerCapsule": format_decimal(self.expense_type.expenses.get_amount_sum() / 2, ".01"),
+                    "name": self.expense_type.name,
+                },
+                {
+                    "amountSumPerCapsule": format_decimal(self.expense.amount / 2, ".01"),
+                    "name": None,
+                },
+            ],
+        )
+
+    def create_expense(self, amount=123, expense_type=None):
+        self.expense = Expense.objects.create(amount=amount, type=expense_type)
+        self.expense.refresh_from_db()
+
+    def create_expense_type(self):
+        self.expense_type = ExpenseType.objects.create(name="Test Expense Type")
 
     def create_transaction(self, amount=Decimal(100)):
         self.ensure_user_exists()
