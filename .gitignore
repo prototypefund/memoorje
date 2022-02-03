@@ -4,6 +4,7 @@ __pycache__/
 !/data/.gitkeep
 /db.sqlite3
 /media/
+/static/
 
 /dist/
 *.egg-info/
