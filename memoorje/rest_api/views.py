@@ -2,9 +2,10 @@ from django.db.models import Q
 from djeveric.views import ConfirmModelMixin
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ErrorDetail, ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import exception_handler
 
 from memoorje.models import Capsule, CapsuleContent, CapsuleRecipient, Keyslot, Trustee
 from memoorje.rest_api.permissions import IsCapsuleOwner, IsCapsuleOwnerOrReadOnly
@@ -131,3 +132,23 @@ class TrusteeViewSet(
     serializer_class = TrusteeSerializer
     queryset = Trustee.objects
     filterset_fields = ["capsule"]
+
+
+def custom_exception_handler(exc, context):
+    def _resolve_error_details(detail):
+        if isinstance(detail, ErrorDetail):
+            return {"message": str(detail), "code": detail.code}
+        else:
+            return detail
+
+    response = exception_handler(exc, context)
+    if response is not None and isinstance(response.data, dict):
+        new_data = {}
+        for key, value in response.data.items():
+            if isinstance(value, list):
+                value = [_resolve_error_details(detail) for detail in value]
+            else:
+                value = _resolve_error_details(value)
+            new_data[key] = value
+        response.data = new_data
+    return response
