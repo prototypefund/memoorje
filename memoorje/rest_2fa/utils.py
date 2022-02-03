@@ -8,4 +8,4 @@ def get_totp_for_device(device):
 
 def get_token_max_value():
     digits = getattr(settings, "MEMOORJE_2FA_TOTP_DIGITS", 6)
-    return 10 ** digits - 1
+    return 10**digits - 1
