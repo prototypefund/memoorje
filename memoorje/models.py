@@ -139,7 +139,7 @@ class CapsuleRecipient(ConfirmableModelMixin, models.Model):
         super().__init__(*args, **kwargs)
         self.recipient_token_generator_proxy = CapsuleRecipientTokenGeneratorProxy(self)
 
-    def is_active(self):
+    def is_active(self) -> bool:
         return self.is_email_confirmed
 
     def send_release_notification(self, password):
