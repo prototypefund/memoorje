@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from memoorje.models import Capsule, CapsuleContent, CapsuleRecipient, Keyslot, PartialKey, Trustee, User
-from memoorje.rest_api.fields import BinaryField
+from memoorje.rest_api.fields import BinaryField, HexDigestField
 from memoorje.utils import get_authenticated_user
 
 
@@ -75,9 +75,11 @@ class PartialKeySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class TrusteeSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):
+    partial_key_sha256 = HexDigestField(source="partial_key_hash", write_only=True)
+
     class Meta:
         model = Trustee
-        fields = ["capsule", "email", "id", "url"]
+        fields = ["capsule", "email", "name", "id", "url", "partial_key_sha256"]
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
