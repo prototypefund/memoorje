@@ -79,7 +79,7 @@ class TrusteeSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedMo
 
     class Meta:
         model = Trustee
-        fields = ["capsule", "email", "name", "id", "url", "partial_key_sha256"]
+        fields = ["capsule", "email", "id", "name", "partial_key_sha256", "url"]
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

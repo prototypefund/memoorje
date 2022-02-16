@@ -14,9 +14,7 @@ class BinaryField(FileField):
 
 class HexDigestField(CharField):
     def to_internal_value(self, data: str) -> bytes:
-        if not isinstance(data, str):
-            self.fail("invalid")
-        return bytes.fromhex(data)
+        return bytes.fromhex(super().to_internal_value(data))
 
     def to_representation(self, value: bytes) -> str:
         return value.hex()
