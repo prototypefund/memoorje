@@ -153,7 +153,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "memoorje.User"
 
 REST_FRAMEWORK = {
-    "EXCEPTION_HANDLER": "memoorje.rest_api.views.custom_exception_handler",
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
@@ -170,10 +169,11 @@ REST_FRAMEWORK = {
         "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    "EXCEPTION_HANDLER": "memoorje.rest_api.views.full_details_exception_handler",
     "JSON_UNDERSCOREIZE": {
         "no_underscore_before_number": True,
     },
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
 REST_REGISTRATION = {
