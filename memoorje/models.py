@@ -129,6 +129,7 @@ class CapsuleRecipient(ConfirmableModelMixin, models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
     is_email_confirmed = ConfirmationField(email_class=CapsuleRecipientConfirmationEmail)
+    name = models.CharField(max_length=100, blank=True)
 
     objects = models.Manager.from_queryset(CapsuleRecipientQuerySet)()
 

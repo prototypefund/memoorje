@@ -88,15 +88,7 @@ class CapsuleContentViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets
     filterset_fields = ["capsule"]
 
 
-class CapsuleRecipientViewSet(
-    OwnedCapsuleRelatedQueryMixin,
-    ConfirmModelMixin,
-    mixins.CreateModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
-):
+class CapsuleRecipientViewSet(OwnedCapsuleRelatedQueryMixin, ConfirmModelMixin, viewsets.ModelViewSet):
     """Capsule recipient access for authenticated users"""
 
     permission_classes = [IsCapsuleOwner]

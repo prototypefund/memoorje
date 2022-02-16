@@ -34,6 +34,7 @@ class CapsuleRecipientTestCase(CapsuleRecipientMixin, MemoorjeAPITestCase):
             {
                 "capsule": reverse("capsule", self.capsule),
                 "email": email,
+                "name": "Test Name",
             },
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -81,6 +82,7 @@ class CapsuleRecipientTestCase(CapsuleRecipientMixin, MemoorjeAPITestCase):
                     "email": self.recipient_email,
                     "id": self.capsule_recipient.id,
                     "isActive": False,
+                    "name": "",
                     "url": reverse("capsulerecipient", self.capsule_recipient, response),
                 },
             ],
@@ -163,3 +165,13 @@ class CapsuleRecipientTestCase(CapsuleRecipientMixin, MemoorjeAPITestCase):
         response = self.client.get(self.get_api_url(url))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+    def test_update_recipient_name(self):
+        url = "/capsule-recipients/{pk}/"
+        new_name = "Capsule Recipient New Name"
+        self.create_capsule_recipient()
+        self.authenticate_user()
+        response = self.client.patch(self.get_api_url(url, pk=self.capsule_recipient.pk), {"name": new_name})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.capsule_recipient.refresh_from_db()
+        self.assertEqual(self.capsule_recipient.name, new_name)
