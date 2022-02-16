@@ -58,7 +58,7 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
             format="multipart",
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data["capsule"][0].code, "does_not_exist")
+        self.assertEqual(json.loads(response.content)["capsule"][0]["code"], "does_not_exist")
 
     def test_modify_keyslot(self):
         """Keyslot modifications shouldn't update the capsule's update timestamp."""

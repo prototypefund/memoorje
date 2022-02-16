@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import status
 
 from memoorje.models import PartialKey
@@ -22,7 +24,7 @@ class PartialKeyTestCase(TrusteeMixin, MemoorjeAPITestCase):
                 format="multipart",
             )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data["non_field_errors"][0].code, "invalid_key")
+        self.assertEqual(json.loads(response.content)["nonFieldErrors"][0]["code"], "invalid_key")
 
     def test_create_partial_key(self):
         url = "/partial-keys/"
@@ -58,4 +60,4 @@ class PartialKeyTestCase(TrusteeMixin, MemoorjeAPITestCase):
             )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(PartialKey.objects.count(), 0)
-        self.assertEqual(response.data["capsule"][0].code, "already_released")
+        self.assertEqual(json.loads(response.content)["capsule"][0]["code"], "already_released")

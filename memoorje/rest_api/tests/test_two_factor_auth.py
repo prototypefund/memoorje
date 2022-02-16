@@ -18,7 +18,7 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
         data = {"login": self.email, "password": self.password}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data["non_field_errors"][0].code, "provide-token")
+        self.assertEqual(json.loads(response.content)["nonFieldErrors"][0]["code"], "provide-token")
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
     def test_login_with_invalid_token(self) -> None:
@@ -28,7 +28,7 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
         data = {"login": self.email, "password": self.password, "token": "012345"}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data["detail"].code, "login-invalid")
+        self.assertEqual(json.loads(response.content)["code"], "login-invalid")
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
     def test_login_with_valid_token(self) -> None:
@@ -47,7 +47,7 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
         self.authenticate_user()
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data["user"][0].code, "already-enabled")
+        self.assertEqual(json.loads(response.content)["user"][0]["code"], "already-enabled")
 
     def test_enable_2fa_unauthorized(self):
         """Enabling 2FA when not logged in returns an error."""
@@ -65,7 +65,7 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("non_field_errors", response.data)
-        self.assertEqual(response.data["non_field_errors"][0].code, "invalid-token")
+        self.assertEqual(json.loads(response.content)["nonFieldErrors"][0]["code"], "invalid-token")
         self.assertFalse(is_2fa_enabled_for_user(self.user))
 
     def test_enable_2fa_with_valid_token(self):
@@ -112,7 +112,7 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
         self.authenticate_user()
         response = self.client.delete(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data["password"][0].code, "invalid-password")
+        self.assertEqual(json.loads(response.content)["password"][0]["code"], "invalid-password")
         self.assertTrue(is_2fa_enabled_for_user(self.user))
 
     def test_create_backup_tokens(self):

@@ -40,7 +40,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         data = {"login": self.email, "password": "invalid"}
         response = self.client.post(self.get_api_url(url), data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data["detail"].code, "login-invalid")
+        self.assertEqual(json.loads(response.content)["code"], "login-invalid")
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
     def test_logout(self) -> None:
