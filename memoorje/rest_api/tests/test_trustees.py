@@ -2,7 +2,7 @@ import json
 
 from rest_framework import status
 
-from memoorje.models import Trustee
+from memoorje.models import PartialKey, Trustee
 from memoorje.rest_api.tests.utils import MemoorjeAPITestCase, reverse
 from memoorje.tests.mixins import CapsuleRecipientMixin, TrusteeMixin
 
@@ -27,6 +27,7 @@ class TrusteeTestCase(TrusteeMixin, MemoorjeAPITestCase):
             {
                 "capsule": reverse("capsule", self.capsule),
                 "email": email,
+                "partialKeySha256": PartialKey.hash_key_data(b"Test Data").hex(),
             },
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -66,6 +67,7 @@ class TrusteeTestCase(TrusteeMixin, MemoorjeAPITestCase):
                     "capsule": reverse("capsule", self.capsule, response),
                     "id": self.trustee.id,
                     "email": self.trustee_email,
+                    "name": "",
                     "url": reverse("trustee", self.trustee, response),
                 },
             ],
