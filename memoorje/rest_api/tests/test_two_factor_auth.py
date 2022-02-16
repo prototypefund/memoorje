@@ -1,6 +1,7 @@
 from binascii import unhexlify
 import json
 
+from django.conf import settings
 from django_otp.oath import TOTP
 from django_otp.plugins.otp_totp.models import default_key
 from rest_framework import status
@@ -135,3 +136,21 @@ class TwoFactorUserTestCase(UserMixin, APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.wsgi_request.user.is_authenticated)
+
+    def test_retrieve_active_token_count(self):
+        url = "/api/auth/two-factor/backup-tokens/"
+        self.create_user(is_2fa_enabled=True)
+        self.authenticate_user()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertDictEqual(
+            json.loads(response.content),
+            {"numberOfActiveTokens": settings.TWO_FACTOR_BACKUP_TOKEN_COUNT},
+        )
+
+    def test_retrieve_token_status_without_backup_tokens(self):
+        url = "/api/auth/two-factor/backup-tokens/"
+        self.create_user(is_2fa_enabled=True, with_backup_tokens=False)
+        self.authenticate_user()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

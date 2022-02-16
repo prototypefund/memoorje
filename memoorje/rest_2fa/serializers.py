@@ -97,3 +97,11 @@ class TwoFactorBackupSerializer(serializers.HyperlinkedModelSerializer):
                 "Backup tokens can only be created if 2FA is enabled", code="two-factor-disabled"
             )
         return user
+
+
+class TwoFactorBackupStatusSerializer(serializers.HyperlinkedModelSerializer):
+    number_of_active_tokens = serializers.IntegerField(source="token_set.count")
+
+    class Meta:
+        model = StaticDevice
+        fields = ["number_of_active_tokens"]
