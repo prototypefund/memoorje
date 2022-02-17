@@ -156,6 +156,7 @@ class Keyslot(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE, related_name="keyslots")
     data = models.BinaryField()
     purpose = models.CharField(max_length=3, choices=Purpose.choices)
+    recipient = models.OneToOneField("CapsuleRecipient", on_delete=models.CASCADE, null=True)
 
     def decrypt(self, password: bytes) -> bytes:
         encryption = EncryptionV1()

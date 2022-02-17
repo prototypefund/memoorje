@@ -140,6 +140,7 @@ class KeyslotAccessWithRecipientTokenTestCase(CapsuleRecipientMixin, KeyslotMixi
     def test_list_keyslots(self):
         url = "/api/keyslots/"
         self.create_capsule_recipient()
+        self.create_keyslot(recipient=self.capsule_recipient)
         self.create_keyslot()
         response = self.client.get(url, **self.get_request_headers(with_recipient_token_for=self.capsule_recipient))
         self.assertEqual(response.status_code, status.HTTP_200_OK)

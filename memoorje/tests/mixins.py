@@ -105,11 +105,13 @@ class KeyslotMixin(CapsuleMixin):
     data: bytes
     purpose: Keyslot.Purpose
 
-    def create_keyslot(self, data=None, purpose=Keyslot.Purpose.PASSWORD):
+    def create_keyslot(self, data=None, purpose=Keyslot.Purpose.PASSWORD, recipient=None):
         self.ensure_capsule_exists()
         self.data = data or b"Some encrypted data"
         self.purpose = purpose
-        self.keyslot = Keyslot.objects.create(capsule=self.capsule, data=self.data, purpose=self.purpose)
+        self.keyslot = Keyslot.objects.create(
+            capsule=self.capsule, data=self.data, purpose=self.purpose, recipient=recipient
+        )
 
 
 class PartialKeyMixin(CapsuleMixin):

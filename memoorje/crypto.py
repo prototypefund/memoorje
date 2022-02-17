@@ -37,7 +37,7 @@ def _create_recipient_keyslots(capsule: "Capsule", secret: bytes) -> Mapping["Ca
     for recipient in capsule.recipients.all():
         new_password = _generate_password()
         new_data = _encrypt_secret(secret, new_password.encode())
-        capsule.keyslots.create(purpose=Keyslot.Purpose.PASSWORD, data=new_data)
+        capsule.keyslots.create(purpose=Keyslot.Purpose.PASSWORD, data=new_data, recipient=recipient)
         result[recipient] = new_password
     return result
 

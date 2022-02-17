@@ -18,39 +18,17 @@ from memoorje.rest_api.serializers import (
     PartialKeySerializer,
     TrusteeSerializer,
 )
-from memoorje.utils import get_authenticated_user, get_recipient_by_token
+from memoorje.rest_api.view_mixins import (
+    OwnedCapsuleRelatedFilterMixin,
+    OwnedCapsuleRelatedQuerySetMixin,
+    OwnedOrReceivedCapsuleRelatedQuerySetMixin,
+)
 
 
 def full_details_exception_handler(exc, context):
     if isinstance(exc, APIException):
         exc.detail = exc.get_full_details()
     return exception_handler(exc, context)
-
-
-class OwnedCapsuleRelatedQueryMixin:
-    def get_query(self):
-        user = get_authenticated_user(self.request)
-        query = Q(capsule__owner=user)
-        return query
-
-
-class OwnedCapsuleRelatedQuerySetMixin(OwnedCapsuleRelatedQueryMixin):
-    def get_queryset(self):
-        return self.queryset.filter(self.get_query())
-
-
-class OwnedOrReceivedCapsuleRelatedQuerySetMixin(OwnedCapsuleRelatedQuerySetMixin):
-    """
-    Restricts the query set to objects for which the capsule is either owned by the current user or for which a
-    recipient token exists.
-    """
-
-    def get_query(self):
-        query = super().get_query()
-        recipient = get_recipient_by_token(self.request)
-        if recipient is not None:
-            query |= Q(capsule__recipients=recipient)
-        return query
 
 
 class CapsuleViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
@@ -88,7 +66,7 @@ class CapsuleContentViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets
     filterset_fields = ["capsule"]
 
 
-class CapsuleRecipientViewSet(OwnedCapsuleRelatedQueryMixin, ConfirmModelMixin, viewsets.ModelViewSet):
+class CapsuleRecipientViewSet(OwnedCapsuleRelatedFilterMixin, ConfirmModelMixin, viewsets.ModelViewSet):
     """Capsule recipient access for authenticated users"""
 
     permission_classes = [IsCapsuleOwner]
@@ -97,7 +75,7 @@ class CapsuleRecipientViewSet(OwnedCapsuleRelatedQueryMixin, ConfirmModelMixin, 
     filterset_fields = ["capsule"]
 
     def get_basic_queryset(self):
-        return self.queryset.filter(self.get_query())
+        return self.queryset.filter(self.get_filter())
 
 
 class KeyslotViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
@@ -107,6 +85,9 @@ class KeyslotViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets.ModelV
     serializer_class = KeyslotSerializer
     queryset = Keyslot.objects
     filterset_fields = ["capsule"]
+
+    def get_recipient_filter(self, recipient: CapsuleRecipient) -> Q:
+        return Q(recipient=recipient)
 
 
 class PartialKeyViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
