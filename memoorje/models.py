@@ -7,6 +7,8 @@ from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -19,7 +21,6 @@ from memoorje.emails import (
     CapsuleHintsEmail,
     CapsuleRecipientConfirmationEmail,
     CapsuleRecipientReleaseNotificationEmail,
-    RecipientsChangedNotificationEmail,
     ReleaseInitiatedNotificationEmail,
     ReminderEmail,
     TrusteePartialKeyInvitationEmail,
@@ -232,9 +233,22 @@ class Capsule(models.Model):
         """Send hints regarding notable facts to capsule owner."""
         self.owner.send_email(CapsuleHintsEmail, instance=self, inactive_recipients=inactive_recipients)
 
-    def send_notification(self, recipients_changed=False, release_initiated=False):
+    def send_notification(self, release_initiated=False):
         """Send a notification email to the capsule owner."""
-        if recipients_changed:
-            self.owner.send_email(RecipientsChangedNotificationEmail, instance=self)
         if release_initiated:
             self.owner.send_email(ReleaseInitiatedNotificationEmail, instance=self)
+
+
+class JournalEntry(models.Model):
+    class Action(models.TextChoices):
+        CREATE = "c"
+        UPDATE = "u"
+        DELETE = "d"
+
+    created_on = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    capsule = models.ForeignKey("Capsule", on_delete=models.SET_NULL, null=True)
+    action = models.CharField(max_length=1, choices=Action.choices)
+    entity = GenericForeignKey("entity_type", "entity_id")
+    entity_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    entity_id = models.PositiveIntegerField()

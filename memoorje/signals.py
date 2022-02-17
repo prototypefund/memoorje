@@ -1,7 +1,7 @@
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
-from memoorje.models import Capsule, CapsuleContent, CapsuleRecipient, PartialKey
+from memoorje.models import Capsule, CapsuleContent, CapsuleRecipient, JournalEntry, PartialKey
 
 
 @receiver(post_delete, sender=CapsuleContent)
@@ -12,8 +12,19 @@ def touch_capsule(instance: CapsuleContent, **kwargs):
 
 @receiver(post_delete, sender=CapsuleRecipient)
 @receiver(post_save, sender=CapsuleRecipient)
-def send_recipient_change_notification(instance: CapsuleRecipient, **kwargs):
-    instance.capsule.send_notification(recipients_changed=True)
+def create_journal_entry(instance, **kwargs):
+    def _create_journal_entry(action):
+        entry = JournalEntry(user=instance.capsule.owner, capsule=instance.capsule, action=action)
+        entry.entity = instance
+        entry.save()
+
+    if "created" in kwargs:
+        if kwargs["created"]:
+            _create_journal_entry(JournalEntry.Action.CREATE)
+        else:
+            _create_journal_entry(JournalEntry.Action.UPDATE)
+    else:
+        _create_journal_entry(JournalEntry.Action.DELETE)
 
 
 @receiver(post_save, sender=PartialKey)
