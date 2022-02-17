@@ -2,6 +2,7 @@ from base64 import b64encode
 import json
 
 from rest_framework import status
+from rest_framework.test import APITestCase
 
 from memoorje.models import Keyslot
 from memoorje.rest_api.tests.utils import MemoorjeAPITestCase, reverse
@@ -135,19 +136,11 @@ class KeyslotTestCase(KeyslotMixin, MemoorjeAPITestCase):
         self.assertEqual(len(response.data), 1)
 
 
-class AuthenticatedKeyslotAccessWithRecipientTokenTestCase(CapsuleRecipientMixin, KeyslotMixin, MemoorjeAPITestCase):
+class KeyslotAccessWithRecipientTokenTestCase(CapsuleRecipientMixin, KeyslotMixin, APITestCase):
     def test_list_keyslots(self):
-        """List keyslot(s) for the given recipient."""
-        url = "/keyslots/"
-        recipient = self.create_capsule_recipient()
+        url = "/api/keyslots/"
+        self.create_capsule_recipient()
         self.create_keyslot()
-        self.create_user()
-        self.create_keyslot()
-        self.authenticate_user()
-        response = self.client.get(
-            self.get_api_url(url), **self.get_request_headers(with_recipient_token_for=recipient)
-        )
+        response = self.client.get(url, **self.get_request_headers(with_recipient_token_for=self.capsule_recipient))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertNotEqual(self.user, recipient)
-        self.assertEqual(Keyslot.objects.count(), 2)
         self.assertEqual(len(response.data), 1)

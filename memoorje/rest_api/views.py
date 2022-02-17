@@ -100,10 +100,10 @@ class CapsuleRecipientViewSet(OwnedCapsuleRelatedQueryMixin, ConfirmModelMixin, 
         return self.queryset.filter(self.get_query())
 
 
-class KeyslotViewSet(OwnedCapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
+class KeyslotViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
     """Keyslot access for authenticated users"""
 
-    permission_classes = [IsCapsuleOwner]
+    permission_classes = [IsCapsuleOwnerOrReadOnly]
     serializer_class = KeyslotSerializer
     queryset = Keyslot.objects
     filterset_fields = ["capsule"]
