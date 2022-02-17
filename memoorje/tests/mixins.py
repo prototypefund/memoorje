@@ -83,6 +83,10 @@ class CapsuleRecipientMixin(CapsuleMixin):
         self.capsule_recipient = CapsuleRecipient.objects.create(capsule=self.capsule, email=self.recipient_email)
         return self.capsule_recipient
 
+    def ensure_capsule_recipient_exists(self):
+        if not hasattr(self, "capsule_recipient"):
+            self.create_capsule_recipient()
+
     def get_request_headers(self, **kwargs):
         headers = super().get_request_headers(**kwargs)
         if "with_recipient_token_for" in kwargs:
@@ -90,6 +94,10 @@ class CapsuleRecipientMixin(CapsuleMixin):
             token = recipient.recipient_token_generator_proxy.make_token()
             headers["HTTP_X_MEMOORJE_RECIPIENT_TOKEN"] = token
         return headers
+
+    def get_request_headers_with_recipient_token(self):
+        self.ensure_capsule_recipient_exists()
+        return self.get_request_headers(with_recipient_token_for=self.capsule_recipient)
 
 
 class KeyslotMixin(CapsuleMixin):

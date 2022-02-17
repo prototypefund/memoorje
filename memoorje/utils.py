@@ -1,3 +1,5 @@
+from typing import Optional
+
 from rest_framework.request import Request
 
 from memoorje.models import CapsuleRecipient
@@ -9,7 +11,7 @@ def get_authenticated_user(request):
     return None
 
 
-def get_recipient_by_token(request: Request):
+def get_recipient_by_token(request: Request) -> Optional[CapsuleRecipient]:
     token = request.headers.get("X-Memoorje-Recipient-Token")
     try:
         return CapsuleRecipient.objects.get_by_token(token)
