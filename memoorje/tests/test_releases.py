@@ -2,7 +2,7 @@ from django.core import mail, management
 from django.test import TestCase
 
 from memoorje.crypto import _encrypt_secret
-from memoorje.models import Keyslot
+from memoorje.models import Capsule, Keyslot
 from memoorje.tests.mixins import CapsuleRecipientMixin, KeyslotMixin, PartialKeyMixin
 
 
@@ -35,6 +35,19 @@ class ReleaseTestCase(CapsuleRecipientMixin, KeyslotMixin, PartialKeyMixin, Test
         self.assertEqual(self.capsule.partial_keys.count(), 2)
         management.call_command("releasecapsules")
         self.assertEqual(self.capsule.partial_keys.count(), 0)
+
+    def test_release_two_capsules(self):
+        """Release should work as well if more than one capsule exists.
+
+        This is a regression test for #54.
+        """
+        self._create_release_setup()
+        capsule = self.capsule
+        self.create_capsule()
+        self.assertEqual(Capsule.objects.count(), 2)
+        management.call_command("releasecapsules")
+        capsule.refresh_from_db()
+        self.assertTrue(capsule.is_released)
 
     def _create_release_setup(self):
         self.create_capsule_recipient()
