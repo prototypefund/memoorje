@@ -168,6 +168,9 @@ class PartialKey(models.Model):
     capsule = models.ForeignKey("Capsule", on_delete=models.CASCADE, related_name="partial_keys")
     data = models.BinaryField()
 
+    class Meta:
+        unique_together = ["capsule", "data"]
+
     @staticmethod
     def hash_key_data(data):
         return hashlib.sha256(data).digest()
