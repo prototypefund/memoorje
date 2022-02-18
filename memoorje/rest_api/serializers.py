@@ -33,7 +33,7 @@ class CapsuleContentSerializer(CapsuleRelatedSerializerMixin, serializers.Hyperl
         model = CapsuleContent
         fields = ["capsule", "data", "data_size_bytes", "id", "metadata", "url"]
 
-    def get_data_size_bytes(self, obj):
+    def get_data_size_bytes(self, obj) -> int:
         return obj.data.size
 
 
