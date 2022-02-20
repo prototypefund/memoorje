@@ -1,9 +1,10 @@
 import logging
 
 from django.core.management import BaseCommand
+from django.db.models import Exists, OuterRef
 
 from memoorje.crypto import RecryptError
-from memoorje.models import Capsule
+from memoorje.models import Capsule, PartialKey
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,9 @@ class Command(BaseCommand):
     help = "Sends notifications to capsule recipients when the capsule was released"
 
     def handle(self, *args, **options):
-        for capsule in Capsule.objects.all():
+        for capsule in Capsule.objects.filter(
+            Exists(PartialKey.objects.filter(capsule=OuterRef("pk"))), is_released=False
+        ):
             try:
                 passwords = capsule.release()
                 if passwords is not None:
