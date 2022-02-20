@@ -54,7 +54,9 @@ def _decrypt_secret(capsule: "Capsule", sss_password: bytes) -> bytes:
 
 
 def _encrypt_secret(secret: bytes, password: bytes) -> bytes:
-    encryption = EncryptionV1(iv_size_bytes=64)
+    # We use a high hash iteration count to increase the computational cost
+    # of brute-force attacks against the generated passwords.
+    encryption = EncryptionV1(hash_iterations=2_000_000)
     return encryption.encrypt(password, secret)
 
 
