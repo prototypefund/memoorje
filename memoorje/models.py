@@ -21,6 +21,7 @@ from memoorje.emails import (
     CapsuleHintsEmail,
     CapsuleRecipientConfirmationEmail,
     CapsuleRecipientReleaseNotificationEmail,
+    JournalNotificationEmail,
     ReleaseInitiatedNotificationEmail,
     ReminderEmail,
     TrusteePartialKeyInvitationEmail,
@@ -78,6 +79,9 @@ class User(PermissionsMixin, AbstractBaseUser):
         ),
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    latest_notified_journal_entry = models.OneToOneField(
+        "JournalEntry", on_delete=models.SET_NULL, null=True, related_name="+"
+    )
 
     objects = UserManager()
 
@@ -96,6 +100,10 @@ class User(PermissionsMixin, AbstractBaseUser):
     def send_email(self, email_class, **kwargs):
         """Send an email to this user."""
         email_class(self.email).send(**kwargs)
+
+    def send_journal_notification(self):
+        """Send a notification on new journal entries to this user."""
+        self.send_email(JournalNotificationEmail)
 
     def send_reminder(self):
         """Send a reminder to this user."""
@@ -246,7 +254,7 @@ class JournalEntry(models.Model):
         DELETE = "d"
 
     created_on = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="journal_entries")
     capsule = models.ForeignKey("Capsule", on_delete=models.SET_NULL, null=True)
     action = models.CharField(max_length=1, choices=Action.choices)
     entity = GenericForeignKey("entity_type", "entity_id")

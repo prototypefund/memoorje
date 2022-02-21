@@ -16,6 +16,7 @@ Build-Depends:
  python3-django-downloadview,
  python3-django-filters,
  python3-djangorestframework,
+ python3-freezegun,
 Standards-Version: 4.6.0
 
 Package: memoorje

@@ -216,11 +216,11 @@ FRONTEND_LINKS = {
     "capsule_release_abort_justify": "#",
     "capsule_token_access": "http://localhost:8080/capsules/{pk}/recipient_access/{token}",
     "capsule_token_access_justify": "#",
-    "capsule_recipient_change_justify": "#",
     "capsule_recipient_confirm": "http://localhost:8080/capsule-recipients/{pk}/confirm/{token}",
     "capsule_recipient_confirm_justify": "#",
     "partial_key_create": "http://localhost:8080/capsules/{capsule_pk}/partial-keys/add",
     "partial_key_create_justify": "#",
+    "user_journal_justify": "#",
     "user_reminder_check": "http://localhost:8080/capsules/check",
     "user_reminder_check_justify": "#",
 }
@@ -233,3 +233,5 @@ CURRENCY_REPRESENTATION = {
 }
 
 EXPENSE_TYPE_AMOUNT_SUM_REFERENCE_PERIOD_MONTHS = 6
+
+JOURNAL_NOTIFICATION_GRACE_PERIOD_MINUTES = 5

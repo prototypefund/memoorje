@@ -51,14 +51,12 @@ class CapsuleHintsEmail(TemplatedEmail):
         }
 
 
-class RecipientsChangedNotificationEmail(TemplatedEmail):
-    template_name = "owner_recipients_changed_notification"
+class JournalNotificationEmail(TemplatedEmail):
+    template_name = "owner_journal_notification"
 
     def get_context(self, **kwargs):
-        capsule = kwargs["instance"]
         return {
-            "capsule": capsule,
-            "justify_link": self.format_link("capsule_recipient_change_justify"),
+            "justify_link": self.format_link("user_journal_justify"),
         }
 
 

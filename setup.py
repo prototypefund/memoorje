@@ -34,6 +34,7 @@ setup(
         "django-templated-email~=3.0.0",
         "djeveric~=1.0.0",
         "drf-spectacular~=0.18.2",
+        "freezegun~=0.3.15",
         "html2text~=2020.1.16",
         "memoorje_crypto",
         "python-dateutil~=2.8.1",
