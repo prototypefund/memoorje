@@ -26,15 +26,12 @@ class CapsuleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CapsuleContentSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):
-    data_size_bytes = serializers.SerializerMethodField()
+    data_size_bytes = serializers.IntegerField(source="data.size", read_only=True)
     metadata = BinaryField()
 
     class Meta:
         model = CapsuleContent
         fields = ["capsule", "data", "data_size_bytes", "id", "metadata", "url"]
-
-    def get_data_size_bytes(self, obj) -> int:
-        return obj.data.size
 
 
 class CapsuleRecipientSerializer(CapsuleRelatedSerializerMixin, serializers.HyperlinkedModelSerializer):
