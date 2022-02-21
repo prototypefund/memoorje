@@ -16,10 +16,7 @@ class Command(BaseCommand):
             if (
                 first_key is not None
                 and not capsule.are_partial_key_invitations_sent
-                and (
-                    first_key.created_on
-                    < (now() - timedelta(days=settings.TRUSTEE_PARTIAL_KEY_INVITATION_GRACE_PERIOD_DAYS))
-                )
+                and (first_key.created_on < (now() - timedelta(days=settings.CAPSULE_RELEASE_GRACE_PERIOD_DAYS)))
             ):
                 for trustee in capsule.trustees.all():
                     trustee.send_partial_key_invitation()

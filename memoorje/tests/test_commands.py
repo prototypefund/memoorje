@@ -27,7 +27,7 @@ class InvitationTestCase(PartialKeyMixin, TrusteeMixin, TestCase):
         self.create_trustee()
         self.create_trustee()
         self.create_partial_key()
-        self.partial_key.created_on -= relativedelta(days=settings.TRUSTEE_PARTIAL_KEY_INVITATION_GRACE_PERIOD_DAYS)
+        self.partial_key.created_on -= relativedelta(days=settings.CAPSULE_RELEASE_GRACE_PERIOD_DAYS)
         self.partial_key.save()
         mail.outbox.clear()
         management.call_command("sendpartialkeyinvitations")

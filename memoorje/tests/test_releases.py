@@ -1,5 +1,10 @@
+from datetime import timedelta
+
+from django.conf import settings
 from django.core import mail, management
 from django.test import TestCase
+from django.utils.timezone import now
+from freezegun import freeze_time
 
 from memoorje.crypto import _encrypt_secret
 from memoorje.models import Capsule, Keyslot
@@ -49,7 +54,20 @@ class ReleaseTestCase(CapsuleRecipientMixin, KeyslotMixin, PartialKeyMixin, Test
         capsule.refresh_from_db()
         self.assertTrue(capsule.is_released)
 
-    def _create_release_setup(self):
-        self.create_capsule_recipient()
-        self.create_combinable_partial_keys()
-        self.create_keyslot(purpose=Keyslot.Purpose.SSS, data=_encrypt_secret(b"capsule secret", self.combined_secret))
+    def test_release_capsule_immediately(self):
+        """Capsules should be released after a grace period is elapsed.
+
+        Regression test for #50.
+        """
+        self._create_release_setup(0)
+        management.call_command("releasecapsules")
+        self.capsule.refresh_from_db()
+        self.assertFalse(self.capsule.is_released)
+
+    def _create_release_setup(self, time_shift_days=settings.CAPSULE_RELEASE_GRACE_PERIOD_DAYS):
+        with freeze_time(now() - timedelta(days=time_shift_days)):
+            self.create_capsule_recipient()
+            self.create_combinable_partial_keys()
+            self.create_keyslot(
+                purpose=Keyslot.Purpose.SSS, data=_encrypt_secret(b"capsule secret", self.combined_secret)
+            )
