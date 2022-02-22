@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core import mail
 from rest_framework import status
 
+from memoorje.emails import UserRegistrationConfirmationEmail
 from memoorje.models import User
 from memoorje.rest_api.tests.utils import format_decimal, MemoorjeAPITestCase
 from memoorje.tests.mixins import UserMixin
@@ -86,6 +87,13 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self._register_user()
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn("Please confirm your email address", mail.outbox[0].body)
+
+    def test_verify_registration(self):
+        url = "/verify-registration/"
+        self.create_user()
+        data = UserRegistrationConfirmationEmail(None).get_signed_data(self.user)
+        response = self.client.post(self.get_api_url(url), data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def _register_user(self, email="test@example.org", password="test12345"):
         url = "/register/"
