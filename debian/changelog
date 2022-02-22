@@ -1,5 +1,5 @@
-memoorje (0.1.0-1) UNRELEASED; urgency=medium
+memoorje (0.1.0-1) unstable; urgency=medium
 
   * initial release
 
- -- Konrad Mohrfeldt <konrad.mohrfeldt@farbdev.org>  Fri, 22 Oct 2021 11:17:28 +0200
+ -- Konrad Mohrfeldt <konrad.mohrfeldt@farbdev.org>  Tue, 22 Feb 2022 14:17:07 +0100
