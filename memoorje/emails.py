@@ -1,6 +1,8 @@
 from django.conf import settings
 from djeveric.emails import ConfirmationEmail
 from html2text import HTML2Text
+from rest_registration.signers.register import RegisterSigner
+from rest_registration.utils.users import get_user_verification_id
 from templated_email import get_templated_mail
 
 
@@ -130,4 +132,19 @@ class TrusteePartialKeyInvitationEmail(TemplatedEmail):
             "capsule": capsule,
             "justification_link": self.format_link("partial_key_create_justify"),
             "partial_key_link": self.format_link("partial_key_create", capsule_pk=capsule.pk),
+        }
+
+
+# mails sent to any user
+
+
+class UserRegistrationConfirmationEmail(TemplatedEmail):
+    template_name = "user_registration_confirmation"
+
+    def get_context(self, **kwargs):
+        user = kwargs["instance"]
+        signer = RegisterSigner({"user_id": get_user_verification_id(user)}, strict=False)
+        return {
+            "confirm_link": self.format_link("user_registration_confirm", **(signer.get_signed_data())),
+            "justification_link": self.format_link("user_registration_confirm_justify"),
         }

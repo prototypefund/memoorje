@@ -1,6 +1,7 @@
 import json
 
 from django.conf import settings
+from django.core import mail
 from rest_framework import status
 
 from memoorje.models import User
@@ -13,11 +14,8 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
 
     def test_signup(self):
         """Create a new user account (signup)"""
-        url = "/register/"
         email = "test@example.org"
-        password = "test12345"
-        data = {"email": email, "password": password, "passwordConfirm": password}
-        response = self.client.post(self.get_api_url(url), data)
+        response = self._register_user(email)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 1)
         user = User.objects.get()
@@ -83,3 +81,14 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self.create_user()
         self.create_user()
         self.assertEqual(User.objects.count(), 2)
+
+    def test_send_registration_email(self):
+        self._register_user()
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Please confirm your email address", mail.outbox[0].body)
+
+    def _register_user(self, email="test@example.org", password="test12345"):
+        url = "/register/"
+        data = {"email": email, "password": password, "passwordConfirm": password}
+        response = self.client.post(self.get_api_url(url), data)
+        return response

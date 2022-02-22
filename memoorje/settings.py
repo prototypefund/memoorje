@@ -221,6 +221,8 @@ FRONTEND_LINKS = {
     "partial_key_create": "http://localhost:8080/capsules/{capsule_pk}/partial-keys/add",
     "partial_key_create_justify": "#",
     "user_journal_justify": "#",
+    "user_registration_confirm": "http://localhost:8080/users/{user_id}/confirm/{timestamp}/{signature}",
+    "user_registration_confirm_justify": "#",
     "user_reminder_check": "http://localhost:8080/capsules/check",
     "user_reminder_check_justify": "#",
 }
