@@ -25,6 +25,7 @@ from memoorje.emails import (
     ReleaseInitiatedNotificationEmail,
     ReminderEmail,
     TrusteePartialKeyInvitationEmail,
+    UserRegistrationConfirmationEmail,
 )
 from memoorje.tokens import CapsuleRecipientTokenGeneratorProxy
 
@@ -104,6 +105,10 @@ class User(PermissionsMixin, AbstractBaseUser):
     def send_journal_notification(self):
         """Send a notification on new journal entries to this user."""
         self.send_email(JournalNotificationEmail)
+
+    def send_registration_confirmation(self):
+        """Send a confirmation email to this user."""
+        self.send_email(UserRegistrationConfirmationEmail, instance=self)
 
     def send_reminder(self):
         """Send a reminder to this user."""

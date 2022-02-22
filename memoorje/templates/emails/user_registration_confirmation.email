@@ -1,0 +1,21 @@
+{% extends "emails/base.email" %}
+
+{% load i18n %}
+
+{% block subject %}{% translate "Registration confirmation" %}{% endblock %}
+
+{% block title %}{% translate "Registration confirmation" %}{% endblock %}
+
+{% block content %}
+  <p>
+    {% blocktranslate %}
+      Please confirm your email address by following this link:
+    {% endblocktranslate %}
+  </p>
+  <p>
+    <a href="{{ confirm_link }}">{{ confirm_link }}</a>
+  </p>
+  <p>
+    <a href="{{ justification_link }}">{% translate "Why do I get this e-mail?" %}</a>
+  </p>
+{% endblock %}
