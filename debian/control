@@ -23,6 +23,7 @@ Package: memoorje
 Architecture: all
 Depends:
  ${misc:Depends},
+ moreutils,
  python3-memoorje,
  python3-uwsgidecorators,
  uwsgi-core,
