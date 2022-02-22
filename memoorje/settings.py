@@ -180,9 +180,12 @@ REST_REGISTRATION = {
     "LOGIN_AUTHENTICATOR": "memoorje.rest_2fa.users.authenticate",
     "LOGIN_SERIALIZER_CLASS": "memoorje.rest_2fa.serializers.TwoFactorLoginSerializer",
     "PROFILE_SERIALIZER_CLASS": "memoorje.rest_api.serializers.UserSerializer",
-    "REGISTER_VERIFICATION_ENABLED": False,
+    "REGISTER_VERIFICATION_ENABLED": True,
     "REGISTER_EMAIL_VERIFICATION_ENABLED": False,
     "RESET_PASSWORD_VERIFICATION_ENABLED": False,
+    # As we do not use rest_registration's email mechanism, we set just placeholders for the following settings.
+    "REGISTER_VERIFICATION_URL": "#",
+    "VERIFICATION_FROM_EMAIL": "#",
 }
 
 SPECTACULAR_SETTINGS = {

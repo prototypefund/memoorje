@@ -143,8 +143,11 @@ class UserRegistrationConfirmationEmail(TemplatedEmail):
 
     def get_context(self, **kwargs):
         user = kwargs["instance"]
-        signer = RegisterSigner({"user_id": get_user_verification_id(user)}, strict=False)
         return {
-            "confirm_link": self.format_link("user_registration_confirm", **(signer.get_signed_data())),
+            "confirm_link": self.format_link("user_registration_confirm", **self.get_signed_data(user)),
             "justification_link": self.format_link("user_registration_confirm_justify"),
         }
+
+    def get_signed_data(self, user):
+        signer = RegisterSigner({"user_id": get_user_verification_id(user)}, strict=False)
+        return signer.get_signed_data()
