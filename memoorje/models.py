@@ -26,6 +26,7 @@ from memoorje.emails import (
     ReminderEmail,
     TrusteePartialKeyInvitationEmail,
     UserRegistrationConfirmationEmail,
+    UserResetPasswordEmail,
 )
 from memoorje.tokens import CapsuleRecipientTokenGeneratorProxy
 
@@ -115,6 +116,14 @@ class User(PermissionsMixin, AbstractBaseUser):
         self.send_email(ReminderEmail, instance=self)
         self.last_reminder_sent_on = date.today()
         self.save()
+
+    def send_reset_password_email(self):
+        """Send an email with a link to reset the user's password."""
+        self.send_email(UserResetPasswordEmail, instance=self)
+
+
+def send_reset_password_email(_, user: User):
+    user.send_reset_password_email()
 
 
 class CapsuleContent(models.Model):

@@ -177,15 +177,17 @@ REST_FRAMEWORK = {
 }
 
 REST_REGISTRATION = {
-    "LOGIN_AUTHENTICATOR": "memoorje.rest_2fa.users.authenticate",
-    "LOGIN_SERIALIZER_CLASS": "memoorje.rest_2fa.serializers.TwoFactorLoginSerializer",
-    "PROFILE_SERIALIZER_CLASS": "memoorje.rest_api.serializers.UserSerializer",
     "REGISTER_VERIFICATION_ENABLED": True,
     "REGISTER_VERIFICATION_EMAIL_ENABLED": False,
     "REGISTER_EMAIL_VERIFICATION_ENABLED": False,
-    "RESET_PASSWORD_VERIFICATION_ENABLED": False,
+    "RESET_PASSWORD_VERIFICATION_ENABLED": True,
+    "LOGIN_AUTHENTICATOR": "memoorje.rest_2fa.users.authenticate",
+    "LOGIN_SERIALIZER_CLASS": "memoorje.rest_2fa.serializers.TwoFactorLoginSerializer",
+    "PROFILE_SERIALIZER_CLASS": "memoorje.rest_api.serializers.UserSerializer",
+    "RESET_PASSWORD_EMAIL_SENDER": "memoorje.models.send_reset_password_email",
     # As we do not use rest_registration's email mechanism, we set just placeholders for the following settings.
     "REGISTER_VERIFICATION_URL": "#",
+    "RESET_PASSWORD_VERIFICATION_URL": "#",
     "VERIFICATION_FROM_EMAIL": "#",
 }
 
@@ -225,6 +227,8 @@ FRONTEND_LINKS = {
     "partial_key_create": "http://localhost:8080/capsules/{capsule_pk}/partial-keys/add",
     "partial_key_create_justify": "#",
     "user_journal_justify": "#",
+    "user_password_reset": "http://localhost:8080/users/{user_id}/reset-password/{timestamp}/{signature}",
+    "user_password_reset_justify": "#",
     "user_registration_confirm": "http://localhost:8080/users/{user_id}/confirm/{timestamp}/{signature}",
     "user_registration_confirm_justify": "#",
     "user_reminder_check": "http://localhost:8080/capsules/check",
