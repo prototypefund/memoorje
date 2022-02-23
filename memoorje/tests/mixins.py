@@ -23,16 +23,17 @@ class UserMixin(BaseMixin):
         self.ensure_user_exists()
         self.client.force_login(user=self.user)
 
-    def create_user(self, is_2fa_enabled=False, with_backup_tokens=True):
+    def create_user(self, is_2fa_enabled=False, with_backup_tokens=True, is_active=True):
         self.email = f"test{User.objects.count()}@example.org"
         self.password = "test12345"
-        self.user = User.objects.create_user(self.email, self.password, name="Test Name")
+        self.user = User.objects.create_user(self.email, self.password, name="Test Name", is_active=is_active)
         if is_2fa_enabled:
             self.two_factor_device = create_default_device_for_user(self.user)
             self.two_factor_token = get_totp_for_device(self.two_factor_device).token()
             if with_backup_tokens:
                 backup_device = create_backup_tokens_for_user(self.user)
                 self.backup_token = backup_device.token_set.all()[3].token
+        return self.user
 
     def ensure_user_exists(self):
         if not User.objects.exists():

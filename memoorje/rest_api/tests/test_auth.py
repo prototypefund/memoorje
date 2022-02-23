@@ -85,18 +85,35 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
 
     def test_send_registration_email(self):
         self._register_user()
+
+        # Remove after #57 is solved.
+        # self.assertGreater(len(mail.outbox), 0)
+        # del mail.outbox[0]
+
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn("Please confirm your email address", mail.outbox[0].body)
 
     def test_verify_registration(self):
         url = "/verify-registration/"
         self.create_user()
-        data = UserRegistrationConfirmationEmail(None).get_signed_data(self.user)
+        data = self._get_signed_data()
         response = self.client.post(self.get_api_url(url), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_login_fails_for_unverified_user(self):
+        url = "/login/"
+        self._register_user()
+        data = {"login": self.email, "password": self.password}
+        response = self.client.post(self.get_api_url(url), data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def _get_signed_data(self):
+        return UserRegistrationConfirmationEmail(None).get_signed_data(self.user)
 
     def _register_user(self, email="test@example.org", password="test12345"):
         url = "/register/"
         data = {"email": email, "password": password, "passwordConfirm": password}
         response = self.client.post(self.get_api_url(url), data)
+        self.email = email
+        self.password = password
         return response
