@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core import mail
 from rest_framework import status
 
-from memoorje.emails import UserRegistrationConfirmationEmail
+from memoorje.emails import UserRegistrationConfirmationEmail, UserResetPasswordEmail
 from memoorje.models import User
 from memoorje.rest_api.tests.utils import format_decimal, MemoorjeAPITestCase
 from memoorje.tests.mixins import UserMixin
@@ -82,7 +82,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
     def test_send_registration_email(self):
         self._register_user()
         self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("Please confirm your email address", mail.outbox[0].body)
+        self.assertIn("Please confirm your e-mail address", mail.outbox[0].body)
 
     def test_verify_registration(self):
         self.create_user()
@@ -111,6 +111,14 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn("Reset your password", mail.outbox[0].body)
 
+    def test_reset_password(self):
+        url = "/reset-password/"
+        self.create_user()
+        data = UserResetPasswordEmail(None).get_signed_data(self.user)
+        data["password"] = "New Password"
+        response = self.client.post(self.get_api_url(url), data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def _register_user(self, email="test@example.org", password="test12345"):
         url = "/register/"
         data = {"email": email, "password": password, "passwordConfirm": password}
@@ -118,7 +126,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
 
     def _verify_user(self, user: User):
         url = "/verify-registration/"
-        data = self._get_signed_data(user)
+        data = UserRegistrationConfirmationEmail(None).get_signed_data(user)
         response = self.client.post(self.get_api_url(url), data)
         return response
 
@@ -126,6 +134,3 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         url = "/login/"
         data = {"login": email, "password": password}
         return self.client.post(self.get_api_url(url), data)
-
-    def _get_signed_data(self, user: User):
-        return UserRegistrationConfirmationEmail(None).get_signed_data(user)
