@@ -2,6 +2,7 @@ from django.conf import settings
 from djeveric.emails import ConfirmationEmail
 from html2text import HTML2Text
 from rest_registration.signers.register import RegisterSigner
+from rest_registration.signers.reset_password import ResetPasswordSigner
 from rest_registration.utils.users import get_user_verification_id
 from templated_email import get_templated_mail
 
@@ -150,4 +151,19 @@ class UserRegistrationConfirmationEmail(TemplatedEmail):
 
     def get_signed_data(self, user):
         signer = RegisterSigner({"user_id": get_user_verification_id(user)}, strict=False)
+        return signer.get_signed_data()
+
+
+class UserResetPasswordEmail(TemplatedEmail):
+    template_name = "user_reset_password"
+
+    def get_context(self, **kwargs):
+        user = kwargs["instance"]
+        return {
+            "reset_link": self.format_link("user_password_reset", **self.get_signed_data(user)),
+            "justification_link": self.format_link("user_password_reset_justify"),
+        }
+
+    def get_signed_data(self, user):
+        signer = ResetPasswordSigner({"user_id": get_user_verification_id(user)}, strict=False)
         return signer.get_signed_data()

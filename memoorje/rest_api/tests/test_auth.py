@@ -103,6 +103,14 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
         response = self._login_user(email, password)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_reset_password_sends_email(self):
+        url = "/send-reset-password-link/"
+        self.create_user()
+        response = self.client.post(self.get_api_url(url), {"login": self.user.email})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Reset your password", mail.outbox[0].body)
+
     def _register_user(self, email="test@example.org", password="test12345"):
         url = "/register/"
         data = {"email": email, "password": password, "passwordConfirm": password}
