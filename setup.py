@@ -30,7 +30,7 @@ setup(
         "django-downloadview~=2.1.1",
         "django-filter~=2.4.0",
         "django-otp~=1.0.2",
-        "django-rest-registration~=0.6.4",
+        "git+https://github.com/robwa/django-rest-registration.git",
         "django-templated-email~=3.0.0",
         "djeveric~=1.0.0",
         "drf-spectacular~=0.18.2",
