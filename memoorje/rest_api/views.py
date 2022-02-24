@@ -77,6 +77,14 @@ class CapsuleRecipientViewSet(OwnedCapsuleRelatedFilterMixin, ConfirmModelMixin,
     def get_basic_queryset(self):
         return self.queryset.filter(self.get_filter())
 
+    @action(methods=["post"], detail=True, url_path="send-confirmation-email")
+    def resend(self, request, pk=None):
+        recipient: CapsuleRecipient = self.get_object()
+        if recipient.is_active():
+            raise ValidationError("Recipient is already confirmed", code="already-confirmed")
+        recipient.send_confirmation_email()
+        return Response()
+
 
 class KeyslotViewSet(OwnedOrReceivedCapsuleRelatedQuerySetMixin, viewsets.ModelViewSet):
     """Keyslot access for authenticated users"""

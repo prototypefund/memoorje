@@ -175,3 +175,12 @@ class CapsuleRecipientTestCase(CapsuleRecipientMixin, MemoorjeAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.capsule_recipient.refresh_from_db()
         self.assertEqual(self.capsule_recipient.name, new_name)
+
+    def test_resend_confirmation_email(self):
+        url = "/capsule-recipients/{pk}/send-confirmation-email/"
+        self.create_capsule_recipient()
+        mail.outbox.clear()
+        self.authenticate_user()
+        response = self.client.post(self.get_api_url(url, pk=self.capsule_recipient.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(mail.outbox), 1)
