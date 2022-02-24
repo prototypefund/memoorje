@@ -1,8 +1,7 @@
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-from rest_registration.signals import user_registered
 
-from memoorje.models import Capsule, CapsuleContent, CapsuleRecipient, JournalEntry, PartialKey, User
+from memoorje.models import Capsule, CapsuleContent, CapsuleRecipient, JournalEntry, PartialKey
 
 
 @receiver(post_delete, sender=CapsuleContent)
@@ -32,11 +31,6 @@ def create_journal_entry(instance, **kwargs):
 def send_release_init_notification(instance: PartialKey, created: bool, **kwargs):
     if created and instance.capsule.partial_keys.count() == 1:
         instance.capsule.send_notification(release_initiated=True)
-
-
-@receiver(user_registered)
-def send_user_registration_confirmation(user: User, **kwargs):
-    user.send_registration_confirmation()
 
 
 @receiver(post_save, sender=Capsule)

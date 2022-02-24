@@ -122,6 +122,10 @@ class User(PermissionsMixin, AbstractBaseUser):
         self.send_email(UserResetPasswordEmail, instance=self)
 
 
+def send_registration_confirmation(_, user: User):
+    user.send_registration_confirmation()
+
+
 def send_reset_password_email(_, user: User):
     user.send_reset_password_email()
 

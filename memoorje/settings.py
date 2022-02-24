@@ -178,17 +178,13 @@ REST_FRAMEWORK = {
 
 REST_REGISTRATION = {
     "REGISTER_VERIFICATION_ENABLED": True,
-    "REGISTER_VERIFICATION_EMAIL_ENABLED": False,
+    "REGISTER_VERIFICATION_EMAIL_SENDER": "memoorje.models.send_registration_confirmation",
     "REGISTER_EMAIL_VERIFICATION_ENABLED": False,
     "RESET_PASSWORD_VERIFICATION_ENABLED": True,
+    "RESET_PASSWORD_VERIFICATION_EMAIL_SENDER": "memoorje.models.send_reset_password_email",
     "LOGIN_AUTHENTICATOR": "memoorje.rest_2fa.users.authenticate",
     "LOGIN_SERIALIZER_CLASS": "memoorje.rest_2fa.serializers.TwoFactorLoginSerializer",
     "PROFILE_SERIALIZER_CLASS": "memoorje.rest_api.serializers.UserSerializer",
-    "RESET_PASSWORD_EMAIL_SENDER": "memoorje.models.send_reset_password_email",
-    # As we do not use rest_registration's email mechanism, we set just placeholders for the following settings.
-    "REGISTER_VERIFICATION_URL": "#",
-    "RESET_PASSWORD_VERIFICATION_URL": "#",
-    "VERIFICATION_FROM_EMAIL": "#",
 }
 
 SPECTACULAR_SETTINGS = {
