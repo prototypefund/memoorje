@@ -240,7 +240,7 @@ FRONTEND_LINKS = _OriginPrefixedURLs(
         "user_journal_justify": "#",
         "user_password_reset": "/auth/reset-password?userId={user_id}&timestamp={timestamp}&signature={signature}",
         "user_password_reset_justify": "#",
-        "user_registration_confirm": "/auth/confirm-user?timestamp={timestamp}&signature={signature}",
+        "user_registration_confirm": "/auth/confirm-user?userId={user_id}&timestamp={timestamp}&signature={signature}",
         "user_registration_confirm_justify": "#",
         "user_reminder_check": "/my/capsules",
         "user_reminder_check_justify": "#",
