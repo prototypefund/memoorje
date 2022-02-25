@@ -1,3 +1,4 @@
+from django.conf import settings
 from django_otp.plugins.otp_totp.models import TOTPDevice
 
 from memoorje.models import Capsule, CapsuleContent, CapsuleRecipient, Keyslot, PartialKey, Trustee, User
@@ -23,10 +24,14 @@ class UserMixin(BaseMixin):
         self.ensure_user_exists()
         self.client.force_login(user=self.user)
 
-    def create_user(self, is_2fa_enabled=False, with_backup_tokens=True, is_active=True):
+    def create_user(
+        self, is_2fa_enabled=False, with_backup_tokens=True, is_active=True, language=settings.DEFAULT_USER_LANGUAGE
+    ):
         self.email = f"test{User.objects.count()}@example.org"
         self.password = "test12345"
-        self.user = User.objects.create_user(self.email, self.password, name="Test Name", is_active=is_active)
+        self.user = User.objects.create_user(
+            self.email, self.password, name="Test Name", is_active=is_active, language=language
+        )
         if is_2fa_enabled:
             self.two_factor_device = create_default_device_for_user(self.user)
             self.two_factor_token = get_totp_for_device(self.two_factor_device).token()

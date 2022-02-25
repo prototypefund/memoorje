@@ -58,6 +58,7 @@ class UserTestCase(UserMixin, MemoorjeAPITestCase):
                 "accountBalance": format_decimal(self.user.transactions.get_balance(), ".01"),
                 "email": self.email,
                 "id": self.user.id,
+                "language": settings.DEFAULT_USER_LANGUAGE,
                 "name": self.user.name,
                 "remindInterval": settings.DEFAULT_REMIND_INTERVAL_MONTHS,
             },

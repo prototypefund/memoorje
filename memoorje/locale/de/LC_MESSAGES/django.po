@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-18 13:48+0100\n"
+"POT-Creation-Date: 2022-02-25 10:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,32 +40,38 @@ msgid ""
 "The following recipients of your capsule didn't confirm their recipient "
 "status yet. You might want to remind them of doing so."
 msgstr ""
-"Die folgenden Empfänger:innen deiner Kapsel haben bisher nicht ihren Empfänger:innenstatus"
-"bestätigt. Vielleicht möchtest du sie daran erinnern."
+"Die folgenden Empfänger:innen deiner Kapsel haben bisher nicht ihren "
+"Empfänger:innenstatusbestätigt. Vielleicht möchtest du sie daran erinnern."
 
 #: memoorje/templates/emails/owner_capsule_hints_notification.email:28
-#: memoorje/templates/emails/owner_recipients_changed_notification.email:17
+#: memoorje/templates/emails/owner_journal_notification.email:17
 #: memoorje/templates/emails/owner_release_initiated_notification.email:19
 #: memoorje/templates/emails/owner_reminder.email:27
 #: memoorje/templates/emails/recipient_confirmation.email:27
 #: memoorje/templates/emails/recipient_release_notification.email:28
 #: memoorje/templates/emails/trustee_partial_key_invitation.email:29
+#: memoorje/templates/emails/user_registration_confirmation.email:19
+#: memoorje/templates/emails/user_reset_password.email:19
 msgid "Why do I get this e-mail?"
 msgstr "Warum bekomme ich diese E-Mail?"
 
-#: memoorje/templates/emails/owner_recipients_changed_notification.email:5
-#: memoorje/templates/emails/owner_recipients_changed_notification.email:7
-#, fuzzy
-#| msgid "Capsule recipient confirmation"
-msgid "Capsule recipients changed"
-msgstr "Kapselempfänger:innen geändert"
+#: memoorje/templates/emails/owner_journal_notification.email:5
+#: memoorje/templates/emails/owner_journal_notification.email:7
+msgid "Capsule changes"
+msgstr "Kapseländerungen"
 
-#: memoorje/templates/emails/owner_recipients_changed_notification.email:11
-#, python-format
+#: memoorje/templates/emails/owner_journal_notification.email:11
+#, fuzzy
+#| msgid ""
+#| "The recipients of your capsule <strong>%(capsule_name)s</strong> were "
+#| "changed. If you didn't change them you should notify us and check your "
+#| "account's security."
 msgid ""
-"The recipients of your capsule <strong>%(capsule_name)s</strong> were "
-"changed. If you didn't change them you should notify us and check your "
-"account's security."
+"\n"
+"      Changes have been made to at least one of your capsules. If you didn't "
+"change them you should notify us and check\n"
+"      your account's security.\n"
+"    "
 msgstr ""
 "Die Empfänger:innen deiner Kapsel <strong>%(capsule_name)s</strong> wurden "
 "geändert. Wenn du sie nicht geändert hast, solltest du uns informieren und "
@@ -213,3 +219,35 @@ msgstr ""
 "Wenn du einverstanden bist, dass die Kapselinhalte für die Empfänger:innen "
 "freigegeben sollen, reiche bitte deinen Teilschlüssel unter dem folgenden "
 "Link ein:"
+
+#: memoorje/templates/emails/user_registration_confirmation.email:5
+#: memoorje/templates/emails/user_registration_confirmation.email:7
+#, fuzzy
+#| msgid "Capsule recipient confirmation"
+msgid "Registration confirmation"
+msgstr "Bestätigung als Kapselempfänger:in"
+
+#: memoorje/templates/emails/user_registration_confirmation.email:11
+#, fuzzy
+#| msgid "Please confirm your recipient status by following this link:"
+msgid ""
+"\n"
+"      Please confirm your e-mail address by following this link:\n"
+"    "
+msgstr ""
+"Bitte bestätige deinen Empfänger:innenstatus durch Aufruf dieses Links:"
+
+#: memoorje/templates/emails/user_reset_password.email:5
+#: memoorje/templates/emails/user_reset_password.email:7
+msgid "Reset password"
+msgstr ""
+
+#: memoorje/templates/emails/user_reset_password.email:11
+#, fuzzy
+#| msgid "Please confirm your recipient status by following this link:"
+msgid ""
+"\n"
+"      Reset your password by following this link:\n"
+"    "
+msgstr ""
+"Bitte bestätige deinen Empfänger:innenstatus durch Aufruf dieses Links:"

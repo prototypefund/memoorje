@@ -84,7 +84,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ["account_balance", "email", "id", "name", "remind_interval"]
+        fields = ["account_balance", "email", "id", "language", "name", "remind_interval"]
 
 
 class AbortCapsuleReleaseSerializer(serializers.Serializer):

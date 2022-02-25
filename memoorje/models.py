@@ -84,6 +84,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     latest_notified_journal_entry = models.OneToOneField(
         "JournalEntry", on_delete=models.SET_NULL, null=True, related_name="+"
     )
+    language = models.CharField(max_length=7, default=settings.DEFAULT_USER_LANGUAGE)
 
     objects = UserManager()
 

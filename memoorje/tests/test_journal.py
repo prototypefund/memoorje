@@ -30,6 +30,17 @@ class JournalTestCase(CapsuleRecipientMixin, TestCase):
         self._call_command()
         self.assertEqual(len(mail.outbox), 0)
 
+    def test_emails_are_sent_in_user_language(self):
+        self._send_and_test_lang("de", "Kapseländerungen")
+        self._send_and_test_lang("en", "Capsule changes")
+
+    def _send_and_test_lang(self, language, test_str):
+        self.create_user(language=language)
+        self._change_capsule()
+        self._call_command()
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(test_str, mail.outbox[0].body)
+
     def _change_capsule(self, time_shift_minutes=settings.JOURNAL_NOTIFICATION_GRACE_PERIOD_MINUTES):
         with freeze_time(now() - timedelta(minutes=time_shift_minutes)):
             self.create_capsule_recipient()

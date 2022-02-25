@@ -1,6 +1,7 @@
 from urllib.parse import quote_plus
 
 from django.conf import settings
+from django.utils import translation
 from djeveric.emails import ConfirmationEmail
 from html2text import HTML2Text
 from rest_registration.signers.register import RegisterSigner
@@ -28,11 +29,23 @@ class TemplatedEmail(ConfirmationEmail):
     def get_context(self, **kwargs):
         return kwargs
 
+    def get_language(self, **kwargs):
+        if "instance" in kwargs:
+            instance = kwargs["instance"]
+            if hasattr(instance, "language"):
+                return instance.language
+            if hasattr(instance, "capsule"):
+                return instance.capsule.owner.language
+        return None
+
     def get_template_name(self):
         return self.template_name
 
     def send(self, **kwargs):
         template_name = self.get_template_name()
+        language = self.get_language(**kwargs)
+        if language is not None:
+            translation.activate(language)
         mail = get_templated_mail(
             context=self.get_context(**kwargs),
             template_name=template_name,

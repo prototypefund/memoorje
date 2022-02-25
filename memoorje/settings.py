@@ -124,6 +124,7 @@ LANGUAGES = [
     ("de", "Deutsch"),
     ("en", "English"),
 ]
+DEFAULT_USER_LANGUAGE = "de"
 
 TIME_ZONE = "Europe/Berlin"
 
