@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import collections
 import os
 from pathlib import Path
 
@@ -212,24 +212,39 @@ TEMPLATED_EMAIL_PLAIN_FUNCTION = convert_html_to_text
 
 TEMPLATED_EMAIL_TEMPLATE_DIR = "emails/"
 
-FRONTEND_LINKS = {
-    "capsule_hints_justify": "#",
-    "capsule_release_abort": "http://localhost:8080/capsules/{pk}/release/abort",
-    "capsule_release_abort_justify": "#",
-    "capsule_token_access": "http://localhost:8080/capsules/{pk}/recipient_access/{token}",
-    "capsule_token_access_justify": "#",
-    "capsule_recipient_confirm": "http://localhost:8080/capsule-recipients/{pk}/confirm/{token}",
-    "capsule_recipient_confirm_justify": "#",
-    "partial_key_create": "http://localhost:8080/capsules/{capsule_pk}/partial-keys/add",
-    "partial_key_create_justify": "#",
-    "user_journal_justify": "#",
-    "user_password_reset": "http://localhost:8080/users/{user_id}/reset-password/{timestamp}/{signature}",
-    "user_password_reset_justify": "#",
-    "user_registration_confirm": "http://localhost:8080/users/{user_id}/confirm/{timestamp}/{signature}",
-    "user_registration_confirm_justify": "#",
-    "user_reminder_check": "http://localhost:8080/capsules/check",
-    "user_reminder_check_justify": "#",
-}
+
+class _OriginPrefixedURLs(collections.UserDict):
+    def __getitem__(self, item):
+        from django.conf import settings
+
+        return settings.ORIGIN + self.data[item]
+
+    def __repr__(self):
+        return repr({key: self[key] for key in self.keys()})
+
+
+ORIGIN = "http://localhost:8000"
+
+FRONTEND_LINKS = _OriginPrefixedURLs(
+    {
+        "capsule_hints_justify": "#",
+        "capsule_release_abort": "/my/capsules/{pk}/abort-release",
+        "capsule_release_abort_justify": "#",
+        "capsule_token_access": "/-/capsules/{pk}?token={token}",
+        "capsule_token_access_justify": "#",
+        "capsule_recipient_confirm": "/-/capsule-recipients/{pk}/confirm?token={token}",
+        "capsule_recipient_confirm_justify": "#",
+        "partial_key_create": "/-/capsules/{capsule_pk}/release",
+        "partial_key_create_justify": "#",
+        "user_journal_justify": "#",
+        "user_password_reset": "/auth/reset-password?userId={user_id}&timestamp={timestamp}&signature={signature}",
+        "user_password_reset_justify": "#",
+        "user_registration_confirm": "/auth/confirm-user?timestamp={timestamp}&signature={signature}",
+        "user_registration_confirm_justify": "#",
+        "user_reminder_check": "/my/capsules",
+        "user_reminder_check_justify": "#",
+    }
+)
 
 MONTHLY_DUE_PER_CAPSULE = 1
 
