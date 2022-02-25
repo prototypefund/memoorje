@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-25 10:31+0100\n"
+"POT-Creation-Date: 2022-02-25 11:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,25 +61,15 @@ msgid "Capsule changes"
 msgstr "Kapseländerungen"
 
 #: memoorje/templates/emails/owner_journal_notification.email:11
-#, fuzzy
-#| msgid ""
-#| "The recipients of your capsule <strong>%(capsule_name)s</strong> were "
-#| "changed. If you didn't change them you should notify us and check your "
-#| "account's security."
 msgid ""
-"\n"
-"      Changes have been made to at least one of your capsules. If you didn't "
-"change them you should notify us and check\n"
-"      your account's security.\n"
-"    "
+"Changes have been made to at least one of your capsules. If you didn't "
+"change them you should notify us and check your account's security."
 msgstr ""
-"Die Empfänger:innen deiner Kapsel <strong>%(capsule_name)s</strong> wurden "
-"geändert. Wenn du sie nicht geändert hast, solltest du uns informieren und "
-"die Sicherheit deines Benutzer:innenkontos überprüfen."
+"Mindestens eine deiner Kapseln wurde verändert. Wenn du sie nicht geändert "
+"hast, solltest du uns informieren und die Sicherheit deines Benutzer:"
+"innenkontos überprüfen."
 
 #: memoorje/templates/emails/owner_release_initiated_notification.email:5
-#, fuzzy
-#| msgid "Capsule recipient confirmation"
 msgid "Capsule release initiated"
 msgstr "Kapselfreigabe begonnen"
 
@@ -107,9 +97,7 @@ msgid "Please check your capsules"
 msgstr "Bitte überprüfe deine Kapseln"
 
 #: memoorje/templates/emails/owner_reminder.email:11
-#, fuzzy, python-format
-#| msgid "You own %(capsule_count)s capsule."
-#| msgid_plural "You own %(capsule_count)s capsules."
+#, python-format
 msgid "You own one capsule."
 msgid_plural "You own %(capsule_count)s capsules."
 msgstr[0] "Dir gehört eine Kapsel."
@@ -156,8 +144,6 @@ msgstr ""
 "Bitte bestätige deinen Empfänger:innenstatus durch Aufruf dieses Links:"
 
 #: memoorje/templates/emails/recipient_release_notification.email:5
-#, fuzzy
-#| msgid "Capsule recipient confirmation"
 msgid "Capsule recipient release notification"
 msgstr "Freigabebenachrichtigung für Kapselempfänger:in"
 
@@ -166,11 +152,7 @@ msgid "A capsule has been released to you"
 msgstr "Eine Kapsel wurde für dich freigegeben"
 
 #: memoorje/templates/emails/recipient_release_notification.email:11
-#, fuzzy, python-format
-#| msgid ""
-#| "You have been selected as a recipient for the contents of the capsule "
-#| "<strong>%(capsule_name)s</strong>. Please read the capsule description "
-#| "below and confirm your recipient status afterwards."
+#, python-format
 msgid ""
 "You are registered as a recipient of the capsule <strong>%(capsule_name)s</"
 "strong>. The capsule has been released. Please read the following capsule "
@@ -222,32 +204,18 @@ msgstr ""
 
 #: memoorje/templates/emails/user_registration_confirmation.email:5
 #: memoorje/templates/emails/user_registration_confirmation.email:7
-#, fuzzy
-#| msgid "Capsule recipient confirmation"
 msgid "Registration confirmation"
-msgstr "Bestätigung als Kapselempfänger:in"
+msgstr "Registrierung bestätigen"
 
 #: memoorje/templates/emails/user_registration_confirmation.email:11
-#, fuzzy
-#| msgid "Please confirm your recipient status by following this link:"
-msgid ""
-"\n"
-"      Please confirm your e-mail address by following this link:\n"
-"    "
-msgstr ""
-"Bitte bestätige deinen Empfänger:innenstatus durch Aufruf dieses Links:"
+msgid "Please confirm your e-mail address by following this link:"
+msgstr "Bitte bestätige deine E-Mail-Adresse durch Aufruf dieses Links:"
 
 #: memoorje/templates/emails/user_reset_password.email:5
 #: memoorje/templates/emails/user_reset_password.email:7
 msgid "Reset password"
-msgstr ""
+msgstr "Kennwort zurücksetzen"
 
 #: memoorje/templates/emails/user_reset_password.email:11
-#, fuzzy
-#| msgid "Please confirm your recipient status by following this link:"
-msgid ""
-"\n"
-"      Reset your password by following this link:\n"
-"    "
-msgstr ""
-"Bitte bestätige deinen Empfänger:innenstatus durch Aufruf dieses Links:"
+msgid "Reset your password by following this link:"
+msgstr "Du kannst dein Kennwort durch Aufruf dieses Links zurücksetzen:"
