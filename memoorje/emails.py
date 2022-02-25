@@ -1,3 +1,5 @@
+from urllib.parse import quote
+
 from django.conf import settings
 from djeveric.emails import ConfirmationEmail
 from html2text import HTML2Text
@@ -20,7 +22,7 @@ class TemplatedEmail(ConfirmationEmail):
     template_name: str
 
     def format_link(self, key, **kwargs):
-        return settings.FRONTEND_LINKS[key].format(**kwargs)
+        return quote(settings.FRONTEND_LINKS[key].format(**kwargs))
 
     def get_context(self, **kwargs):
         return kwargs
