@@ -4,6 +4,7 @@ ARG APP_USER=memoorje
 RUN adduser --system --group --disabled-password --home /var/lib/${APP_USER} ${APP_USER}
 
 RUN apt update -y && apt install -y \
+      git \
       mime-support \
       python3 \
       python3-pip \
