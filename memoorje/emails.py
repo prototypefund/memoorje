@@ -22,7 +22,7 @@ class TemplatedEmail(ConfirmationEmail):
     template_name: str
 
     def format_link(self, key, **kwargs):
-        quoted_kwargs = {k: quote_plus(v) for k, v in kwargs.items()}
+        quoted_kwargs = {k: quote_plus(str(v)) for k, v in kwargs.items()}
         return settings.FRONTEND_LINKS[key].format(**quoted_kwargs)
 
     def get_context(self, **kwargs):
