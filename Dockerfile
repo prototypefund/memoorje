@@ -43,6 +43,7 @@ ENV UWSGI_WORKERS=2 UWSGI_THREADS=4
 USER ${APP_USER}:${APP_USER}
 
 ADD docker/entrypoint.sh /app/
+ADD docker/fixtures.json /app/
 ENTRYPOINT ["/app/entrypoint.sh"]
 EXPOSE 8000
 CMD ["uwsgi", "--show-config", "--plugin", "python3", "--static-map", "/static/=/app/static/", "--static-map", "/media/=/var/lib/memoorje/media/"]

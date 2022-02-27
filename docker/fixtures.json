@@ -1,0 +1,22 @@
+[
+  {
+    "model": "memoorje.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$ymWolgiZsKP6Sl61vvkWvX$vVV88OubiuIzHh9xda8PeCcLngjeLT9ckNutmMod7HY=",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "default-user@example.org",
+      "name": "",
+      "remind_interval": 6,
+      "last_reminder_sent_on": null,
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2022-02-26T11:35:39.485Z",
+      "latest_notified_journal_entry": null,
+      "language": "en",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]
