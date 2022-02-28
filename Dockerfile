@@ -24,6 +24,7 @@ RUN pip install dj-database-url
 ENV DATABASE_URL="sqlite:////var/lib/memoorje/db.sqlite3"
 ENV PYTHONPATH=/app
 ENV DJANGO_SETTINGS_MODULE=memoorje_settings
+ENV MEMOORJE_DATA_DIR=/var/lib/memoorje
 ADD docker/memoorje_settings.py /app/
 
 RUN python3 -m django collectstatic
