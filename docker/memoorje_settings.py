@@ -11,6 +11,7 @@ STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesSto
 ORIGIN = os.environ.get("MEMOORJE_ORIGIN", ORIGIN)
 USE_X_FORWARDED_HOST = True
 
+EMAIL_BACKEND = os.environ.get("MEMOORJE_EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
 EMAIL_HOST = os.environ.get("MEMOORJE_EMAIL_HOST", "localhost")
 EMAIL_PORT = int(os.environ.get("MEMOORJE_EMAIL_PORT", 25))
 EMAIL_USE_TLS = os.environ.get("MEMOORJE_EMAIL_USE_TLS", "False") == "True"
