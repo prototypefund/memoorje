@@ -3,7 +3,7 @@ import os
 from setuptools import find_namespace_packages, setup
 
 __dir__ = os.path.abspath(os.path.dirname(__file__))
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 try:
     with open(os.path.join(__dir__, "README.md")) as f:

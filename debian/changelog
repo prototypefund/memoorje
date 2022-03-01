@@ -1,3 +1,9 @@
+memoorje (0.2.0-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Konrad Mohrfeldt <konrad.mohrfeldt@farbdev.org>  Tue, 01 Mar 2022 01:54:28 +0100
+
 memoorje (0.1.0-1) unstable; urgency=medium
 
   * initial release
